@@ -1,112 +1,123 @@
+"use client";
 import Image from "next/image";
+import React, { useState } from "react";
+import PropertyCard from "../components/PropertyCard";
+import PointCounterfactualCard from "@/components/PointCounterfactualCard";
+import UserInputCard from "@/components/UserInputCard";
+
+import properties from "../../public/london_10.json";
+import point_counterfactuals from "../../public/london_10.json";
+import interval_counterfactuals from "../../public/interval_counterfactuals.json";
+import { useAnswers } from "./context/AnswersContext";
+import AddItem from "@/components/AddItem";
+import IntervalCard from "@/components/IntervalCard";
+
+// TODO: Add a modal to show the actual price of the house (or make it an input thing)
 
 export default function Home() {
+  const { userId, resetUserID, currentQuestion, goToNextQuestion } =
+    useAnswers();
+  const [explanationViewMode, setExplanationViewMode] = useState("sentences");
+  const [explanationType, setExplanationType] = useState("point");
+  const [currentPhase, setCurrentPhase] = useState("0");
+
+  const handleNext = () => {
+    goToNextQuestion();
+  };
+
+  const progressValue = (currentQuestion / properties.length) * 100;
+
+  const ExplanationSelector = (
+    <select
+      className="select select-bordered bg-warning text-warning-content"
+      onChange={(e) => setExplanationViewMode(e.target.value)}
+    >
+      <option value="sentences">Sentences</option>
+      <option value="graph">Graph</option>
+      <option value="table">Table</option>
+    </select>
+  );
+  const ExplanationTypeSelector = (
+    <select
+      className="select select-bordered bg-warning text-warning-content"
+      onChange={(e) => setExplanationType(e.target.value)}
+    >
+      <option value="point">Point explanation</option>
+      <option value="interval">Interval explanation</option>
+      <option value="both">Both explanations</option>
+    </select>
+  );
+  const CurrentPhaseSelector = (
+    <select
+      className="select select-bordered bg-warning text-warning-content"
+      onChange={(e) => setCurrentPhase(e.target.value)}
+    >
+      <option value="0">Phase 0</option>
+      <option value="1">Phase 1</option>
+      <option value="2">Phase 2</option>
+    </select>
+  );
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.js</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <main className="flex min-h-screen flex-col items-leading justify-between p-24">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-4xl font-bold text-center mb-0">This is a title</h1>
+        {/* Explanation view selection dropdown */}
+        <div className="flex flex-row gap-4">
+          {CurrentPhaseSelector}
+          {ExplanationTypeSelector}
+          {ExplanationSelector}
         </div>
+
+        {/* <button className="btn btn-secondary px-2 py-1" onClick={resetUserID}>
+          Reset user ID
+        </button> */}
+      </div>
+      <p>
+        {currentQuestion}/{properties.length} completed
+      </p>
+      {/* <p> User id: {userId}</p> */}
+
+      {/* Progress bar */}
+      <div className="flex justify-center py-4">
+        <progress className="progress w-full" value={progressValue} max={100} />
       </div>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-full sm:before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full sm:after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+      {/* Main content grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        {/* Property features card */}
+        <div className="flex-grow space-y-2">
+          <PropertyCard property={properties[currentQuestion]} />
+        </div>
 
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+        {/* Counterfactual explanation card */}
+        {explanationType === "interval" || explanationType === "both" ? (
+          <div className="flex-grow space-y-2">
+            <IntervalCard
+              property={properties[currentQuestion]}
+              intervalExplanation={interval_counterfactuals[currentQuestion]}
+              mode={explanationViewMode}
+            />
+          </div>
+        ) : null}
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800 hover:dark:bg-opacity-30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+        {/* Counterfactual explanation card */}
+        {/* Counterfactual explanation card */}
+        {explanationType === "point" || explanationType === "both" ? (
+          <div className="flex-grow space-y-2">
+            <PointCounterfactualCard
+              property={properties[currentQuestion]}
+              pointCounterfactual={point_counterfactuals[currentQuestion]}
+              mode={explanationViewMode}
+            />
+          </div>
+        ) : null}
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50 text-balance`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+        {/* Inputs for user answers */}
+        <div className="col-span-1 md:col-span-2 xl:col-span-1">
+          <UserInputCard onClickNext={handleNext} phase={currentPhase} />
+        </div>
       </div>
     </main>
   );
