@@ -5,9 +5,9 @@ import PropertyCard from "../components/PropertyCard";
 import PointCounterfactualCard from "@/components/PointCounterfactualCard";
 import UserInputCard from "@/components/UserInputCard";
 
-import properties from "../../public/london_10.json";
-import point_counterfactuals from "../../public/london_10.json";
-import interval_counterfactuals from "../../public/interval_counterfactuals.json";
+import houses from "../../public/data/houses.json";
+import point_counterfactuals from "../../public/data/point_counterfactuals.json";
+import interval_counterfactuals from "../../public/data/interval_counterfactuals";
 import { useAnswers } from "./context/AnswersContext";
 import AddItem from "@/components/AddItem";
 import IntervalCard from "@/components/IntervalCard";
@@ -18,14 +18,14 @@ export default function Home() {
   const { userId, resetUserID, currentQuestion, goToNextQuestion } =
     useAnswers();
   const [explanationViewMode, setExplanationViewMode] = useState("sentences");
-  const [explanationType, setExplanationType] = useState("point");
+  const [explanationType, setExplanationType] = useState("interval");
   const [currentPhase, setCurrentPhase] = useState("0");
 
   const handleNext = () => {
     goToNextQuestion();
   };
 
-  const progressValue = (currentQuestion / properties.length) * 100;
+  const progressValue = (currentQuestion / houses.length) * 100;
 
   const ExplanationSelector = (
     <select
@@ -75,7 +75,7 @@ export default function Home() {
         </button> */}
       </div>
       <p>
-        {currentQuestion}/{properties.length} completed
+        {currentQuestion}/{houses.length} completed
       </p>
       {/* <p> User id: {userId}</p> */}
 
@@ -88,27 +88,26 @@ export default function Home() {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {/* Property features card */}
         <div className="flex-grow space-y-2">
-          <PropertyCard property={properties[currentQuestion]} />
+          <PropertyCard house={houses[currentQuestion]} />
         </div>
 
         {/* Counterfactual explanation card */}
-        {explanationType === "interval" || explanationType === "both" ? (
+        {explanationType === "point" || explanationType === "both" ? (
           <div className="flex-grow space-y-2">
-            <IntervalCard
-              property={properties[currentQuestion]}
-              intervalExplanation={interval_counterfactuals[currentQuestion]}
+            <PointCounterfactualCard
+              house={houses[currentQuestion]}
+              pointCounterfactual={point_counterfactuals[currentQuestion]}
               mode={explanationViewMode}
             />
           </div>
         ) : null}
 
         {/* Counterfactual explanation card */}
-        {/* Counterfactual explanation card */}
-        {explanationType === "point" || explanationType === "both" ? (
+        {explanationType === "interval" || explanationType === "both" ? (
           <div className="flex-grow space-y-2">
-            <PointCounterfactualCard
-              property={properties[currentQuestion]}
-              pointCounterfactual={point_counterfactuals[currentQuestion]}
+            <IntervalCard
+              house={houses[currentQuestion]}
+              intervalExplanation={interval_counterfactuals[currentQuestion]}
               mode={explanationViewMode}
             />
           </div>

@@ -1,6 +1,8 @@
 import React from "react";
 import IntervalBar from "./IntervalBar";
 import NotImplementedCard from "./NotImplementedCard";
+import { formatFeatureForUI, getFeatureBounds } from "@/utils/featureProcessor";
+import featureInfos from "../../public/data/featureInfos.json";
 
 const SentencesIntervalCard = ({ intervalExplanation }) => {
   return (
@@ -8,95 +10,69 @@ const SentencesIntervalCard = ({ intervalExplanation }) => {
       <div className="card-body">
         <h2 className="card-title">Interval Explanation</h2>
         <p>
-          The place should have an area between{" "}
-          {intervalExplanation["Area in sq ft"].min.toLocaleString()} and{" "}
-          {intervalExplanation["Area in sq ft"].max.toLocaleString()} sq ft, as
-          well as {intervalExplanation["No. of Bedrooms"].min.toLocaleString()}{" "}
-          to {intervalExplanation["No. of Bedrooms"].max.toLocaleString()}{" "}
-          bedrooms,{" "}
-          {intervalExplanation["No. of Bathrooms"].min.toLocaleString()} to{" "}
-          {intervalExplanation["No. of Bathrooms"].max.toLocaleString()}{" "}
-          bathrooms, and{" "}
-          {intervalExplanation["No. of Receptions"].min.toLocaleString()} to{" "}
-          {intervalExplanation["No. of Receptions"].max.toLocaleString()}{" "}
-          receptions.
+          The property should be {intervalExplanation["LotArea"].min} to{" "}
+          {intervalExplanation["LotArea"].max} sq ft (with{" "}
+          {intervalExplanation["1stFlrSF"].min} to{" "}
+          {intervalExplanation["1stFlrSF"].max} sq ft on the first floor, and{" "}
+          {intervalExplanation["1stFlrSF"].min} to{" "}
+          {intervalExplanation["1stFlrSF"].max} on the second). It should have{" "}
+          been build between {intervalExplanation["YearBuilt"].min} and{" "}
+          {intervalExplanation["YearBuilt"].max}, have{" "}
+          {intervalExplanation["TotRmsAbvGrd"].min} to{" "}
+          {intervalExplanation["TotRmsAbvGrd"].max} total rooms, of which{" "}
+          {intervalExplanation["BedroomAbvGr"].min} to{" "}
+          {intervalExplanation["BedroomAbvGr"].max} bedrooms and{" "}
+          {intervalExplanation["FullBath"].min} to{" "}
+          {intervalExplanation["FullBath"].max} bathrooms. It should also have{" "}
+          {intervalExplanation["Fireplaces"].min} to{" "}
+          {intervalExplanation["Fireplaces"].max} fireplaces.
         </p>
       </div>
     </div>
   );
 };
 
-const GraphIntervalCard = ({ property, intervalExplanation }) => {
+const GraphIntervalCard = ({ house, intervalExplanation }) => {
+  const continuousFeatures = featureInfos.filter(
+    (feature) => feature.type === "continuous"
+  );
+
+  const FeatureIntervalBar = ({ featureInfo }) => {
+    const [min, max] = getFeatureBounds(
+      featureInfo,
+      house[featureInfo.name],
+      intervalExplanation[featureInfo.name].max
+    );
+    return (
+      <div className="py-2">
+        <p>{featureInfo.label}</p>
+        <IntervalBar
+          lower={intervalExplanation[featureInfo.name].min}
+          actual={house[featureInfo.name]}
+          upper={intervalExplanation[featureInfo.name].max}
+          featureMin={min}
+          featureMax={max}
+        />
+      </div>
+    );
+  };
+
   return (
     <div className="card bg-base-100 shadow-xl m-4">
       <div className="card-body">
         <h2 className="card-title">Interval counterfactual</h2>
-
-        <div className="pb-2">
-          <p>Area: (sq ft)</p>
-          <IntervalBar
-            lower={intervalExplanation["Area in sq ft"].min}
-            actual={property["Area in sq ft"]}
-            upper={intervalExplanation["Area in sq ft"].max}
-            featureMin={
-              Math.min(
-                property["Area in sq ft"],
-                intervalExplanation["Area in sq ft"].min
-              ) * 0.9
-            }
-            featureMax={
-              Math.max(
-                property["Area in sq ft"],
-                intervalExplanation["Area in sq ft"].max
-              ) * 1.1
-            }
-          />
-        </div>
-
-        <div className="py-2">
-          <p>Number of bedrooms</p>
-          <IntervalBar
-            lower={intervalExplanation["No. of Bedrooms"].min}
-            actual={property["No. of Bedrooms"]}
-            upper={intervalExplanation["No. of Bedrooms"].max}
-            featureMin={0}
-            featureMax={7}
-          />
-        </div>
-
-        <div className="py-2">
-          <p>Number of bathrooms</p>
-          <IntervalBar
-            lower={intervalExplanation["No. of Bathrooms"].min}
-            actual={property["No. of Bathrooms"]}
-            upper={intervalExplanation["No. of Bathrooms"].max}
-            featureMin={0}
-            featureMax={7}
-          />
-        </div>
-
-        <div className="py-2">
-          <p>Number of receptions </p>
-          <IntervalBar
-            lower={intervalExplanation["No. of Receptions"].min}
-            actual={property["No. of Receptions"]}
-            upper={intervalExplanation["No. of Receptions"].max}
-            featureMin={0}
-            featureMax={7}
-          />
-        </div>
+        {continuousFeatures.map((feature, index) => (
+          <FeatureIntervalBar key={index} featureInfo={feature} />
+        ))}
       </div>
     </div>
   );
 };
 
 const TableIntervalCard = ({ intervalExplanation }) => {
-  const features = [
-    "Area in sq ft",
-    "No. of Bedrooms",
-    "No. of Bathrooms",
-    "No. of Receptions",
-  ];
+  const continuousFeatures = featureInfos.filter(
+    (feature) => feature.type === "continuous"
+  );
 
   return (
     <div className="card bg-base-100 shadow-xl m-4">
@@ -111,11 +87,21 @@ const TableIntervalCard = ({ intervalExplanation }) => {
             </tr>
           </thead>
           <tbody>
-            {features.map((feature) => (
+            {continuousFeatures.map((feature) => (
               <tr key={feature}>
-                <td>{feature}</td>
-                <td>{intervalExplanation[feature].min.toLocaleString()}</td>
-                <td>{intervalExplanation[feature].max.toLocaleString()}</td>
+                <td>{feature.label}</td>
+                <td>
+                  {formatFeatureForUI(
+                    feature,
+                    intervalExplanation[feature.name].min
+                  )}
+                </td>
+                <td>
+                  {formatFeatureForUI(
+                    feature,
+                    intervalExplanation[feature.name].max
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -125,7 +111,7 @@ const TableIntervalCard = ({ intervalExplanation }) => {
   );
 };
 
-const IntervalCard = ({ property, intervalExplanation, mode = "table" }) => {
+const IntervalCard = ({ house, intervalExplanation, mode = "table" }) => {
   // Raise an error is the mode is not "sentences", "graph", or "table"
   if (!["sentences", "graph", "table"].includes(mode)) {
     throw new Error(
@@ -140,7 +126,7 @@ const IntervalCard = ({ property, intervalExplanation, mode = "table" }) => {
   if (mode === "graph") {
     return (
       <GraphIntervalCard
-        property={property}
+        house={house}
         intervalExplanation={intervalExplanation}
       />
     );

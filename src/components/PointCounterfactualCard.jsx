@@ -1,5 +1,7 @@
 import React from "react";
 import PointBar from "./PointBar";
+import featureInfos from "../../public/data/featureInfos.json";
+import { formatFeatureForUI, getFeatureBounds } from "@/utils/featureProcessor";
 
 const SentencesPointCounterfactualCard = ({ pointCounterfactual }) => {
   return (
@@ -7,47 +9,64 @@ const SentencesPointCounterfactualCard = ({ pointCounterfactual }) => {
       <div className="card-body">
         <h2 className="card-title">Point counterfactual</h2>
         <p>
-          The property is {pointCounterfactual["Area in sq ft"]} sq ft big, has{" "}
-          {pointCounterfactual["No. of Bedrooms"]} bedrooms,
-          {pointCounterfactual["No. of Bathrooms"]} bathrooms, and{" "}
-          {pointCounterfactual["No. of Receptions"]} receptions
+          The property is a {pointCounterfactual["BldgType"]} on a{" "}
+          {pointCounterfactual["Street"]} street. It is{" "}
+          {pointCounterfactual["LotArea"]} sq ft big built in{" "}
+          {pointCounterfactual["YearBuilt"]} with{" "}
+          {pointCounterfactual["TotRmsAbvGrd"]} rooms in total including{" "}
+          {pointCounterfactual["BedroomAbvGr"]} bedrooms and{" "}
+          {pointCounterfactual["FullBath"]} bathrooms. The property has{" "}
+          {pointCounterfactual["Fireplaces"]} fireplaces and{" "}
+          {pointCounterfactual["CentralAir"] === "Y" ? "" : "no"} central air
+          conditioning. The floors are divided into{" "}
+          {pointCounterfactual["1stFlrSF"]} sq ft on the first floor and{" "}
+          {pointCounterfactual["2ndFlrSF"]} sq ft on the second floor.
         </p>
       </div>
     </div>
   );
 };
 
-const GraphPointCounterfactualCard = ({ property, pointCounterfactual }) => {
+const GraphPointCounterfactualCard = ({ house, pointCounterfactual }) => {
+  const continuousFeatures = featureInfos.filter(
+    (feature) => feature.type === "continuous"
+  );
+
+  const FeatureBar = ({ feature }) => {
+    const [min, max] = getFeatureBounds(
+      feature,
+      house[feature.name],
+      pointCounterfactual[feature.name]
+    );
+
+    return (
+      <div className="py-2">
+        <p>{feature.label}</p>
+        <PointBar
+          counterfactual={pointCounterfactual[feature.name]}
+          actual={house[feature.name]}
+          featureMin={min}
+          featureMax={max}
+        />
+      </div>
+    );
+  };
+
   return (
     <div className="card bg-base-100 shadow-xl m-4">
       <div className="card-body">
         <h2 className="card-title">Point counterfactual</h2>
+        {continuousFeatures.map((feature, index) => (
+          <FeatureBar key={index} feature={feature} />
+        ))}
+        {/* A div to explain the meaning of the colors */}
         <div className="py-2">
-          <p>Number of bedrooms</p>
-          <PointBar
-            counterfactual={pointCounterfactual["No. of Bedrooms"]}
-            actual={property["No. of Bedrooms"]}
-            featureMin={0}
-            featureMax={7}
-          />
-        </div>
-        <div className="py-2">
-          <p>Number of bathrooms</p>
-          <PointBar
-            counterfactual={pointCounterfactual["No. of Bedrooms"]}
-            actual={property["No. of Bathrooms"]}
-            featureMin={0}
-            featureMax={7}
-          />
-        </div>
-        <div className="py-2">
-          <p>Number of bedrooms</p>
-          <PointBar
-            counterfactual={pointCounterfactual["No. of Receptions"]}
-            actual={property["No. of Receptions"]}
-            featureMin={0}
-            featureMax={7}
-          />
+          <div className="flex flex-row gap-2 align-middle">
+            <div className="bg-base-content w-6 h-6 rounded-full"></div>
+            <p className="text-base-content">Actual value</p>
+            <div className="bg-secondary w-6 h-6 rounded-full"></div>
+            <p className="text-secondary">Counterfactual</p>
+          </div>
         </div>
       </div>
     </div>
@@ -55,16 +74,14 @@ const GraphPointCounterfactualCard = ({ property, pointCounterfactual }) => {
 };
 
 const TablePointCounterfactualCard = ({ pointCounterfactual }) => {
-  const features = [
-    "Area in sq ft",
-    "No. of Bedrooms",
-    "No. of Bathrooms",
-    "No. of Receptions",
-  ];
-  const tableRows = features.map((feature, index) => (
+  const continuousFeatures = featureInfos.filter(
+    (feature) => feature.type === "continuous"
+  );
+
+  const tableRows = continuousFeatures.map((feature, index) => (
     <tr key={index}>
-      <td>{feature}</td>
-      <td>{pointCounterfactual[feature]}</td>
+      <td>{feature.label}</td>
+      <td>{formatFeatureForUI(feature, pointCounterfactual[feature.name])}</td>
     </tr>
   ));
 
@@ -87,7 +104,7 @@ const TablePointCounterfactualCard = ({ pointCounterfactual }) => {
 };
 
 const PointCounterfactualCard = ({
-  property,
+  house,
   pointCounterfactual,
   mode = "table",
 }) => {
@@ -107,7 +124,7 @@ const PointCounterfactualCard = ({
   } else if (mode === "graph") {
     return (
       <GraphPointCounterfactualCard
-        property={property}
+        house={house}
         pointCounterfactual={pointCounterfactual}
       />
     );
