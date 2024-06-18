@@ -2,7 +2,8 @@ import React from "react";
 import IntervalBar from "./IntervalBar";
 import NotImplementedCard from "./NotImplementedCard";
 import { formatFeatureForUI, getFeatureBounds } from "@/utils/featureProcessor";
-import featureInfos from "../../public/data/featureInfos.json";
+import featureInfos from "../../public/data/feature_infos.json";
+import { useAnswers } from "@/app/context/AnswersContext";
 
 const SentencesIntervalCard = ({ intervalExplanation }) => {
   return (
@@ -111,7 +112,16 @@ const TableIntervalCard = ({ intervalExplanation }) => {
   );
 };
 
-const IntervalCard = ({ house, intervalExplanation, mode = "table" }) => {
+const IntervalCard = () => {
+  const {
+    getCurrentHouse,
+    getCurrentIntervalCounterfactual,
+    userExplanationViewMode,
+  } = useAnswers();
+  const house = getCurrentHouse();
+  const intervalExplanation = getCurrentIntervalCounterfactual();
+  const mode = userExplanationViewMode;
+
   // Raise an error is the mode is not "sentences", "graph", or "table"
   if (!["sentences", "graph", "table"].includes(mode)) {
     throw new Error(

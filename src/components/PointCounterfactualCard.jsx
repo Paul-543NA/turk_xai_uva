@@ -1,7 +1,8 @@
 import React from "react";
 import PointBar from "./PointBar";
-import featureInfos from "../../public/data/featureInfos.json";
+import featureInfos from "../../public/data/feature_infos.json";
 import { formatFeatureForUI, getFeatureBounds } from "@/utils/featureProcessor";
+import { useAnswers } from "@/app/context/AnswersContext";
 
 const SentencesPointCounterfactualCard = ({ pointCounterfactual }) => {
   return (
@@ -103,11 +104,16 @@ const TablePointCounterfactualCard = ({ pointCounterfactual }) => {
   );
 };
 
-const PointCounterfactualCard = ({
-  house,
-  pointCounterfactual,
-  mode = "table",
-}) => {
+const PointCounterfactualCard = () => {
+  const {
+    getCurrentHouse,
+    getCurrentPointCounterfactual,
+    userExplanationViewMode,
+  } = useAnswers();
+  const house = getCurrentHouse();
+  const pointCounterfactual = getCurrentPointCounterfactual();
+  const mode = userExplanationViewMode;
+
   // Raise an error is the mode is not "sentences", "graph", or "table"
   if (!["sentences", "graph", "table"].includes(mode)) {
     throw new Error(

@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+
+      {
+        "name": "Next.js: Chrome",
+        "type": "pwa-chrome",
+        "request": "launch",
+        "url": "http://localhost:3000",
+        "webRoot": "${workspaceFolder}",
+        "sourceMaps": true,
+        "skipFiles": ["<node_internals>/**", "node_modules/**"]
+      },
+    {
+        "name": "Firefox launch",
+        "type": "firefox",
+        "request": "launch",
+        "reAttach": true,
+        "url": "http://localhost:3000", // URL of the app
+        "webRoot": "${workspaceFolder}",
+    }
+    ]
+  }

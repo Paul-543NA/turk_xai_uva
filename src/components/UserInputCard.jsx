@@ -1,11 +1,9 @@
 "use client";
 import React, { useState } from "react";
+import { useAnswers } from "@/app/context/AnswersContext";
 
-function UserInputCard({ onClickNext, phase = "0" }) {
-  // Check that phase has an appropriate value
-  if (!["0", "1", "2"].includes(phase)) {
-    throw new Error(`Invalid phase value: ${phase} not in ["0", "1", "2"]`);
-  }
+function UserInputCard() {
+  const { currentPhase, goToNextQuestion } = useAnswers();
 
   const [inputValue, setInputValue] = useState("");
   const [inputAIValue, setAIInputValue] = useState("");
@@ -40,7 +38,7 @@ function UserInputCard({ onClickNext, phase = "0" }) {
   };
 
   const handleClickNext = () => {
-    onClickNext();
+    goToNextQuestion();
     emptyInputs();
   };
 
@@ -73,7 +71,7 @@ function UserInputCard({ onClickNext, phase = "0" }) {
           placeholder=""
           value={inputValue}
           onChange={handleInputChange}
-          disabled={phase === "2" && followAI}
+          disabled={currentPhase === "2" && followAI}
         />
       </label>
     </label>
@@ -98,16 +96,14 @@ function UserInputCard({ onClickNext, phase = "0" }) {
     </label>
   );
 
-  console.log(" | phase", phase);
-
   return (
     <div className="card bg-base-100 shadow-xl m-4">
       <div className="card-body">
         {/* Show the toggle only in phase 2 */}
-        {phase === "2" ? TrustAIToggle : null}
+        {currentPhase === "2" ? TrustAIToggle : null}
 
         {/* Show AI input field in phase 1 */}
-        {phase === "1" ? AIInput : null}
+        {currentPhase === "1" ? AIInput : null}
 
         {/* Input field, it all should be disabled if "follow AI" is on*/}
         {TruthInput}
@@ -120,9 +116,9 @@ function UserInputCard({ onClickNext, phase = "0" }) {
           onClick={handleClickNext}
           className="btn btn-primary mt-4"
           disabled={
-            (phase === "0" && !isValid) ||
-            (phase === "1" && (!isValid || !isAIValid)) ||
-            (phase === "2" && (followAI ? false : !isValid))
+            (currentPhase === "0" && !isValid) ||
+            (currentPhase === "1" && (!isValid || !isAIValid)) ||
+            (currentPhase === "2" && (followAI ? false : !isValid))
           }
         >
           Next

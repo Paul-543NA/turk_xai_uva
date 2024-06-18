@@ -5,32 +5,32 @@ import PropertyCard from "../components/PropertyCard";
 import PointCounterfactualCard from "@/components/PointCounterfactualCard";
 import UserInputCard from "@/components/UserInputCard";
 
-import houses from "../../public/data/houses.json";
-import point_counterfactuals from "../../public/data/point_counterfactuals.json";
-import interval_counterfactuals from "../../public/data/interval_counterfactuals";
 import { useAnswers } from "./context/AnswersContext";
 import AddItem from "@/components/AddItem";
 import IntervalCard from "@/components/IntervalCard";
 
 // TODO: Add a modal to show the actual price of the house (or make it an input thing)
+// TODO: Implement the phase breadcrumbs
 
 export default function Home() {
-  const { userId, resetUserID, currentQuestion, goToNextQuestion } =
-    useAnswers();
-  const [explanationViewMode, setExplanationViewMode] = useState("sentences");
-  const [explanationType, setExplanationType] = useState("interval");
-  const [currentPhase, setCurrentPhase] = useState("0");
+  const answersContext = useAnswers();
+  const { userExplanationType: explanationType, currentPhase } = answersContext;
+  const progressValue = answersContext.getCurrentPhaseProgress() * 100;
+
+  // Log the explanations type
+  console.log("EXPTYPE - ", explanationType);
+  console.log(answersContext);
 
   const handleNext = () => {
-    goToNextQuestion();
+    // HACK: This is a temporary function, should be in the submit card eventually
   };
-
-  const progressValue = (currentQuestion / houses.length) * 100;
 
   const ExplanationSelector = (
     <select
       className="select select-bordered bg-warning text-warning-content"
-      onChange={(e) => setExplanationViewMode(e.target.value)}
+      onChange={(e) =>
+        answersContext.setUserExplanationViewMode(e.target.value)
+      }
     >
       <option value="sentences">Sentences</option>
       <option value="graph">Graph</option>
@@ -40,7 +40,7 @@ export default function Home() {
   const ExplanationTypeSelector = (
     <select
       className="select select-bordered bg-warning text-warning-content"
-      onChange={(e) => setExplanationType(e.target.value)}
+      onChange={(e) => answersContext.setUserExplanationType(e.target.value)}
     >
       <option value="point">Point explanation</option>
       <option value="interval">Interval explanation</option>
@@ -50,12 +50,21 @@ export default function Home() {
   const CurrentPhaseSelector = (
     <select
       className="select select-bordered bg-warning text-warning-content"
-      onChange={(e) => setCurrentPhase(e.target.value)}
+      onChange={(e) => answersContext.updatePhase(e.target.value)}
     >
       <option value="0">Phase 0</option>
       <option value="1">Phase 1</option>
       <option value="2">Phase 2</option>
     </select>
+  );
+  // Button that resets the user
+  const resetUserButton = (
+    <button
+      className="btn btn-secondary px-2 py-1"
+      onClick={answersContext.resetUser}
+    >
+      Reset user ID
+    </button>
   );
 
   return (
@@ -65,6 +74,7 @@ export default function Home() {
         <h1 className="text-4xl font-bold text-center mb-0">This is a title</h1>
         {/* Explanation view selection dropdown */}
         <div className="flex flex-row gap-4">
+          {resetUserButton}
           {CurrentPhaseSelector}
           {ExplanationTypeSelector}
           {ExplanationSelector}
@@ -74,8 +84,11 @@ export default function Home() {
           Reset user ID
         </button> */}
       </div>
+      <p>Explanation type {answersContext.userExplanationType}</p>
       <p>
-        {currentQuestion}/{houses.length} completed
+        {answersContext.currentQuestion}/{answersContext.currentQuestion}{" "}
+        completed
+        {/* HACK: Fix the above if need be */}
       </p>
       {/* <p> User id: {userId}</p> */}
 
@@ -88,34 +101,26 @@ export default function Home() {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {/* Property features card */}
         <div className="flex-grow space-y-2">
-          <PropertyCard house={houses[currentQuestion]} />
+          <PropertyCard />
         </div>
 
         {/* Counterfactual explanation card */}
         {explanationType === "point" || explanationType === "both" ? (
           <div className="flex-grow space-y-2">
-            <PointCounterfactualCard
-              house={houses[currentQuestion]}
-              pointCounterfactual={point_counterfactuals[currentQuestion]}
-              mode={explanationViewMode}
-            />
+            <PointCounterfactualCard />
           </div>
         ) : null}
 
         {/* Counterfactual explanation card */}
         {explanationType === "interval" || explanationType === "both" ? (
           <div className="flex-grow space-y-2">
-            <IntervalCard
-              house={houses[currentQuestion]}
-              intervalExplanation={interval_counterfactuals[currentQuestion]}
-              mode={explanationViewMode}
-            />
+            <IntervalCard />
           </div>
         ) : null}
 
         {/* Inputs for user answers */}
         <div className="col-span-1 md:col-span-2 xl:col-span-1">
-          <UserInputCard onClickNext={handleNext} phase={currentPhase} />
+          <UserInputCard />
         </div>
       </div>
     </main>
