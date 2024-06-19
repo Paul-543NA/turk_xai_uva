@@ -97,7 +97,7 @@ export default function Home() {
       {/* Instructions dropdown */}
       <div className="collapse bg-base-200 py-4">
         <input type="checkbox" />
-        <div className="collapse-title text-xl font-medium bg-neutral text-neutral-content">
+        <div className="collapse-title text-xl font-medium bg-base-content bg-opacity-15 text-base-content">
           Show instructions
         </div>
         <div className="collapse-content flex justify-center">

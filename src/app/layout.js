@@ -21,17 +21,19 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" data-theme="dark">
-      <AnswersProvider>
-        {/* <body className={inter.className}> */}
-        {/* {runtimeParams.singleViewMode ? (
+    <html lang="en" data-theme="light">
+      <div>
+        <AnswersProvider>
+          {/* <body className={inter.className}> */}
+          {/* {runtimeParams.singleViewMode ? (
             <IntervalBar lower={30} actual={50} upper={90} />
           ) : (
             { children }
           )}
         </body> */}
-        <body className={inter.className}>{children}</body>
-      </AnswersProvider>
+          <body className={inter.className}>{children}</body>
+        </AnswersProvider>
+      </div>
     </html>
   );
 }
