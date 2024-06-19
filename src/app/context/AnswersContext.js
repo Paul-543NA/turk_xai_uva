@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import houses from "../../../public/data/houses.json";
 import pointCounterfactuals from "../../../public/data/point_counterfactuals.json";
 import intervalCounterfactuals from "../../../public/data/interval_counterfactuals.json";
+import featureImportances from "../../../public/data/feature_importances.json";
 
 const AnswersContext = createContext();
 
@@ -62,8 +63,6 @@ export const AnswersProvider = ({ children }) => {
   // =============================================================================
 
   function getCurrentHouse() {
-    console.log(houses);
-    console.log(currentQuestion);
     return houses[currentQuestion];
   }
 
@@ -73,6 +72,17 @@ export const AnswersProvider = ({ children }) => {
 
   function getCurrentIntervalCounterfactual() {
     return intervalCounterfactuals[currentQuestion];
+  }
+
+  function getCurrentFeatureImportances() {
+    const importances = featureImportances[currentQuestion];
+    // Multiply the importances by 100 and round tjem to integers
+    return Object.fromEntries(
+      Object.entries(importances).map(([key, value]) => [
+        key,
+        Math.round(value * 100),
+      ])
+    );
   }
 
   function getCurrentPhaseProgress() {
@@ -153,7 +163,8 @@ export const AnswersProvider = ({ children }) => {
 
     // Initialize the explanation type
     const storedExplanationType =
-      localStorage.getItem("userExplanationType") || "point";
+      localStorage.getItem("userExplanationType") ||
+      getRandom(explanationTypes);
     setUserExplanationType(storedExplanationType);
 
     // Initialize the explanation view mode
@@ -233,6 +244,7 @@ export const AnswersProvider = ({ children }) => {
         getCurrentHouse,
         getCurrentPointCounterfactual,
         getCurrentIntervalCounterfactual,
+        getCurrentFeatureImportances,
         getCurrentPhaseProgress,
         goToNextQuestion,
       }}

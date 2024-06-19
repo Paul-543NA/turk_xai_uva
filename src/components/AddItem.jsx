@@ -18,7 +18,6 @@ const AddItem = () => {
       const docRef = await addDoc(collection(db, "testCollection"), {
         name: value,
       });
-      console.log("Document written with ID: ", docRef.id);
       setValue(""); // Clear the form
     } catch (e) {
       console.error("Error adding document: ", e);

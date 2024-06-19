@@ -60,11 +60,10 @@ export function getFeatureBounds(
   if (counterfactualInterval !== undefined) {
     const min = Math.min(actual, counterfactualInterval.min);
     const max = Math.max(actual, counterfactualInterval.max);
+    console.log("min", min, "max", max);
     return [0.9 * min, 1.1 * max];
   }
 
-  console.log("Actual", actual);
-  console.log("Counterfactual", counterfactualPoint);
   // At this point we have a point counterfactual with no set bounds
   const min = Math.min(actual, counterfactualPoint);
   const max = Math.max(actual, counterfactualPoint);

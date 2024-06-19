@@ -9,10 +9,12 @@ import { PhaseInstructions } from "../components/instructions";
 import { useAnswers } from "./context/AnswersContext";
 import AddItem from "@/components/AddItem";
 import IntervalCard from "@/components/IntervalCard";
-import { marked } from "marked";
+import FeatureImportanceCard from "@/components/featureImportanceCard";
 
-// TODO: Add a modal to show the actual price of the house (or make it an input thing)
-// TODO: Implement the phase breadcrumbs
+// TODO: Implement the feedback logic
+// TODO: Fix the page reload bug
+// TODO: Implement sentences and tables for feature importances
+// TODO: Fix the counterfactual out of bounds bug
 
 export default function Home() {
   const answersContext = useAnswers();
@@ -127,10 +129,25 @@ export default function Home() {
           </div>
         ) : null}
 
+        {/* Feature importance card */}
+        {explanationType === "featureImportance" ? (
+          <div className="flex-grow space-y-2">
+            <FeatureImportanceCard />
+          </div>
+        ) : null}
+
+        {/* Add item card */}
+
         {/* Inputs for user answers */}
-        <div className="col-span-1 md:col-span-2 xl:col-span-1">
-          <UserInputCard />
-        </div>
+        {explanationType === "none" ? (
+          <div className="col-span-1">
+            <UserInputCard />
+          </div>
+        ) : (
+          <div className="col-span-1 md:col-span-2 xl:col-span-1">
+            <UserInputCard />
+          </div>
+        )}
       </div>
     </main>
   );
