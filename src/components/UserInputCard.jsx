@@ -3,7 +3,13 @@ import React, { useState } from "react";
 import { useAnswers } from "@/app/context/AnswersContext";
 
 function UserInputCard() {
-  const { currentPhase, goToNextQuestion } = useAnswers();
+  const {
+    currentPhase,
+    goToNextQuestion,
+    showingFeedback,
+    getCurrentHousePrice,
+    getAIPrediction,
+  } = useAnswers();
 
   const [inputValue, setInputValue] = useState("");
   const [inputAIValue, setAIInputValue] = useState("");
@@ -38,8 +44,10 @@ function UserInputCard() {
   };
 
   const handleClickNext = () => {
-    goToNextQuestion();
-    emptyInputs();
+    const doReset = goToNextQuestion();
+    if (doReset) {
+      emptyInputs();
+    }
   };
 
   const TrustAIToggle = (
@@ -53,6 +61,7 @@ function UserInputCard() {
         className="toggle"
         checked={followAI}
         onChange={() => setFollowAI(!followAI)}
+        disabled={showingFeedback}
       />
     </label>
   );
@@ -71,7 +80,7 @@ function UserInputCard() {
           placeholder=""
           value={inputValue}
           onChange={handleInputChange}
-          disabled={currentPhase === "2" && followAI}
+          disabled={showingFeedback || (currentPhase === "2" && followAI)}
         />
       </label>
     </label>
@@ -91,6 +100,7 @@ function UserInputCard() {
           placeholder=""
           value={inputAIValue}
           onChange={handleAIInputChange}
+          disabled={showingFeedback}
         />
       </label>
     </label>
@@ -103,7 +113,17 @@ function UserInputCard() {
         {currentPhase === "2" ? TrustAIToggle : null}
 
         {/* Show AI input field in phase 1 */}
-        {currentPhase === "1" ? AIInput : null}
+        {currentPhase === "1" ? (
+          <>
+            {AIInput}
+            {showingFeedback ? (
+              <p className="p-4 pl-4">
+                The AI predicted the value of the property to be{" "}
+                <strong>£{getAIPrediction().toLocaleString()}</strong>.
+              </p>
+            ) : null}
+          </>
+        ) : null}
 
         {/* Input field, it all should be disabled if "follow AI" is on*/}
         {TruthInput}
@@ -112,17 +132,38 @@ function UserInputCard() {
         {/* In phase 0, it is disabled if the value input is not valid */}
         {/* In phase 1, it is disabled if any of the value/AI inputs are not valid */}
         {/* In phase 2, it is disabled if the value input is not valid or follow AI is on */}
-        <button
-          onClick={handleClickNext}
-          className="btn btn-primary mt-4"
-          disabled={
-            (currentPhase === "0" && !isValid) ||
-            (currentPhase === "1" && (!isValid || !isAIValid)) ||
-            (currentPhase === "2" && (followAI ? false : !isValid))
-          }
-        >
-          Next
-        </button>
+        {showingFeedback ? (
+          <>
+            <p className="p-4 pl-4">
+              The true value of the property is{" "}
+              <strong>£{getCurrentHousePrice().toLocaleString()}</strong>.
+            </p>
+
+            <button
+              onClick={handleClickNext}
+              className="btn btn-secondary mt-4"
+              disabled={
+                (currentPhase === "0" && !isValid) ||
+                (currentPhase === "1" && (!isValid || !isAIValid)) ||
+                (currentPhase === "2" && (followAI ? false : !isValid))
+              }
+            >
+              Next question
+            </button>
+          </>
+        ) : (
+          <button
+            onClick={handleClickNext}
+            className="btn btn-primary mt-4"
+            disabled={
+              (currentPhase === "0" && !isValid) ||
+              (currentPhase === "1" && (!isValid || !isAIValid)) ||
+              (currentPhase === "2" && (followAI ? false : !isValid))
+            }
+          >
+            Ok
+          </button>
+        )}
       </div>
     </div>
   );

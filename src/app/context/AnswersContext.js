@@ -54,6 +54,14 @@ export const AnswersProvider = ({ children }) => {
     localStorage.setItem("currentQuestion", currentQuestion);
   }, [currentQuestion]);
 
+  const [showingFeedback, setShowingFeedback] = useState(() => {
+    const saved = localStorage.getItem("showingFeedback");
+    return saved === "true" ? true : false;
+  });
+  useEffect(() => {
+    localStorage.setItem("showingFeedback", showingFeedback);
+  }, [showingFeedback]);
+
   const [answers, setAnswers] = useState(() => {
     return JSON.parse(localStorage.getItem("answers")) || {};
   });
@@ -95,6 +103,14 @@ export const AnswersProvider = ({ children }) => {
         Math.round(value * 100),
       ])
     );
+  }
+
+  function getCurrentHousePrice() {
+    return getCurrentHouse().SalePrice;
+  }
+
+  function getAIPrediction() {
+    return getCurrentHouse()["predicted-price"];
   }
 
   function getCurrentPhaseProgress() {
@@ -223,6 +239,11 @@ export const AnswersProvider = ({ children }) => {
   }, []);
 
   const goToNextQuestion = () => {
+    // The first step is to show feedback, then move on to the next question
+    if (!showingFeedback) {
+      setShowingFeedback(true);
+      return false;
+    }
     // Increase the question index by one
     const nextQuestion = currentQuestion + 1;
 
@@ -236,8 +257,10 @@ export const AnswersProvider = ({ children }) => {
         break;
       }
     }
+    setShowingFeedback(false);
     setCurrentQuestion(nextQuestion);
     setCurrentPhase(newPhase);
+    return true;
   };
 
   return (
@@ -253,11 +276,14 @@ export const AnswersProvider = ({ children }) => {
         currentQuestion,
         currentPhase,
         updatePhase,
+        showingFeedback,
         getCurrentHouse,
         getCurrentPointCounterfactual,
         getCurrentIntervalCounterfactual,
         getCurrentFeatureImportances,
         getCurrentPhaseProgress,
+        getCurrentHousePrice,
+        getAIPrediction,
         goToNextQuestion,
       }}
     >
