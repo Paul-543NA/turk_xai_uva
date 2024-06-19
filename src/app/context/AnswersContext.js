@@ -220,7 +220,6 @@ export const AnswersProvider = ({ children }) => {
 
   useEffect(() => {
     initUser();
-    logLocalStorage();
   }, []);
 
   const goToNextQuestion = () => {

@@ -42,7 +42,8 @@ const GraphIntervalCard = ({ house, intervalExplanation }) => {
     const [min, max] = getFeatureBounds(
       featureInfo,
       house[featureInfo.name],
-      intervalExplanation[featureInfo.name].max
+      undefined,
+      intervalExplanation[featureInfo.name]
     );
     return (
       <div className="py-2">

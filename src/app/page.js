@@ -13,7 +13,6 @@ import FeatureImportanceCard from "@/components/featureImportanceCard";
 
 // TODO: Implement the feedback logic
 // TODO: Implement sentences and tables for feature importances
-// TODO: Fix the counterfactual out of bounds bug
 
 export default function Home() {
   const answersContext = useAnswers();

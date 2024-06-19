@@ -38,6 +38,7 @@ export function getFeatureBounds(
       `Exactly one of counterfactualPoint or counterfactualInterval should be provided, got point ${counterfactualPoint} and interval ${counterfactualInterval}`
     );
   }
+
   // If the feature info has bounds, return them
   if (featureInfo.min !== null && featureInfo.max !== null) {
     let dataMin = actual;
@@ -58,9 +59,12 @@ export function getFeatureBounds(
 
   // Compute bounds for an interval counterfactual
   if (counterfactualInterval !== undefined) {
-    const min = Math.min(actual, counterfactualInterval.min);
+    const min = Math.min(
+      actual,
+      counterfactualInterval.min,
+      counterfactualInterval.max
+    );
     const max = Math.max(actual, counterfactualInterval.max);
-    console.log("min", min, "max", max);
     return [0.9 * min, 1.1 * max];
   }
 
