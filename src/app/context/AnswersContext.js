@@ -62,6 +62,8 @@ export const AnswersProvider = ({ children }) => {
   // =============================================================================
 
   function getCurrentHouse() {
+    console.log(houses);
+    console.log(currentQuestion);
     return houses[currentQuestion];
   }
 
@@ -161,7 +163,7 @@ export const AnswersProvider = ({ children }) => {
     setUserExplanationViewMode(storedExplanationViewMode);
 
     // Initialize the current question
-    let storedQuestion = localStorage.getItem("currentQuestion") || 0;
+    let storedQuestion = parseInt(localStorage.getItem("currentQuestion")) || 0;
     setCurrentQuestion(storedQuestion);
   }
 

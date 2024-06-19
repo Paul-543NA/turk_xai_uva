@@ -7,6 +7,8 @@ const PropertyCard = () => {
   const { getCurrentHouse } = useAnswers();
   const house = getCurrentHouse();
 
+  console.log(house);
+
   return (
     <div className="card bg-base-100 shadow-xl m-4">
       <div className="card-body">

@@ -4,10 +4,12 @@ import React, { useState } from "react";
 import PropertyCard from "../components/PropertyCard";
 import PointCounterfactualCard from "@/components/PointCounterfactualCard";
 import UserInputCard from "@/components/UserInputCard";
+import { PhaseInstructions } from "../components/instructions";
 
 import { useAnswers } from "./context/AnswersContext";
 import AddItem from "@/components/AddItem";
 import IntervalCard from "@/components/IntervalCard";
+import { marked } from "marked";
 
 // TODO: Add a modal to show the actual price of the house (or make it an input thing)
 // TODO: Implement the phase breadcrumbs
@@ -16,10 +18,6 @@ export default function Home() {
   const answersContext = useAnswers();
   const { userExplanationType: explanationType, currentPhase } = answersContext;
   const progressValue = answersContext.getCurrentPhaseProgress() * 100;
-
-  // Log the explanations type
-  console.log("EXPTYPE - ", explanationType);
-  console.log(answersContext);
 
   const handleNext = () => {
     // HACK: This is a temporary function, should be in the submit card eventually
@@ -68,7 +66,7 @@ export default function Home() {
   );
 
   return (
-    <main className="flex min-h-screen flex-col items-leading justify-between p-24">
+    <main className="flex min-h-screen flex-col items-leading justify-start p-24">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-4xl font-bold text-center mb-0">This is a title</h1>
@@ -86,8 +84,8 @@ export default function Home() {
       </div>
       <p>Explanation type {answersContext.userExplanationType}</p>
       <p>
-        {answersContext.currentQuestion}/{answersContext.currentQuestion}{" "}
-        completed
+        Phase {answersContext.currentPhase} -{answersContext.currentQuestion}
+        cases completed
         {/* HACK: Fix the above if need be */}
       </p>
       {/* <p> User id: {userId}</p> */}
@@ -97,11 +95,22 @@ export default function Home() {
         <progress className="progress w-full" value={progressValue} max={100} />
       </div>
 
+      {/* Instructions dropdown */}
+      <div className="collapse bg-base-200 py-4">
+        <input type="checkbox" />
+        <div className="collapse-title text-xl font-medium bg-neutral text-neutral-content">
+          Show instructions
+        </div>
+        <div className="collapse-content flex justify-center">
+          <PhaseInstructions />
+        </div>
+      </div>
+
       {/* Main content grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {/* Property features card */}
         <div className="flex-grow space-y-2">
-          <PropertyCard />
+          <PropertyCard className="flex mx-4" />
         </div>
 
         {/* Counterfactual explanation card */}
