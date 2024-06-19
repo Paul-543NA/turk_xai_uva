@@ -51,6 +51,67 @@ const FeatureImportanceBar = ({ actual, featureMax = 100 }) => {
   );
 };
 
+const FeatureImportanceSentencesCard = ({ featureImportances }) => {
+  /*
+
+    featureImportances: object with feature names as keys and feature importances as values
+
+    */
+  const continuousFeatures = featureInfos.filter(
+    (feature) => feature.type === "continuous"
+  );
+
+  const displayedText = continuousFeatures.map((feature, index) => {
+    const importance = featureImportances[feature.name];
+    if (index === continuousFeatures.length - 1) {
+      return `and ${feature.label} weighs ${importance}.`;
+    }
+    return `${feature.label} weighs ${importance}, `;
+  });
+
+  return (
+    <div className="card bg-base-100 shadow-xl m-4">
+      <div className="card-body">
+        <h2 className="card-title">Feature importances</h2>
+        <p>According to the model, on a scale of 0 to 100, {displayedText}</p>
+      </div>
+    </div>
+  );
+};
+
+const FeatureImportanceTableCard = ({ featureImportances }) => {
+  /*
+        featureImportances: object with feature names as keys and feature importances as values
+        */
+  const continuousFeatures = featureInfos.filter(
+    (feature) => feature.type === "continuous"
+  );
+
+  return (
+    <div className="card bg-base-100 shadow-xl m-4">
+      <div className="card-body">
+        <h2 className="card-title">Feature importances</h2>
+        <table className="table w-full">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Importance</th>
+            </tr>
+          </thead>
+          <tbody>
+            {continuousFeatures.map((feature, index) => (
+              <tr key={index}>
+                <td>{feature.label}</td>
+                <td>{featureImportances[feature.name]}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
 const FeatureImportanceGraphCard = ({ featureImportances }) => {
   /*
     featureImportances: object with feature names as keys and feature importances as values
@@ -83,10 +144,33 @@ const FeatureImportanceGraphCard = ({ featureImportances }) => {
 };
 
 const FeatureImportanceCard = () => {
-  const { getCurrentFeatureImportances } = useAnswers();
+  const { getCurrentFeatureImportances, userExplanationViewMode } =
+    useAnswers();
   const featureImportances = getCurrentFeatureImportances();
+  const mode = userExplanationViewMode;
 
-  return <FeatureImportanceGraphCard featureImportances={featureImportances} />;
+  // If the mode is "sentences", return the interval explanation as sentences
+  if (mode === "sentences") {
+    return (
+      <FeatureImportanceSentencesCard featureImportances={featureImportances} />
+    );
+  }
+  if (mode === "graph") {
+    return (
+      <FeatureImportanceGraphCard featureImportances={featureImportances} />
+    );
+  }
+  if (mode === "table") {
+    return (
+      <FeatureImportanceTableCard featureImportances={featureImportances} />
+    );
+  }
+  // Otherwise, return an error box with the message "Not implemented yet"
+  return (
+    <NotImplementedCard
+      message={`Feature importance card mode "${mode}" is not implemented yet`}
+    />
+  );
 };
 
 export default FeatureImportanceCard;

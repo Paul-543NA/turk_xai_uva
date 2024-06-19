@@ -12,7 +12,6 @@ import IntervalCard from "@/components/IntervalCard";
 import FeatureImportanceCard from "@/components/featureImportanceCard";
 
 // TODO: Implement the feedback logic
-// TODO: Implement sentences and tables for feature importances
 
 export default function Home() {
   const answersContext = useAnswers();
