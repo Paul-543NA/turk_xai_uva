@@ -142,11 +142,7 @@ function UserInputCard() {
             <button
               onClick={handleClickNext}
               className="btn btn-secondary mt-4"
-              disabled={
-                (currentPhase === "0" && !isValid) ||
-                (currentPhase === "1" && (!isValid || !isAIValid)) ||
-                (currentPhase === "2" && (followAI ? false : !isValid))
-              }
+              disabled={false}
             >
               Next question
             </button>
