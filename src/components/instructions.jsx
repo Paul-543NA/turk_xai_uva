@@ -50,15 +50,20 @@ export const PhaseInstructions = () => {
               </p>
 
               <ul>
-                <li>
-                  Counterfactuals: The explanation will show how each feature
-                  would have to change such that the predicted house price would
-                  be at least $100,000 more than the currently predicted price.
-                </li>
-                <li>
-                  Feature importance: The explanation shows the impact of each
-                  feature on the predicted price.
-                </li>
+                {["point", "interval"].includes(userExplanationType) ? (
+                  <li>
+                    Counterfactuals: The explanation will show how each feature
+                    would have to change such that the predicted house price
+                    would be at least $100,000 more than the currently predicted
+                    price.
+                  </li>
+                ) : null}
+                {["featureImportance"].includes(userExplanationType) ? (
+                  <li>
+                    Feature importance: The explanation shows the impact of each
+                    feature on the predicted price.
+                  </li>
+                ) : null}
               </ul>
             </>
           )}
@@ -88,15 +93,20 @@ export const PhaseInstructions = () => {
               </p>
 
               <ul>
-                <li>
-                  Counterfactuals: The explanation will show how each feature
-                  would have to change such that the predicted house price would
-                  be at least $100,000 more than the currently predicted price.
-                </li>
-                <li>
-                  Feature importance: The explanation shows the impact of each
-                  feature on the predicted price.
-                </li>
+                {["point", "interval"].includes(userExplanationType) ? (
+                  <li>
+                    Counterfactuals: The explanation will show how each feature
+                    would have to change such that the predicted house price
+                    would be at least $100,000 more than the currently predicted
+                    price.
+                  </li>
+                ) : null}
+                {["featureImportance"].includes(userExplanationType) ? (
+                  <li>
+                    Feature importance: The explanation shows the impact of each
+                    feature on the predicted price.
+                  </li>
+                ) : null}
               </ul>
             </>
           )}
