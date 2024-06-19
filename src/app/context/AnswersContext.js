@@ -18,33 +18,45 @@ export const AnswersProvider = ({ children }) => {
   // SECTION - STATE
   // =============================================================================
 
-  const [userId, setUserId] = useState(null);
+  const [userId, setUserId] = useState(() => {
+    return localStorage.getItem("userId") || uuidv4();
+  });
   useEffect(() => {
     localStorage.setItem("userId", userId);
   }, [userId]);
 
-  const [currentPhase, setCurrentPhase] = useState("0");
+  const [currentPhase, setCurrentPhase] = useState(() => {
+    return localStorage.getItem("currentPhase") || "0";
+  });
   useEffect(() => {
     localStorage.setItem("currentPhase", currentPhase);
   }, [currentPhase]);
 
-  const [userExplanationType, setUserExplanationType] = useState("interval");
+  const [userExplanationType, setUserExplanationType] = useState(() => {
+    return localStorage.getItem("userExplanationType") || "featureImportance";
+  });
   useEffect(() => {
+    let storedUserExplanationType = localStorage.getItem("userExplanationType");
     localStorage.setItem("userExplanationType", userExplanationType);
   }, [userExplanationType]);
 
-  const [userExplanationViewMode, setUserExplanationViewMode] =
-    useState("sentences");
+  const [userExplanationViewMode, setUserExplanationViewMode] = useState(() => {
+    return localStorage.getItem("userExplanationViewMode") || "sentences";
+  });
   useEffect(() => {
     localStorage.setItem("userExplanationViewMode", userExplanationViewMode);
   }, [userExplanationViewMode]);
 
-  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [currentQuestion, setCurrentQuestion] = useState(() => {
+    return parseInt(localStorage.getItem("currentQuestion")) || 0;
+  });
   useEffect(() => {
     localStorage.setItem("currentQuestion", currentQuestion);
   }, [currentQuestion]);
 
-  const [answers, setAnswers] = useState({});
+  const [answers, setAnswers] = useState(() => {
+    return JSON.parse(localStorage.getItem("answers")) || {};
+  });
   useEffect(() => {
     localStorage.setItem("answers", JSON.stringify(answers));
   }, [answers]);
@@ -208,6 +220,7 @@ export const AnswersProvider = ({ children }) => {
 
   useEffect(() => {
     initUser();
+    logLocalStorage();
   }, []);
 
   const goToNextQuestion = () => {

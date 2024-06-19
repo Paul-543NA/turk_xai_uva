@@ -12,7 +12,6 @@ import IntervalCard from "@/components/IntervalCard";
 import FeatureImportanceCard from "@/components/featureImportanceCard";
 
 // TODO: Implement the feedback logic
-// TODO: Fix the page reload bug
 // TODO: Implement sentences and tables for feature importances
 // TODO: Fix the counterfactual out of bounds bug
 
