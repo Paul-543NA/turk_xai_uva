@@ -7,7 +7,13 @@ export function formatFeatureForUI(featureInfo, value) {
     // For continuous features, return the value as a string
     if (featureInfo.name === "YearBuilt") {
       // Except for dates that remain the same
-      return value.toString();
+      return Math.round(value).toString();
+    }
+    // Convert sqft to sqm
+    const oneSqFtToSqm = 0.09290304;
+    const areaFeatures = ["LotArea", "1stFlrSF", "2ndFlrSF"];
+    if (areaFeatures.includes(featureInfo.name)) {
+      return `${Math.round(value * oneSqFtToSqm)}`;
     }
     return value.toLocaleString();
   }
@@ -73,16 +79,3 @@ export function getFeatureBounds(
   const max = Math.max(actual, counterfactualPoint);
   return [0.9 * min, 1.1 * max];
 }
-
-export const formatNumber = (value) => {
-  // Formats the number with thousands separators
-  // e.g. 1000000 -> 1,000,000
-  // Remove any non-digit characters except for the decimal point
-  const cleanValue = value.replace(/[^\d.]/g, "");
-  // Split the integer and decimal parts
-  const [integerPart, decimalPart] = cleanValue.split(".");
-  // Format the integer part with thousands separators
-  const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  // Reassemble the number
-  return decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger;
-};

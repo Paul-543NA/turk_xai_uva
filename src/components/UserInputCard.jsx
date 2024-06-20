@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { useAnswers } from "@/app/context/AnswersContext";
-import { formatNumber } from "@/utils/featureProcessor";
 
 function UserInputCard() {
   const {
@@ -10,6 +9,9 @@ function UserInputCard() {
     showingFeedback,
     getCurrentHousePrice,
     getAIPrediction,
+    getCurrencySymbol,
+    formatPriceForUI,
+    formatCurrencyInput,
   } = useAnswers();
 
   const [inputValue, setInputValue] = useState("");
@@ -20,7 +22,7 @@ function UserInputCard() {
 
   const handleInputChange = (e) => {
     const value = e.target.value;
-    const formattedValue = formatNumber(value);
+    const formattedValue = formatCurrencyInput(value);
     setInputValue(formattedValue);
 
     // Validate the input value (must be a positive number)
@@ -30,7 +32,7 @@ function UserInputCard() {
 
   const handleAIInputChange = (e) => {
     const value = e.target.value;
-    const formattedValue = formatNumber(value);
+    const formattedValue = formatCurrencyInput(value);
     setAIInputValue(formattedValue);
 
     // Validate the input value (must be a positive number)
@@ -76,7 +78,7 @@ function UserInputCard() {
         <span className="label-text">How much is this property worth?</span>
       </div>
       <label className="input input-bordered flex items-center gap-2">
-        £
+        {getCurrencySymbol()}
         <input
           type="text"
           className="grow"
@@ -96,7 +98,7 @@ function UserInputCard() {
         <span className="label-text">How much will the AI say?</span>
       </div>
       <label className="input input-bordered flex items-center gap-2">
-        £
+        {getCurrencySymbol()}
         <input
           type="text"
           className="grow"
@@ -130,7 +132,7 @@ function UserInputCard() {
             {showingFeedback ? (
               <p className="p-4 pl-4">
                 The AI predicted the value of the property to be{" "}
-                <strong>£{getAIPrediction().toLocaleString()}</strong>.
+                <strong>{formatPriceForUI(getAIPrediction())}</strong>.
               </p>
             ) : null}
           </>
@@ -146,15 +148,15 @@ function UserInputCard() {
         {showingFeedback && currentPhase !== "2" ? (
           <p className="p-4 pl-4">
             The true value of the property is{" "}
-            <strong>£{getCurrentHousePrice().toLocaleString()}</strong>.
+            <strong>{formatPriceForUI(getCurrentHousePrice())}</strong>.
           </p>
         ) : null}
 
         {showingFeedback && currentPhase === "2" ? (
           <p className="p-4 pl-4">
             The true value of the property is{" "}
-            <strong>£{getCurrentHousePrice().toLocaleString()}</strong> (you
-            were <strong>£{userPredictionError().toLocaleString()}</strong>{" "}
+            <strong>{formatPriceForUI(getCurrentHousePrice())}</strong> (you
+            were <strong>{formatPriceForUI(userPredictionError())}</strong>{" "}
             away).
           </p>
         ) : null}

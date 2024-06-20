@@ -17,7 +17,7 @@
     "name": "LotArea",
     "min": null,
     "max": null,
-    "label": "Lot size (sq ft)",
+    "label": "Lot size",
     "type": "continuous"
   },
   {
@@ -42,14 +42,14 @@
     "name": "1stFlrSF",
     "min": null,
     "max": null,
-    "label": "First floor area (sq ft)",
+    "label": "First floor area",
     "type": "continuous"
   },
   {
     "name": "2ndFlrSF",
     "min": null,
     "max": null,
-    "label": "Second floor area (sq ft)",
+    "label": "Second floor area",
     "type": "continuous"
   },
   {

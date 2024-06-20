@@ -69,6 +69,22 @@ export const AnswersProvider = ({ children }) => {
     localStorage.setItem("answers", JSON.stringify(answers));
   }, [answers]);
 
+  // Tracks the preferred area metric, can be "sqm" or "sqft"
+  const [preferredAreaMetric, setPreferredAreaMetric] = useState(() => {
+    return localStorage.getItem("preferredAreaMetric") || "sqft";
+  });
+  useEffect(() => {
+    localStorage.setItem("preferredAreaMetric", preferredAreaMetric);
+  }, [preferredAreaMetric]);
+
+  // Tracks the preferred currency, can be "GBP", "EUR", or "USD"
+  const [preferredCurrency, setPreferredCurrency] = useState(() => {
+    return localStorage.getItem("preferredCurrency") || "EUR";
+  });
+  useEffect(() => {
+    localStorage.setItem("preferredCurrency", preferredCurrency);
+  }, [preferredCurrency]);
+
   const explanationTypes = ["none", "point", "interval", "featureImportance"];
   const explanationViewModes = ["sentences", "graph", "table"];
   const phases = ["0", "1", "2"];
@@ -127,6 +143,98 @@ export const AnswersProvider = ({ children }) => {
       }
     }
     return 0;
+  }
+
+  function getCurrencySymbol() {
+    const symbols = {
+      GBP: "£",
+      EUR: "€",
+      USD: "$",
+    };
+    return symbols[preferredCurrency];
+  }
+
+  // ===========================================================================
+  // SECTION - UI FORMATTING
+  // ===========================================================================
+
+  function formatFeatureLabelForUI(featureInfo) {
+    // Format the feature label for display in the UI
+    // e.g. "1stFlrSF" -> "1st Floor Area (ft²)"
+    const areaFeatures = ["LotArea", "1stFlrSF", "2ndFlrSF"];
+    if (areaFeatures.includes(featureInfo.name)) {
+      console.log("preferredAreaMetric", preferredAreaMetric);
+      if (preferredAreaMetric === "sqm") {
+        return `${featureInfo.label} (m²)`;
+      }
+      return `${featureInfo.label} (ft²)`;
+    }
+    return featureInfo.label;
+  }
+
+  function formatFeatureForUI(featureInfo, value) {
+    if (featureInfo.type === "categorical") {
+      // For categorical features, return the category name
+      return featureInfo.valueLabels[value];
+    }
+    if (featureInfo.type === "continuous") {
+      // For continuous features, return the value as a string
+      if (featureInfo.name === "YearBuilt") {
+        // Except for dates that remain the same
+        return Math.round(value).toString();
+      }
+      // Convert sqft to sqm
+      const oneSqFtToSqm = 0.09290304;
+      const areaFeatures = ["LotArea", "1stFlrSF", "2ndFlrSF"];
+      if (areaFeatures.includes(featureInfo.name)) {
+        return formatCurrencyInput(Math.round(value * oneSqFtToSqm).toString());
+      }
+      return value.toLocaleString();
+    }
+
+    // For other types of values (e.g., dates), return the original value
+    return value;
+  }
+
+  function formatPriceForUI(price) {
+    // The original price is in GBP, turn it into the preferred currency
+    const conversionRates = {
+      GBP: 1,
+      EUR: 1.18,
+      USD: 1.27,
+    };
+    const convertedPrice = Math.round(
+      price / conversionRates[preferredCurrency]
+    );
+    const localeString = formatCurrencyInput(convertedPrice.toString());
+    if (preferredCurrency === "GBP") {
+      return `£${localeString}`;
+    }
+    if (preferredCurrency === "EUR") {
+      return `${localeString} €`;
+    }
+    if (preferredCurrency === "USD") {
+      return `$${localeString}`;
+    }
+  }
+
+  function formatCurrencyInput(value) {
+    // Formats the number with thousands separators
+    // e.g. 1000000 -> 1,000,000 or 1 000 000
+    // Remove any non-digit characters except for the decimal point
+    const split = preferredCurrency === "EUR" ? " " : ",";
+    const cleanValue = value.replace(/[^\d.]/g, "");
+    // Split the integer and decimal parts
+    const [integerPart, decimalPart] = cleanValue.split(".");
+    // Format the integer part with thousands separators
+    const formattedInteger = integerPart.replace(
+      /\B(?=(\d{3})+(?!\d))/g,
+      split
+    );
+    // Reassemble the number
+    return decimalPart
+      ? `${formattedInteger}.${decimalPart}`
+      : formattedInteger;
   }
 
   // =============================================================================
@@ -266,6 +374,7 @@ export const AnswersProvider = ({ children }) => {
   return (
     <AnswersContext.Provider
       value={{
+        // States and setters
         userId,
         userExplanationType,
         setUserExplanationType,
@@ -277,6 +386,7 @@ export const AnswersProvider = ({ children }) => {
         currentPhase,
         updatePhase,
         showingFeedback,
+        // Getters
         getCurrentHouse,
         getCurrentPointCounterfactual,
         getCurrentIntervalCounterfactual,
@@ -284,6 +394,13 @@ export const AnswersProvider = ({ children }) => {
         getCurrentPhaseProgress,
         getCurrentHousePrice,
         getAIPrediction,
+        getCurrencySymbol,
+        // UI formatting
+        formatFeatureLabelForUI,
+        formatFeatureForUI,
+        formatPriceForUI,
+        formatCurrencyInput,
+        // Actions
         goToNextQuestion,
       }}
     >
