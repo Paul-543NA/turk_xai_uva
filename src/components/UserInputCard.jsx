@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { useAnswers } from "@/app/context/AnswersContext";
+import { formatNumber } from "@/utils/featureProcessor";
 
 function UserInputCard() {
   const {
@@ -19,7 +20,8 @@ function UserInputCard() {
 
   const handleInputChange = (e) => {
     const value = e.target.value;
-    setInputValue(value);
+    const formattedValue = formatNumber(value);
+    setInputValue(formattedValue);
 
     // Validate the input value (must be a positive number)
     const number = parseFloat(value);
@@ -28,7 +30,8 @@ function UserInputCard() {
 
   const handleAIInputChange = (e) => {
     const value = e.target.value;
-    setAIInputValue(value);
+    const formattedValue = formatNumber(value);
+    setAIInputValue(formattedValue);
 
     // Validate the input value (must be a positive number)
     const number = parseFloat(value);
@@ -106,8 +109,16 @@ function UserInputCard() {
     </label>
   );
 
+  const userPredictionError = () => {
+    // If the user follows the AI, use the AI output
+    if (followAI) {
+      return Math.round(Math.abs(getCurrentHousePrice() - getAIPrediction()));
+    }
+    return Math.abs(getCurrentHousePrice() - parseFloat(inputValue));
+  };
+
   return (
-    <div className="card bg-base-100 shadow-xl m-4">
+    <div className="card bg-base-300 shadow-xl m-4">
       <div className="card-body">
         {/* Show the toggle only in phase 2 */}
         {currentPhase === "2" ? TrustAIToggle : null}
@@ -132,13 +143,24 @@ function UserInputCard() {
         {/* In phase 0, it is disabled if the value input is not valid */}
         {/* In phase 1, it is disabled if any of the value/AI inputs are not valid */}
         {/* In phase 2, it is disabled if the value input is not valid or follow AI is on */}
+        {showingFeedback && currentPhase !== "2" ? (
+          <p className="p-4 pl-4">
+            The true value of the property is{" "}
+            <strong>£{getCurrentHousePrice().toLocaleString()}</strong>.
+          </p>
+        ) : null}
+
+        {showingFeedback && currentPhase === "2" ? (
+          <p className="p-4 pl-4">
+            The true value of the property is{" "}
+            <strong>£{getCurrentHousePrice().toLocaleString()}</strong> (you
+            were <strong>£{userPredictionError().toLocaleString()}</strong>{" "}
+            away).
+          </p>
+        ) : null}
+
         {showingFeedback ? (
           <>
-            <p className="p-4 pl-4">
-              The true value of the property is{" "}
-              <strong>£{getCurrentHousePrice().toLocaleString()}</strong>.
-            </p>
-
             <button
               onClick={handleClickNext}
               className="btn btn-secondary mt-4"

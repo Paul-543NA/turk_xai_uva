@@ -8,7 +8,7 @@ const PropertyCard = () => {
   const house = getCurrentHouse();
 
   return (
-    <div className="card bg-base-100 shadow-xl m-4">
+    <div className="card bg-base-300 shadow-xl m-4">
       <div className="card-body">
         {featureInfos.map((feature, index) => (
           <div key={index}>

@@ -15,7 +15,11 @@ import FeatureImportanceCard from "@/components/featureImportanceCard";
 
 export default function Home() {
   const answersContext = useAnswers();
-  const { userExplanationType: explanationType, currentPhase } = answersContext;
+  const {
+    userExplanationType: explanationType,
+    currentPhase,
+    showingFeedback,
+  } = answersContext;
   const progressValue = answersContext.getCurrentPhaseProgress() * 100;
 
   const handleNext = () => {
@@ -57,12 +61,17 @@ export default function Home() {
   // Button that resets the user
   const resetUserButton = (
     <button
-      className="btn btn-secondary px-2 py-1"
+      className="btn btn-warning px-2 py-1"
       onClick={answersContext.resetUser}
     >
       Reset user ID
     </button>
   );
+
+  // Boolean to show the AI only after the reveal in phase 1 annd never in phase 2
+  const showAI =
+    explanationType !== "none" &&
+    (currentPhase === "0" || (currentPhase === "1" && showingFeedback));
 
   return (
     <main className="flex min-h-screen flex-col items-leading justify-start p-24">
@@ -72,9 +81,9 @@ export default function Home() {
         {/* Explanation view selection dropdown */}
         <div className="flex flex-row gap-4">
           {resetUserButton}
-          {CurrentPhaseSelector}
+          {/* {CurrentPhaseSelector}
           {ExplanationTypeSelector}
-          {ExplanationSelector}
+          {ExplanationSelector} */}
         </div>
 
         {/* <button className="btn btn-secondary px-2 py-1" onClick={resetUserID}>
@@ -113,21 +122,21 @@ export default function Home() {
         </div>
 
         {/* Counterfactual explanation card */}
-        {explanationType === "point" || explanationType === "both" ? (
+        {showAI && explanationType === "point" ? (
           <div className="flex-grow space-y-2">
             <PointCounterfactualCard />
           </div>
         ) : null}
 
         {/* Counterfactual explanation card */}
-        {explanationType === "interval" || explanationType === "both" ? (
+        {showAI && explanationType === "interval" ? (
           <div className="flex-grow space-y-2">
             <IntervalCard />
           </div>
         ) : null}
 
         {/* Feature importance card */}
-        {explanationType === "featureImportance" ? (
+        {showAI && explanationType === "featureImportance" ? (
           <div className="flex-grow space-y-2">
             <FeatureImportanceCard />
           </div>
@@ -136,7 +145,7 @@ export default function Home() {
         {/* Add item card */}
 
         {/* Inputs for user answers */}
-        {explanationType === "none" ? (
+        {!showAI ? (
           <div className="col-span-1">
             <UserInputCard />
           </div>

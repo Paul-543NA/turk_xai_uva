@@ -70,7 +70,7 @@ const FeatureImportanceSentencesCard = ({ featureImportances }) => {
   });
 
   return (
-    <div className="card bg-base-100 shadow-xl m-4">
+    <div className="card bg-base-300 shadow-xl m-4">
       <div className="card-body">
         <h2 className="card-title">Feature importances</h2>
         <p>According to the model, on a scale of 0 to 100, {displayedText}</p>
@@ -88,7 +88,7 @@ const FeatureImportanceTableCard = ({ featureImportances }) => {
   );
 
   return (
-    <div className="card bg-base-100 shadow-xl m-4">
+    <div className="card bg-base-300 shadow-xl m-4">
       <div className="card-body">
         <h2 className="card-title">Feature importances</h2>
         <table className="table w-full">
@@ -132,7 +132,7 @@ const FeatureImportanceGraphCard = ({ featureImportances }) => {
   };
 
   return (
-    <div className="card bg-base-100 shadow-xl m-4">
+    <div className="card bg-base-300 shadow-xl m-4">
       <div className="card-body">
         <h2 className="card-title">Feature importances</h2>
         {continuousFeatures.map((feature, index) => (

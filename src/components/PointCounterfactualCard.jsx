@@ -6,7 +6,7 @@ import { useAnswers } from "@/app/context/AnswersContext";
 
 const SentencesPointCounterfactualCard = ({ pointCounterfactual }) => {
   return (
-    <div className="card bg-base-100 shadow-xl m-4">
+    <div className="card bg-base-300 shadow-xl m-4">
       <div className="card-body">
         <h2 className="card-title">Point counterfactual</h2>
         <p>
@@ -54,7 +54,7 @@ const GraphPointCounterfactualCard = ({ house, pointCounterfactual }) => {
   };
 
   return (
-    <div className="card bg-base-100 shadow-xl m-4">
+    <div className="card bg-base-300 shadow-xl m-4">
       <div className="card-body">
         <h2 className="card-title">Point counterfactual</h2>
         {continuousFeatures.map((feature, index) => (
@@ -87,7 +87,7 @@ const TablePointCounterfactualCard = ({ pointCounterfactual }) => {
   ));
 
   return (
-    <div className="card bg-base-100 shadow-xl m-4">
+    <div className="card bg-base-300 shadow-xl m-4">
       <div className="card-body">
         <h2 className="card-title">Point counterfactual</h2>
         <table className="table table-zebra pt-3">
