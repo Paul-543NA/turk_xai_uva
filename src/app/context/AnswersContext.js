@@ -6,6 +6,8 @@ import houses from "../../../public/data/houses.json";
 import pointCounterfactuals from "../../../public/data/point_counterfactuals.json";
 import intervalCounterfactuals from "../../../public/data/interval_counterfactuals.json";
 import featureImportances from "../../../public/data/feature_importances.json";
+import db from "@/utils/firestore";
+import { doc, setDoc } from "firebase/firestore";
 
 const AnswersContext = createContext();
 
@@ -338,6 +340,17 @@ export const AnswersProvider = ({ children }) => {
     // });
   };
 
+  async function submitFormResponse(formResponse) {
+    // Send the form response to firebase
+    // The document ID is the user ID
+    try {
+      await setDoc(doc(db, "formResponses", userId), formResponse);
+    } catch (error) {
+      console.error("Error writing document: ", error);
+      throw error;
+    }
+  }
+
   // =============================================================================
   // SECTION - LIFE CYCLE METHODS
   // =============================================================================
@@ -400,6 +413,8 @@ export const AnswersProvider = ({ children }) => {
         formatFeatureForUI,
         formatPriceForUI,
         formatCurrencyInput,
+        // Database interactions
+        submitFormResponse,
         // Actions
         goToNextQuestion,
       }}

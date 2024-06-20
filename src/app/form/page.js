@@ -1,5 +1,7 @@
 "use client";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAnswers } from "../context/AnswersContext";
 
 export default function Form() {
   const [formData, setFormData] = useState({
@@ -14,6 +16,9 @@ export default function Form() {
   });
 
   const [errors, setErrors] = useState({});
+
+  const router = useRouter();
+  const { submitFormResponse } = useAnswers();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -41,7 +46,14 @@ export default function Form() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
-      console.log(formData);
+      submitFormResponse(formData)
+        .then(() => {
+          console.log("Form submitted successfully");
+          router.push("/");
+        })
+        .catch((error) => {
+          console.error("Error submitting form:", error);
+        });
     }
   };
 
