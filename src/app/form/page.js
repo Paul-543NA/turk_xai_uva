@@ -39,6 +39,12 @@ export default function Form() {
     if (!formData.houseBuying) {
       tempErrors.houseBuying = "Please select an option.";
     }
+    if (!formData.preferredCurrency) {
+      tempErrors.preferredCurrency = "Please select an option.";
+    }
+    if (!formData.preferredMetric) {
+      tempErrors.preferredMetric = "Please select an option.";
+    }
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
   };
@@ -117,7 +123,7 @@ export default function Form() {
             onChange={handleChange}
             className="range range-sm"
           />
-          <div className="w-full flex justify-between text-xs px-2">
+          <div className="w-full flex justify-between text-xs px-2 pt-2">
             <span>0 (nothing)</span>
             <span>10 (expert)</span>
           </div>
@@ -138,7 +144,7 @@ export default function Form() {
             onChange={handleChange}
             className="range range-sm"
           />
-          <div className="w-full flex justify-between text-xs px-2">
+          <div className="w-full flex justify-between text-xs px-2 pt-2">
             <span>0 (no experience)</span>
             <span>10 (expert)</span>
           </div>
@@ -194,30 +200,6 @@ export default function Form() {
         <div className="form-control">
           <label className="label">
             <span className="label-text">
-              Have you bought a house or actively considered buying a house in
-              the past five years?
-            </span>
-          </label>
-          <select
-            name="houseBuying"
-            value={formData.houseBuying}
-            onChange={handleChange}
-            className={`select select-bordered w-full max-w-xs ${
-              errors.houseBuying ? "select-error" : ""
-            }`}
-          >
-            <option value="">Select</option>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
-          </select>
-          {errors.houseBuying && (
-            <span className="text-red-500 text-sm">{errors.houseBuying}</span>
-          )}
-        </div>
-
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text">
               This task is about estimating prices, which currency are you most
               familiar with?
             </span>
@@ -231,9 +213,9 @@ export default function Form() {
             }`}
           >
             <option value="">Select</option>
-            <option value="usd">USD</option>
-            <option value="eur">EUR</option>
-            <option value="gbp">GBP</option>
+            <option value="USD">US Dollar ($)</option>
+            <option value="EUR">Euro (€)</option>
+            <option value="GBP">British pound (£)</option>
           </select>
           {errors.preferredCurrency && (
             <span className="text-red-500 text-sm">
@@ -257,9 +239,8 @@ export default function Form() {
             }`}
           >
             <option value="">Select</option>
-            <option value="cm">Centimeters</option>
-            <option value="m">Meters</option>
-            <option value="km">Kilometers</option>
+            <option value="sqft">Square feet (ft²)</option>
+            <option value="sqm">Square metres (m²)</option>
           </select>
           {errors.preferredMetric && (
             <span className="text-red-500 text-sm">

@@ -330,14 +330,11 @@ export const AnswersProvider = ({ children }) => {
     setAnswers(newAnswers);
     // localStorage.setItem("answers", JSON.stringify(newAnswers));
 
-    // Optionally send the answer to a server
-    // fetch("/api/saveAnswer", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({ userId, questionId, answer }),
-    // });
+    // Add the answers to firestore
+    // If there is already a document, add the new answers to it
+    try {
+      setDoc(doc(db, "formResponses", userId), newAnswers, { merge: true });
+    }
   };
 
   async function submitFormResponse(formResponse) {
