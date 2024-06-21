@@ -77,8 +77,10 @@ export default function Home() {
       open={showPhaseInfoModal}
     >
       <div className="modal-box bg-neutral text-neutral-content">
-        <h3 className="font-bold text-lg">Welcome to phase {currentPhase}!</h3>
-        <p className="py-4">Press ESC key or click the button below to close</p>
+        <h3 className="font-bold text-4xl">Welcome to phase {currentPhase}!</h3>
+        <div className="py-4">
+          <PhaseInstructions />
+        </div>
         <div className="modal-action">
           <button className="btn btn-info" onClick={closeModal}>
             Start phase {currentPhase}!
@@ -90,10 +92,10 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-leading justify-start p-24">
+      {phaseInformationModal}
+
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        {phaseInformationModal}
-
         <h1 className="text-4xl font-bold text-center mb-0">This is a title</h1>
         {/* Explanation view selection dropdown */}
         <div className="flex flex-row gap-4">
@@ -127,7 +129,9 @@ export default function Home() {
           Show instructions
         </div>
         <div className="collapse-content flex justify-center">
-          <PhaseInstructions />
+          <div className="py-4 pt-4">
+            <PhaseInstructions />
+          </div>
         </div>
       </div>
 

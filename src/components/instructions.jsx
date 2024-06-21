@@ -25,7 +25,7 @@ export const PhaseInstructions = () => {
   const { currentPhase, userExplanationType } = useAnswers();
 
   return (
-    <div className="prose !max-w-none prose-lg xl:prose-xl py-4 pt-4">
+    <div className="prose !max-w-none prose-lg xl:prose-xl">
       {currentPhase === "0" && (
         <>
           {userExplanationType === "none" ? (
