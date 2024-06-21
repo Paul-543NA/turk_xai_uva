@@ -11,7 +11,7 @@ import AddItem from "@/components/AddItem";
 import IntervalCard from "@/components/IntervalCard";
 import FeatureImportanceCard from "@/components/featureImportanceCard";
 
-// TODO: Implement the feedback logic
+// TODO: Implement the information modal
 
 export default function Home() {
   const answersContext = useAnswers();
@@ -19,12 +19,10 @@ export default function Home() {
     userExplanationType: explanationType,
     currentPhase,
     showingFeedback,
+    showPhaseInfoModal,
+    closeModal,
   } = answersContext;
   const progressValue = answersContext.getCurrentPhaseProgress() * 100;
-
-  const handleNext = () => {
-    // HACK: This is a temporary function, should be in the submit card eventually
-  };
 
   const ExplanationSelector = (
     <select
@@ -73,10 +71,29 @@ export default function Home() {
     explanationType !== "none" &&
     (currentPhase === "0" || (currentPhase === "1" && showingFeedback));
 
+  const phaseInformationModal = (
+    <dialog
+      className="modal modal-top p-10 bg-neutral bg-opacity-50"
+      open={showPhaseInfoModal}
+    >
+      <div className="modal-box bg-neutral text-neutral-content">
+        <h3 className="font-bold text-lg">Welcome to phase {currentPhase}!</h3>
+        <p className="py-4">Press ESC key or click the button below to close</p>
+        <div className="modal-action">
+          <button className="btn btn-info" onClick={closeModal}>
+            Start phase {currentPhase}!
+          </button>
+        </div>
+      </div>
+    </dialog>
+  );
+
   return (
     <main className="flex min-h-screen flex-col items-leading justify-start p-24">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
+        {phaseInformationModal}
+
         <h1 className="text-4xl font-bold text-center mb-0">This is a title</h1>
         {/* Explanation view selection dropdown */}
         <div className="flex flex-row gap-4">

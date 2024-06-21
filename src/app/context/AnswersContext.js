@@ -87,6 +87,10 @@ export const AnswersProvider = ({ children }) => {
     localStorage.setItem("preferredCurrency", preferredCurrency);
   }, [preferredCurrency]);
 
+  // State for whether or not to display the phase informations modal
+  // This is not a persistent state, the modal will appear on each page reload
+  const [showPhaseInfoModal, setShowPhaseInfoModal] = useState(true);
+
   const explanationTypes = ["none", "point", "interval", "featureImportance"];
   const explanationViewModes = ["sentences", "graph", "table"];
   const phases = ["0", "1", "2"];
@@ -381,11 +385,18 @@ export const AnswersProvider = ({ children }) => {
         break;
       }
     }
+    if (newPhase !== currentPhase) {
+      setShowPhaseInfoModal(true);
+    }
     setShowingFeedback(false);
     setCurrentQuestion(nextQuestion);
     setCurrentPhase(newPhase);
     return true;
   };
+
+  function closeModal() {
+    setShowPhaseInfoModal(false);
+  }
 
   return (
     <AnswersContext.Provider
@@ -416,6 +427,8 @@ export const AnswersProvider = ({ children }) => {
         formatFeatureForUI,
         formatPriceForUI,
         formatCurrencyInput,
+        showPhaseInfoModal,
+        closeModal,
         // Database interactions
         submitFormResponse,
         // Actions
