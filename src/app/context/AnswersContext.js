@@ -325,7 +325,8 @@ export const AnswersProvider = ({ children }) => {
   // SECTION - DATABASE INTERACTIONS
   // =============================================================================
 
-  const saveAnswer = (questionId, answer) => {
+  async function saveAnswer(questionId, answer) {
+    // TODO - This is a temporary broken function, upload the actual data to firestore
     const newAnswers = { ...answers, [questionId]: answer };
     setAnswers(newAnswers);
     // localStorage.setItem("answers", JSON.stringify(newAnswers));
@@ -333,9 +334,14 @@ export const AnswersProvider = ({ children }) => {
     // Add the answers to firestore
     // If there is already a document, add the new answers to it
     try {
-      setDoc(doc(db, "formResponses", userId), newAnswers, { merge: true });
+      await setDoc(doc(db, "formResponses", userId), newAnswers, {
+        merge: true,
+      });
+    } catch (error) {
+      console.error("Error writing document: ", error);
+      throw error;
     }
-  };
+  }
 
   async function submitFormResponse(formResponse) {
     // Send the form response to firebase
