@@ -54,7 +54,6 @@ export default function Form() {
     if (validate()) {
       submitFormResponse(formData)
         .then(() => {
-          console.log("Form submitted successfully");
           router.push("/");
         })
         .catch((error) => {

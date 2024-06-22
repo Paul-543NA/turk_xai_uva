@@ -16,81 +16,6 @@ export const useAnswers = () => {
 };
 
 export const AnswersProvider = ({ children }) => {
-  // =============================================================================
-  // SECTION - STATE
-  // =============================================================================
-
-  const [userId, setUserId] = useState(() => {
-    return localStorage.getItem("userId") || uuidv4();
-  });
-  useEffect(() => {
-    localStorage.setItem("userId", userId);
-  }, [userId]);
-
-  const [currentPhase, setCurrentPhase] = useState(() => {
-    return localStorage.getItem("currentPhase") || "0";
-  });
-  useEffect(() => {
-    localStorage.setItem("currentPhase", currentPhase);
-  }, [currentPhase]);
-
-  const [userExplanationType, setUserExplanationType] = useState(() => {
-    return localStorage.getItem("userExplanationType") || "featureImportance";
-  });
-  useEffect(() => {
-    let storedUserExplanationType = localStorage.getItem("userExplanationType");
-    localStorage.setItem("userExplanationType", userExplanationType);
-  }, [userExplanationType]);
-
-  const [userExplanationViewMode, setUserExplanationViewMode] = useState(() => {
-    return localStorage.getItem("userExplanationViewMode") || "sentences";
-  });
-  useEffect(() => {
-    localStorage.setItem("userExplanationViewMode", userExplanationViewMode);
-  }, [userExplanationViewMode]);
-
-  const [currentQuestion, setCurrentQuestion] = useState(() => {
-    return parseInt(localStorage.getItem("currentQuestion")) || 0;
-  });
-  useEffect(() => {
-    localStorage.setItem("currentQuestion", currentQuestion);
-  }, [currentQuestion]);
-
-  const [showingFeedback, setShowingFeedback] = useState(() => {
-    const saved = localStorage.getItem("showingFeedback");
-    return saved === "true" ? true : false;
-  });
-  useEffect(() => {
-    localStorage.setItem("showingFeedback", showingFeedback);
-  }, [showingFeedback]);
-
-  const [answers, setAnswers] = useState(() => {
-    return JSON.parse(localStorage.getItem("answers")) || {};
-  });
-  useEffect(() => {
-    localStorage.setItem("answers", JSON.stringify(answers));
-  }, [answers]);
-
-  // Tracks the preferred area metric, can be "sqm" or "sqft"
-  const [preferredAreaMetric, setPreferredAreaMetric] = useState(() => {
-    return localStorage.getItem("preferredAreaMetric") || "sqft";
-  });
-  useEffect(() => {
-    localStorage.setItem("preferredAreaMetric", preferredAreaMetric);
-  }, [preferredAreaMetric]);
-
-  // Tracks the preferred currency, can be "GBP", "EUR", or "USD"
-  const [preferredCurrency, setPreferredCurrency] = useState(() => {
-    return localStorage.getItem("preferredCurrency") || "EUR";
-  });
-  useEffect(() => {
-    localStorage.setItem("preferredCurrency", preferredCurrency);
-  }, [preferredCurrency]);
-
-  // State for whether or not to display the phase informations modal
-  // This is not a persistent state, the modal will appear on each page reload
-  const [showPhaseInfoModal, setShowPhaseInfoModal] = useState(true);
-
   const explanationTypes = ["none", "point", "interval", "featureImportance"];
   const explanationViewModes = ["sentences", "graph", "table"];
   const phases = ["0", "1", "2"];
@@ -99,6 +24,130 @@ export const AnswersProvider = ({ children }) => {
   function getRandom(list) {
     return list[Math.floor(Math.random() * list.length)];
   }
+
+  // =============================================================================
+  // SECTION - STATE
+  // =============================================================================
+
+  const [userId, setUserId] = useState(uuidv4());
+  const updateUserId = (newId) => {
+    setUserId(newId);
+    localStorage.setItem("userId", newId);
+  };
+
+  const [currentPhase, setCurrentPhase] = useState("0");
+  const updateCurrentPhase = (newPhase) => {
+    setCurrentPhase(newPhase);
+    localStorage.setItem("currentPhase", newPhase);
+  };
+
+  const [userExplanationType, setUserExplanationType] = useState("point");
+  const updateExplanationType = (newType) => {
+    setUserExplanationType(newType);
+    localStorage.setItem("userExplanationType", newType);
+  };
+
+  const [userExplanationViewMode, setUserExplanationViewMode] =
+    useState("sentences");
+  const updateExplanationViewMode = (newMode) => {
+    setUserExplanationViewMode(newMode);
+    localStorage.setItem("userExplanationViewMode", newMode);
+  };
+
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const updateCurrentQuestion = (newQuestion) => {
+    console.log("updateQuestion", newQuestion);
+    setCurrentQuestion(newQuestion);
+    localStorage.setItem("currentQuestion", newQuestion);
+  };
+
+  const [showingFeedback, setShowingFeedback] = useState(false);
+  const updateShowingFeedback = (newShowingFeedback) => {
+    setShowingFeedback(newShowingFeedback);
+    localStorage.setItem("showingFeedback", newShowingFeedback);
+  };
+
+  const [answers, setAnswers] = useState({});
+  const updateAnswers = (newAnswers) => {
+    setAnswers(newAnswers);
+    localStorage.setItem("answers", JSON.stringify(newAnswers));
+  };
+
+  // Tracks the preferred area metric, can be "sqm" or "sqft"
+  const [preferredAreaMetric, setPreferredAreaMetric] = useState("sqft");
+  const updatePreferredAreaMetric = (newMetric) => {
+    setPreferredAreaMetric(newMetric);
+    localStorage.setItem("preferredAreaMetric", newMetric);
+  };
+
+  // Tracks the preferred currency, can be "GBP", "EUR", or "USD"
+  const [preferredCurrency, setPreferredCurrency] = useState("EUR");
+  const updatePreferredCurrency = (newCurrency) => {
+    setPreferredCurrency(newCurrency);
+    localStorage.setItem("preferredCurrency", newCurrency);
+  };
+
+  // State for whether or not to display the phase informations modal
+  // This is not a persistent state, the modal will appear on each page reload
+  const [showPhaseInfoModal, setShowPhaseInfoModal] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // =============================================================================
+  // SECTION - USER INITIALIZATION
+  // =============================================================================
+
+  function initUser() {
+    setIsLoading(true);
+    // Initialize the uer ID
+    const storedUserId = localStorage.getItem("userId") ?? uuidv4();
+    updateUserId(storedUserId);
+
+    // Initialize the current phase
+    const storedPhase = localStorage.getItem("currentPhase") ?? "0";
+    updateCurrentPhase(storedPhase);
+
+    // Initialize the explanation type
+    const storedExplanationType =
+      localStorage.getItem("userExplanationType") ??
+      getRandom(explanationTypes);
+    updateExplanationType(storedExplanationType);
+
+    // Initialize the explanation view mode
+    let storedExplanationViewMode =
+      localStorage.getItem("userExplanationViewMode") ??
+      getRandom(explanationViewModes);
+    updateExplanationViewMode(storedExplanationViewMode);
+
+    // Initialize the current question
+    let storedQuestion = parseInt(
+      localStorage.getItem("currentQuestion") ?? "0"
+    );
+    updateCurrentQuestion(storedQuestion);
+
+    // Initialize the showing feedback state
+    let storedFeedback = localStorage.getItem("showingFeedback") === "true";
+    updateShowingFeedback(storedFeedback);
+
+    // Initialize the answers
+    let storedAnswers = JSON.parse(localStorage.getItem("answers")) ?? {};
+    updateAnswers(storedAnswers);
+
+    // Initialize the preferred area metric
+    let storedAreaMetric =
+      localStorage.getItem("preferredAreaMetric") ?? "sqft";
+    updatePreferredAreaMetric(storedAreaMetric);
+
+    // Initialize the preferred currency
+    let storedCurrency = localStorage.getItem("preferredCurrency") ?? "EUR";
+    updatePreferredCurrency(storedCurrency);
+
+    setIsLoading(false);
+  }
+
+  const resetUser = () => {
+    localStorage.clear();
+    initUser();
+  };
 
   // =============================================================================
   // SECTION - GETTERS
@@ -169,7 +218,6 @@ export const AnswersProvider = ({ children }) => {
     // e.g. "1stFlrSF" -> "1st Floor Area (ft²)"
     const areaFeatures = ["LotArea", "1stFlrSF", "2ndFlrSF"];
     if (areaFeatures.includes(featureInfo.name)) {
-      console.log("preferredAreaMetric", preferredAreaMetric);
       if (preferredAreaMetric === "sqm") {
         return `${featureInfo.label} (m²)`;
       }
@@ -277,8 +325,7 @@ export const AnswersProvider = ({ children }) => {
     if (!phases.includes(newPhase)) {
       throw new Error(`Invalid phase value: ${newPhase} not in ${phases}`);
     }
-    setCurrentPhase(newPhase);
-    localStorage.setItem("currentPhase", newPhase);
+
     // Set the current question to the first of this phase
     let newQuestion = 0;
     for (let i = 0; i < phases.length; i++) {
@@ -287,43 +334,11 @@ export const AnswersProvider = ({ children }) => {
       }
       newQuestion += questionsPerPhase[i];
     }
-    setCurrentQuestion(newQuestion);
+
+    // Update the state
+    updateCurrentPhase(newPhase);
+    updateCurrentQuestion(newQuestion);
   }
-
-  // =============================================================================
-  // SECTION - USER INITIALIZATION
-  // =============================================================================
-
-  function initUser() {
-    // Initialize the uer ID
-    const storedUserId = localStorage.getItem("userId") || uuidv4();
-    setUserId(storedUserId);
-
-    // Initialize the current phase
-    const storedPhase = localStorage.getItem("currentPhase") || "0";
-    setCurrentPhase(storedPhase);
-
-    // Initialize the explanation type
-    const storedExplanationType =
-      localStorage.getItem("userExplanationType") ||
-      getRandom(explanationTypes);
-    setUserExplanationType(storedExplanationType);
-
-    // Initialize the explanation view mode
-    let storedExplanationViewMode =
-      localStorage.getItem("userExplanationViewMode") ||
-      getRandom(explanationViewModes);
-    setUserExplanationViewMode(storedExplanationViewMode);
-
-    // Initialize the current question
-    let storedQuestion = parseInt(localStorage.getItem("currentQuestion")) || 0;
-    setCurrentQuestion(storedQuestion);
-  }
-
-  const resetUser = () => {
-    localStorage.clear();
-    initUser();
-  };
 
   // =============================================================================
   // SECTION - DATABASE INTERACTIONS
@@ -332,7 +347,7 @@ export const AnswersProvider = ({ children }) => {
   async function saveAnswer(questionId, answer) {
     // TODO - This is a temporary broken function, upload the actual data to firestore
     const newAnswers = { ...answers, [questionId]: answer };
-    setAnswers(newAnswers);
+    updateAnswers(newAnswers);
     // localStorage.setItem("answers", JSON.stringify(newAnswers));
 
     // Add the answers to firestore
@@ -369,7 +384,7 @@ export const AnswersProvider = ({ children }) => {
   const goToNextQuestion = () => {
     // The first step is to show feedback, then move on to the next question
     if (!showingFeedback) {
-      setShowingFeedback(true);
+      updateShowingFeedback(true);
       return false;
     }
     // Increase the question index by one
@@ -386,11 +401,11 @@ export const AnswersProvider = ({ children }) => {
       }
     }
     if (newPhase !== currentPhase) {
-      setShowPhaseInfoModal(true);
+      updateShowPhaseInfoModal(true);
     }
-    setShowingFeedback(false);
-    setCurrentQuestion(nextQuestion);
-    setCurrentPhase(newPhase);
+    updateShowingFeedback(false);
+    updateCurrentQuestion(nextQuestion);
+    updateCurrentPhase(newPhase);
     return true;
   };
 
@@ -404,7 +419,6 @@ export const AnswersProvider = ({ children }) => {
         // States and setters
         userId,
         userExplanationType,
-        setUserExplanationType,
         userExplanationViewMode,
         setUserExplanationViewMode,
         saveAnswer,
@@ -435,7 +449,13 @@ export const AnswersProvider = ({ children }) => {
         goToNextQuestion,
       }}
     >
-      {children}
+      {isLoading ? (
+        <div className="flex justify-center pt-8">
+          <span className="loading loading-spinner loading-lg"></span>
+        </div>
+      ) : (
+        children
+      )}
     </AnswersContext.Provider>
   );
 };
