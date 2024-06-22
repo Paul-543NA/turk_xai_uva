@@ -91,7 +91,7 @@ export default function Home() {
   );
 
   return (
-    <main className="flex min-h-screen flex-col items-leading justify-start p-24">
+    <main className="flex min-h-screen flex-col items-leading justify-start p-8 md: p:8 lg:p-24">
       {phaseInformationModal}
 
       {/* Header */}
