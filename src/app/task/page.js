@@ -73,7 +73,7 @@ export default function Home() {
 
   const phaseInformationModal = (
     <dialog
-      className="modal modal-top p-10 bg-neutral bg-opacity-50"
+      className="modal modal-top p-10 bg-neutral bg-opacity-50 pb-20 md:pb-0"
       open={showPhaseInfoModal}
     >
       <div className="modal-box bg-neutral text-neutral-content">
