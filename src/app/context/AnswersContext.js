@@ -1,11 +1,13 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { useRouter } from "next/navigation";
 
 import houses from "../../../public/data/houses.json";
 import pointCounterfactuals from "../../../public/data/point_counterfactuals.json";
 import intervalCounterfactuals from "../../../public/data/interval_counterfactuals.json";
 import featureImportances from "../../../public/data/feature_importances.json";
+
 import db from "@/utils/firestore";
 import { doc, setDoc } from "firebase/firestore";
 
@@ -91,6 +93,7 @@ export const AnswersProvider = ({ children }) => {
   // This is not a persistent state, the modal will appear on each page reload
   const [showPhaseInfoModal, setShowPhaseInfoModal] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
   // =============================================================================
   // SECTION - USER INITIALIZATION
@@ -389,6 +392,13 @@ export const AnswersProvider = ({ children }) => {
     }
     // Increase the question index by one
     const nextQuestion = currentQuestion + 1;
+    // Get the sum of questions per phase
+    const totalPossibleQuestions = questionsPerPhase.reduce((a, b) => a + b, 0);
+
+    if (nextQuestion >= totalPossibleQuestions) {
+      router.push("/finish");
+      return false;
+    }
 
     // If the new question is on a new phase, update the current phase
     let newPhase = null;
@@ -401,7 +411,7 @@ export const AnswersProvider = ({ children }) => {
       }
     }
     if (newPhase !== currentPhase) {
-      updateShowPhaseInfoModal(true);
+      setShowPhaseInfoModal(true);
     }
     updateShowingFeedback(false);
     updateCurrentQuestion(nextQuestion);

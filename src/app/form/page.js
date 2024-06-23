@@ -54,7 +54,7 @@ export default function Form() {
     if (validate()) {
       submitFormResponse(formData)
         .then(() => {
-          router.push("/");
+          router.push("/task");
         })
         .catch((error) => {
           console.error("Error submitting form:", error);
