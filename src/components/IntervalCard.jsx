@@ -7,7 +7,7 @@ import { useAnswers } from "@/app/context/AnswersContext";
 
 const SentencesIntervalCard = ({ intervalExplanation }) => {
   return (
-    <div className="card bg-base-300 shadow-xl m-4">
+    <div className="card bg-base-300 shadow-xl md:m-4">
       <div className="card-body">
         <h2 className="card-title">Interval Explanation</h2>
         <p>
@@ -60,7 +60,7 @@ const GraphIntervalCard = ({ house, intervalExplanation }) => {
   };
 
   return (
-    <div className="card bg-base-300 shadow-xl m-4">
+    <div className="card bg-base-300 shadow-xl md:m-4">
       <div className="card-body">
         <h2 className="card-title">Interval counterfactual</h2>
         {continuousFeatures.map((feature, index) => (
@@ -77,7 +77,7 @@ const TableIntervalCard = ({ intervalExplanation }) => {
   );
 
   return (
-    <div className="card bg-base-300 shadow-xl m-4">
+    <div className="card bg-base-300 shadow-xl md:m-4">
       <div className="card-body">
         <h2 className="card-title">Interval Explanation</h2>
         <table className="table table-compact">

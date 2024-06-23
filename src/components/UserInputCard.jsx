@@ -120,7 +120,7 @@ function UserInputCard() {
   };
 
   return (
-    <div className="card bg-base-300 shadow-xl m-4">
+    <div className="card bg-base-300 shadow-xl md:m-4">
       <div className="card-body">
         {/* Show the toggle only in phase 2 */}
         {currentPhase === "2" ? TrustAIToggle : null}

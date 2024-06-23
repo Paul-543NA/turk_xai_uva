@@ -90,13 +90,21 @@ export default function Home() {
     </dialog>
   );
 
+  const titleForPhase = {
+    0: "Guess the price",
+    1: "Guess the AI prediction",
+    2: "Team up with the AI",
+  };
+
   return (
-    <main className="flex min-h-screen flex-col items-leading justify-start p-8 md: p:8 lg:p-24">
+    <main className="flex min-h-screen flex-col items-leading justify-start p-4 md:p-8 lg:p-24">
       {phaseInformationModal}
 
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-4xl font-bold text-center mb-0">This is a title</h1>
+        <h1 className="text-4xl font-bold text-center mb-0">
+          {titleForPhase[currentPhase]}
+        </h1>
         {/* Explanation view selection dropdown */}
         <div className="flex flex-row gap-4">
           {resetUserButton}
@@ -109,7 +117,6 @@ export default function Home() {
           Reset user ID
         </button> */}
       </div>
-      <p>Explanation type {answersContext.userExplanationType}</p>
       <p>
         Phase {answersContext.currentPhase} -{answersContext.currentQuestion}
         cases completed
@@ -139,7 +146,7 @@ export default function Home() {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {/* Property features card */}
         <div className="flex-grow space-y-2">
-          <PropertyCard className="flex mx-4" />
+          <PropertyCard className="flex md:mx-4" />
         </div>
 
         {/* Counterfactual explanation card */}
