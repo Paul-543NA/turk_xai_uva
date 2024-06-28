@@ -11,6 +11,8 @@ import featureImportances from "../../../public/data/feature_importances.json";
 import db from "@/utils/firestore";
 import { doc, setDoc } from "firebase/firestore";
 
+import runtimeParams from "../../../public/runtimeParams.json";
+
 const AnswersContext = createContext();
 
 export const useAnswers = () => {
@@ -95,6 +97,12 @@ export const AnswersProvider = ({ children }) => {
     localStorage.setItem("didCompleteForm", newDidCompleteForm);
   };
 
+  const [userScore, setUserScore] = useState(0);
+  const updateUserScore = (newScore) => {
+    setUserScore(newScore);
+    localStorage.setItem("userScore", newScore);
+  };
+
   // State for whether or not to display the phase informations modal
   // This is not a persistent state, the modal will appear on each page reload
   const [showPhaseInfoModal, setShowPhaseInfoModal] = useState(true);
@@ -154,6 +162,10 @@ export const AnswersProvider = ({ children }) => {
     let storedDidCompleteForm =
       localStorage.getItem("didCompleteForm") === "true";
     updateDidCompleteForm(storedDidCompleteForm);
+
+    // Initialize the user score
+    let storedUserScore = parseFloat(localStorage.getItem("userScore") ?? "0");
+    updateUserScore(storedUserScore);
 
     setIsLoading(false);
   }
@@ -292,6 +304,16 @@ export const AnswersProvider = ({ children }) => {
     }
   }
 
+  const revertPriceToGBP = (price) => {
+    // The price is in the preferred currency, turn it back into GBP
+    const conversionRates = {
+      GBP: 1,
+      EUR: 1.18,
+      USD: 1.27,
+    };
+    return Math.round(price * conversionRates[preferredCurrency]);
+  };
+
   function formatCurrencyInput(value) {
     // Formats the number with thousands separators
     // e.g. 1000000 -> 1,000,000 or 1 000 000
@@ -341,6 +363,15 @@ export const AnswersProvider = ({ children }) => {
   // SECTION: SETTERS
   // ===========================================================================
 
+  function updateScore(userGuess) {
+    // Update the user score based on the current question
+    const correctPrice = getCurrentHousePrice();
+    const error = (100 * Math.abs(correctPrice - userGuess)) / correctPrice;
+    const clippedError = Math.min(error, 100);
+    const score = 100 - clippedError / questionsPerPhase[2];
+    updateUserScore(score);
+  }
+
   function updatePhase(newPhase) {
     if (!phases.includes(newPhase)) {
       throw new Error(`Invalid phase value: ${newPhase} not in ${phases}`);
@@ -369,10 +400,12 @@ export const AnswersProvider = ({ children }) => {
     // The structure is as follows:
     // questionAnswers: { userID: { questionId: answer } }
     try {
-      await setDoc(
-        doc(db, `questionAnswers/${userId}/answers`, getCurrentQuestionID()),
-        answer
-      );
+      if (runtimeParams.useFirestore) {
+        await setDoc(
+          doc(db, `questionAnswers/${userId}/answers`, getCurrentQuestionID()),
+          answer
+        );
+      }
     } catch (error) {
       console.error("Error writing document: ", error);
       throw error;
@@ -383,7 +416,9 @@ export const AnswersProvider = ({ children }) => {
     // Send the form response to firebase
     // The document ID is the user ID
     try {
-      await setDoc(doc(db, "formResponses", userId), formResponse);
+      if (runtimeParams.useFirestore) {
+        await setDoc(doc(db, "formResponses", userId), formResponse);
+      }
       updateDidCompleteForm(true);
     } catch (error) {
       console.error("Error writing document: ", error);
@@ -438,7 +473,7 @@ export const AnswersProvider = ({ children }) => {
     setShowPhaseInfoModal(false);
   }
 
-  console.log("- didCompleteForm", didCompleteForm);
+  // Log current score
 
   return (
     <AnswersContext.Provider
@@ -455,6 +490,8 @@ export const AnswersProvider = ({ children }) => {
         updatePhase,
         showingFeedback,
         didCompleteForm,
+        userScore,
+        revertPriceToGBP,
         // Getters
         getCurrentHouse,
         getCurrentPointCounterfactual,
@@ -474,6 +511,7 @@ export const AnswersProvider = ({ children }) => {
         // Database interactions
         submitFormResponse,
         // Actions
+        updateScore,
         goToNextQuestion,
       }}
     >

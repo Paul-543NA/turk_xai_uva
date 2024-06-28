@@ -1,3 +1,4 @@
 {
-  "singleViewMode": true
+  "singleViewMode": true,
+  "useFirestore": false
 }

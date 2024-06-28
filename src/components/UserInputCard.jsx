@@ -13,6 +13,8 @@ function UserInputCard() {
     formatPriceForUI,
     formatCurrencyInput,
     saveAnswer,
+    updateScore,
+    revertPriceToGBP,
   } = useAnswers();
 
   const [inputValue, setInputValue] = useState("");
@@ -24,14 +26,19 @@ function UserInputCard() {
   const [submitError, setSubmitError] = useState(null);
 
   const createUserAnswer = () => {
-    let userAnswer = { propertyValue: inputValue };
+    let userAnswer = {
+      propertyValue: getValueGBP(inputValue),
+    };
     if (currentPhase === "1") {
-      userAnswer = { ...userAnswer, aiPrediction: inputAIValue };
+      userAnswer = {
+        ...userAnswer,
+        aiPrediction: getValueGBP(inputAIValue),
+      };
     }
     if (currentPhase === "2") {
       userAnswer = {
         ...userAnswer,
-        aiPrediction: inputAIValue,
+        aiPrediction: getValueGBP(inputAIValue),
         followAI: followAI,
       };
     }
@@ -73,6 +80,12 @@ function UserInputCard() {
       const userAnswer = createUserAnswer();
       try {
         setSubmitting(true);
+        if (currentPhase === "2") {
+          const userGuess = followAI
+            ? getAIPrediction()
+            : getValueGBP(inputValue);
+          updateScore(userGuess);
+        }
         await saveAnswer(userAnswer);
       } catch (error) {
         submitErr = error.message;
@@ -151,7 +164,13 @@ function UserInputCard() {
     if (followAI) {
       return Math.round(Math.abs(getCurrentHousePrice() - getAIPrediction()));
     }
-    return Math.abs(getCurrentHousePrice() - parseFloat(inputValue));
+    return Math.abs(getCurrentHousePrice() - getValueGBP(inputValue));
+  };
+
+  const getValueGBP = () => {
+    // Remove " " and , from the input value
+    const inputCleaned = inputValue.replace(/ /g, "").replace(/,/g, "");
+    return revertPriceToGBP(parseFloat(inputCleaned));
   };
 
   return (

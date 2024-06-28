@@ -21,6 +21,7 @@ export default function Home() {
     showingFeedback,
     showPhaseInfoModal,
     closeModal,
+    userScore,
   } = answersContext;
   const progressValue = answersContext.getCurrentPhaseProgress() * 100;
 
@@ -96,12 +97,19 @@ export default function Home() {
     2: "Team up with the AI",
   };
 
+  const scoreText = () => {
+    if (currentPhase === "2") {
+      return `Your score: ${userScore.toFixed(2)}`;
+    }
+    return "";
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-leading justify-start p-4 md:p-8 lg:p-24">
       {phaseInformationModal}
 
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-start md:justify-between mb-4">
         <h1 className="text-4xl font-bold text-center mb-0">
           {titleForPhase[currentPhase]}
         </h1>
@@ -111,6 +119,7 @@ export default function Home() {
           {/* {CurrentPhaseSelector}
           {ExplanationTypeSelector}
           {ExplanationSelector} */}
+          <p className="text-4xl font-bold text-right">{scoreText()} </p>
         </div>
 
         {/* <button className="btn btn-secondary px-2 py-1" onClick={resetUserID}>
