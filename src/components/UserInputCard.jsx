@@ -12,6 +12,7 @@ function UserInputCard() {
     getCurrencySymbol,
     formatPriceForUI,
     formatCurrencyInput,
+    saveAnswer,
   } = useAnswers();
 
   const [inputValue, setInputValue] = useState("");
@@ -19,6 +20,23 @@ function UserInputCard() {
   const [isValid, setIsValid] = useState(false);
   const [isAIValid, setAIIsValid] = useState(false);
   const [followAI, setFollowAI] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
+
+  const createUserAnswer = () => {
+    let userAnswer = { propertyValue: inputValue };
+    if (currentPhase === "1") {
+      userAnswer = { ...userAnswer, aiPrediction: inputAIValue };
+    }
+    if (currentPhase === "2") {
+      userAnswer = {
+        ...userAnswer,
+        aiPrediction: inputAIValue,
+        followAI: followAI,
+      };
+    }
+    return userAnswer;
+  };
 
   const handleInputChange = (e) => {
     const value = e.target.value;
@@ -48,10 +66,27 @@ function UserInputCard() {
     setIsValid(false);
   };
 
-  const handleClickNext = () => {
-    const doReset = goToNextQuestion();
-    if (doReset) {
-      emptyInputs();
+  const handleClickNext = async () => {
+    let submitErr = null;
+
+    if (!showingFeedback) {
+      const userAnswer = createUserAnswer();
+      try {
+        setSubmitting(true);
+        await saveAnswer(userAnswer);
+      } catch (error) {
+        submitErr = error.message;
+      } finally {
+        setSubmitting(false);
+        setSubmitError(submitErr);
+      }
+    }
+    // Only execute if no error occurred
+    if (submitErr === null) {
+      const doReset = goToNextQuestion();
+      if (doReset) {
+        emptyInputs();
+      }
     }
   };
 
@@ -176,6 +211,7 @@ function UserInputCard() {
             onClick={handleClickNext}
             className="btn btn-primary mt-4"
             disabled={
+              submitting ||
               (currentPhase === "0" && !isValid) ||
               (currentPhase === "1" && (!isValid || !isAIValid)) ||
               (currentPhase === "2" && (followAI ? false : !isValid))
@@ -184,6 +220,12 @@ function UserInputCard() {
             Ok
           </button>
         )}
+        {/* Error message if submission failed */}
+        {submitError ? (
+          <p className="text-error mt-4">
+            {submitError} - Please try again later.
+          </p>
+        ) : null}
       </div>
     </div>
   );

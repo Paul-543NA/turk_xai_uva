@@ -1,13 +1,22 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
+import { useAnswers } from "./context/AnswersContext";
 
 const Page = () => {
   const router = useRouter();
+  const { didCompleteForm } = useAnswers();
 
   const handleClick = () => {
-    router.push("/form");
+    if (didCompleteForm) {
+      router.push("/task");
+    } else {
+      router.push("/form");
+    }
   };
+
+  console.log("didCompleteForm", didCompleteForm);
+
   return (
     <div className="hero bg-base-200 min-h-screen">
       <div className="hero-content text-center">
@@ -20,7 +29,7 @@ const Page = () => {
             card!
           </p>
           <button className="btn btn-primary" onClick={handleClick}>
-            Get Started
+            {didCompleteForm ? "Continue" : "Get started"}
           </button>
         </div>
       </div>

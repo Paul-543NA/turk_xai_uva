@@ -3,8 +3,14 @@ import featureInfos from "../../public/data/feature_infos.json";
 import { useAnswers } from "@/app/context/AnswersContext";
 
 const PropertyCard = () => {
-  const { getCurrentHouse, formatFeatureLabelForUI, formatFeatureForUI } =
-    useAnswers();
+  const {
+    getCurrentHouse,
+    formatFeatureLabelForUI,
+    formatFeatureForUI,
+    currentPhase,
+    formatPriceForUI,
+    getAIPrediction,
+  } = useAnswers();
   const house = getCurrentHouse();
 
   return (
@@ -19,6 +25,13 @@ const PropertyCard = () => {
             </p>
           </div>
         ))}
+        {/* AI-predicted house price */}
+        {currentPhase === "0" ? (
+          <p className="mt-4">
+            The AI predicts the house to be:{" "}
+            <strong>{formatPriceForUI(getAIPrediction())}</strong>
+          </p>
+        ) : null}
       </div>
     </div>
   );

@@ -89,6 +89,12 @@ export const AnswersProvider = ({ children }) => {
     localStorage.setItem("preferredCurrency", newCurrency);
   };
 
+  const [didCompleteForm, setDidCompleteForm] = useState(false);
+  const updateDidCompleteForm = (newDidCompleteForm) => {
+    setDidCompleteForm(newDidCompleteForm);
+    localStorage.setItem("didCompleteForm", newDidCompleteForm);
+  };
+
   // State for whether or not to display the phase informations modal
   // This is not a persistent state, the modal will appear on each page reload
   const [showPhaseInfoModal, setShowPhaseInfoModal] = useState(true);
@@ -143,6 +149,11 @@ export const AnswersProvider = ({ children }) => {
     // Initialize the preferred currency
     let storedCurrency = localStorage.getItem("preferredCurrency") ?? "EUR";
     updatePreferredCurrency(storedCurrency);
+
+    // Initialize the did complete form state
+    let storedDidCompleteForm =
+      localStorage.getItem("didCompleteForm") === "true";
+    updateDidCompleteForm(storedDidCompleteForm);
 
     setIsLoading(false);
   }
@@ -211,6 +222,12 @@ export const AnswersProvider = ({ children }) => {
     };
     return symbols[preferredCurrency];
   }
+
+  const getCurrentQuestionID = () => {
+    // Returns a unique string identifying the question
+    // formatted as "p{phase}-q{question}"
+    return `p${currentPhase}-q${currentQuestion}`;
+  };
 
   // ===========================================================================
   // SECTION - UI FORMATTING
@@ -347,18 +364,15 @@ export const AnswersProvider = ({ children }) => {
   // SECTION - DATABASE INTERACTIONS
   // =============================================================================
 
-  async function saveAnswer(questionId, answer) {
-    // TODO - This is a temporary broken function, upload the actual data to firestore
-    const newAnswers = { ...answers, [questionId]: answer };
-    updateAnswers(newAnswers);
-    // localStorage.setItem("answers", JSON.stringify(newAnswers));
-
-    // Add the answers to firestore
-    // If there is already a document, add the new answers to it
+  async function saveAnswer(answer) {
+    // Add te last answer to the answers in the database.
+    // The structure is as follows:
+    // questionAnswers: { userID: { questionId: answer } }
     try {
-      await setDoc(doc(db, "formResponses", userId), newAnswers, {
-        merge: true,
-      });
+      await setDoc(
+        doc(db, `questionAnswers/${userId}/answers`, getCurrentQuestionID()),
+        answer
+      );
     } catch (error) {
       console.error("Error writing document: ", error);
       throw error;
@@ -370,6 +384,7 @@ export const AnswersProvider = ({ children }) => {
     // The document ID is the user ID
     try {
       await setDoc(doc(db, "formResponses", userId), formResponse);
+      updateDidCompleteForm(true);
     } catch (error) {
       console.error("Error writing document: ", error);
       throw error;
@@ -423,6 +438,8 @@ export const AnswersProvider = ({ children }) => {
     setShowPhaseInfoModal(false);
   }
 
+  console.log("- didCompleteForm", didCompleteForm);
+
   return (
     <AnswersContext.Provider
       value={{
@@ -437,6 +454,7 @@ export const AnswersProvider = ({ children }) => {
         currentPhase,
         updatePhase,
         showingFeedback,
+        didCompleteForm,
         // Getters
         getCurrentHouse,
         getCurrentPointCounterfactual,
