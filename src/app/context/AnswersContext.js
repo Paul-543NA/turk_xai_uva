@@ -7,6 +7,7 @@ import houses from "../../../public/data/houses.json";
 import pointCounterfactuals from "../../../public/data/point_counterfactuals.json";
 import intervalCounterfactuals from "../../../public/data/interval_counterfactuals.json";
 import featureImportances from "../../../public/data/feature_importances.json";
+import hiddenFeatures from "../../../public/data/hidden_features.json";
 
 import db from "@/utils/firestore";
 import { doc, setDoc } from "firebase/firestore";
@@ -257,6 +258,26 @@ export const AnswersProvider = ({ children }) => {
     return `p${currentPhase}-q${currentQuestion}`;
   };
 
+  const shouldFeatureBeHidden = (featureName) => {
+    // Returns true if the feature should be hidden for the current question
+    // Features are only hidden in phase 2, the names of features that should be hidden after a
+    // certain number of questions in phase 2 is stored in the hiddenFeatures.json file as:
+    // { nbQuestions: [features to hide] }
+    if (currentPhase !== "2") {
+      return false;
+    }
+    const questionsInP2SoFar =
+      currentQuestion - questionsPerPhase[0] - questionsPerPhase[1];
+    let featuresToHide = [];
+    // Iterate overt the keys of the hiddenFeatures object
+    for (const nbQuestions in hiddenFeatures) {
+      if (questionsInP2SoFar >= parseInt(nbQuestions) - 1) {
+        featuresToHide = featuresToHide.concat(hiddenFeatures[nbQuestions]);
+      }
+    }
+    return featuresToHide.includes(featureName);
+  };
+
   // ===========================================================================
   // SECTION - UI FORMATTING
   // ===========================================================================
@@ -275,6 +296,10 @@ export const AnswersProvider = ({ children }) => {
   }
 
   function formatFeatureForUI(featureInfo, value) {
+    // If the feature should be hidden, return ???
+    if (shouldFeatureBeHidden(featureInfo.name)) {
+      return "???";
+    }
     if (featureInfo.type === "categorical") {
       // For categorical features, return the category name
       return featureInfo.valueLabels[value];

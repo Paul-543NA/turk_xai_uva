@@ -1,0 +1,4 @@
+{
+  "2": ["LotArea", "YearBuilt"],
+  "4": ["LotArea", "YearBuilt", "FullBath", "BedroomAbvGr"]
+}
