@@ -442,6 +442,20 @@ export const AnswersProvider = ({ children }) => {
     }
   }
 
+  async function saveScoreToLeaderBoard(email) {
+    try {
+      if (runtimeParams.useFirestore) {
+        await setDoc(doc(db, "leaderBoard", userId), {
+          email: email,
+          score: userScore,
+        });
+      }
+    } catch (error) {
+      console.error("Error writing document: ", error);
+      throw error;
+    }
+  }
+
   // =============================================================================
   // SECTION - LIFE CYCLE METHODS
   // =============================================================================
@@ -526,6 +540,7 @@ export const AnswersProvider = ({ children }) => {
         closeModal,
         // Database interactions
         submitFormResponse,
+        saveScoreToLeaderBoard,
         // Actions
         updateScore,
         goToNextQuestion,

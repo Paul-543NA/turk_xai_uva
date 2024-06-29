@@ -15,8 +15,6 @@ const Page = () => {
     }
   };
 
-  console.log("didCompleteForm", didCompleteForm);
-
   return (
     <div className="hero bg-base-200 min-h-screen">
       <div className="hero-content text-center">
