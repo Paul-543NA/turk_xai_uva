@@ -1,4 +1,5 @@
 {
   "singleViewMode": true,
-  "useFirestore": false
+  "useFirestore": false,
+  "shuffleHouses": true
 }

@@ -103,6 +103,13 @@ export const AnswersProvider = ({ children }) => {
     localStorage.setItem("userScore", newScore);
   };
 
+  // Store a list of houses for the user to see
+  const [houseIndices, setHouseIndices] = useState([]);
+  const updateHouseIndices = (newIndices) => {
+    setHouseIndices(newIndices);
+    localStorage.setItem("houseIndices", JSON.stringify(newIndices));
+  };
+
   // State for whether or not to display the phase informations modal
   // This is not a persistent state, the modal will appear on each page reload
   const [showPhaseInfoModal, setShowPhaseInfoModal] = useState(true);
@@ -167,6 +174,15 @@ export const AnswersProvider = ({ children }) => {
     let storedUserScore = parseFloat(localStorage.getItem("userScore") ?? "0");
     updateUserScore(storedUserScore);
 
+    // Initialize the house indices
+    // If there is no value in the local storage, these indices are a shuffled version of the range of available houses
+    const housesRange = Array.from({ length: houses.length }, (_, i) => i);
+    let storedHouseIndices = JSON.parse(localStorage.getItem("houseIndices"));
+    if (!storedHouseIndices && runtimeParams.shuffleHouses) {
+      storedHouseIndices = housesRange.sort(() => Math.random() - 0.5);
+    }
+    updateHouseIndices(storedHouseIndices);
+
     setIsLoading(false);
   }
 
@@ -180,19 +196,19 @@ export const AnswersProvider = ({ children }) => {
   // =============================================================================
 
   function getCurrentHouse() {
-    return houses[currentQuestion];
+    return houses[houseIndices[currentQuestion]];
   }
 
   function getCurrentPointCounterfactual() {
-    return pointCounterfactuals[currentQuestion];
+    return pointCounterfactuals[houseIndices[currentQuestion]];
   }
 
   function getCurrentIntervalCounterfactual() {
-    return intervalCounterfactuals[currentQuestion];
+    return intervalCounterfactuals[houseIndices[currentQuestion]];
   }
 
   function getCurrentFeatureImportances() {
-    const importances = featureImportances[currentQuestion];
+    const importances = featureImportances[houseIndices[currentQuestion]];
     // Multiply the importances by 100 and round tjem to integers
     return Object.fromEntries(
       Object.entries(importances).map(([key, value]) => [

@@ -31,6 +31,17 @@ const Page = () => {
           <button className="btn btn-primary" onClick={handleClick}>
             {didCompleteForm ? "Continue" : "Get started"}
           </button>
+
+          {/* Button to clear the cache */}
+          {/* <button
+            className="btn btn-warning"
+            onClick={() => {
+              localStorage.clear();
+              router.refresh();
+            }}
+          >
+            Clear cache
+          </button> */}
         </div>
       </div>
     </div>
