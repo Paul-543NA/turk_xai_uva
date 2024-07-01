@@ -1,13 +1,15 @@
 "use client";
 import React, { useState } from "react";
 import { useAnswers } from "../context/AnswersContext";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
-  const { saveScoreToLeaderBoard } = useAnswers();
+  const { saveScoreToLeaderBoard, resetUser } = useAnswers();
   const [email, setEmail] = useState("");
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [feedbackType, setFeedbackType] = useState(""); // 'success' or 'error'
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,6 +24,13 @@ const Page = () => {
     }
   };
 
+  // Function to reset the experiment
+  const handleReset = () => {
+    localStorage.clear();
+    resetUser();
+    router.push("/");
+  };
+
   return (
     <div className="hero bg-base-200 min-h-screen">
       <div className="hero-content text-center">
@@ -33,29 +42,35 @@ const Page = () => {
             your email address below.
           </p>
           <div>
-            <form className="flex-col gap-2" onSubmit={handleSubmit}>
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="input input-bordered input-primary w-full max-w-xs"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                disabled={isSubmitted}
-              />
-              {!isSubmitted && (
-                <button type="submit" className="btn btn-primary mt-4">
-                  Submit
-                </button>
-              )}
-              {feedbackType === "success" ? (
-                <div className="mt-4 text-success">{feedbackMessage}</div>
-              ) : null}
-              {feedbackType === "error" ? (
-                <div className="mt-4 text-error">{feedbackMessage}</div>
-              ) : null}
+            <form className="gap-2" onSubmit={handleSubmit}>
+              <div className="flex flex-col gap-2">
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  className="input input-bordered input-primary w-full max-w-xs"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  disabled={isSubmitted}
+                />
+                {!isSubmitted && (
+                  <button type="submit" className="btn btn-primary mt-4">
+                    Submit
+                  </button>
+                )}
+                {feedbackType === "success" ? (
+                  <div className="mt-4 text-success">{feedbackMessage}</div>
+                ) : null}
+                {feedbackType === "error" ? (
+                  <div className="mt-4 text-error">{feedbackMessage}</div>
+                ) : null}
+              </div>
             </form>
           </div>
+          {/* Bytton to take the experu */}
+          <button onClick={handleReset} className="btn btn-warning mt-4 w-full">
+            Reset
+          </button>
         </div>
       </div>
     </div>
