@@ -12,6 +12,7 @@ function UserInputCard() {
     getCurrencySymbol,
     formatPriceForUI,
     formatCurrencyInput,
+    userScore,
     saveAnswer,
     updateScore,
     revertPriceToGBP,
@@ -40,6 +41,7 @@ function UserInputCard() {
         ...userAnswer,
         aiPrediction: getValueGBP(inputAIValue),
         followAI: followAI,
+        score: userScore,
       };
     }
     return userAnswer;

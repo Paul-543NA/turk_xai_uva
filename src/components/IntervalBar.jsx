@@ -30,18 +30,35 @@ const IntervalBar = ({
     />
   );
 
-  const IntervalEndLabel = ({ position, label }) => (
-    <p
-      className="absolute text-secondary opacity-100 z-10"
-      style={{
-        left: `${position}%`,
-        top: "0",
-        transform: "translateX(-50%)",
-      }}
-    >
-      {label}
-    </p>
-  );
+  const IntervalEndLabel = ({ position, label }) => {
+    let adjustedPosition = position;
+    let translationValue = 50;
+    // If the label is long, move it closer to the center
+    if (label.length > 7 && position > 75) {
+      adjustedPosition = 75;
+      translationValue = 0;
+    }
+    if (label.length > 11 && position > 60) {
+      adjustedPosition = 60;
+      translationValue = 0;
+    }
+    if (label.length > 13 && position > 55) {
+      adjustedPosition = 55;
+      translationValue = 0;
+    }
+    return (
+      <p
+        className="absolute text-secondary opacity-100 z-10"
+        style={{
+          left: `${adjustedPosition}%`,
+          top: "0",
+          transform: `translateX(-${translationValue}%)`,
+        }}
+      >
+        {label}
+      </p>
+    );
+  };
 
   const ProgressLabel = ({ position, label }) => (
     <p
@@ -70,15 +87,21 @@ const IntervalBar = ({
     <div className="w-full p-2">
       {/* Progress labels */}
       <div className="relative w-full bg-transparent rounded-full py-3">
-        <IntervalEndLabel position={scaledLower} label={lowerLabel} />
-        <ProgressLabel position={scaledActual} label={actualLabel} />
-        <IntervalEndLabel position={scaledUpper} label={upperLabel} />
+        <IntervalEndLabel
+          position={(scaledLower + scaledUpper) / 2}
+          label={`${lowerLabel} - ${upperLabel}`}
+        />
       </div>
 
       {/* Progress bar itself */}
       <div className="relative w-full bg-base-content bg-opacity-50 rounded-full h-4">
         <IntervalHighlightBar start={scaledLower} end={scaledUpper} />
         <ProgressCircle position={scaledActual} />
+      </div>
+
+      {/* Progress labels */}
+      <div className="relative w-full bg-transparent rounded-full py-3">
+        <ProgressLabel position={scaledActual} label={actualLabel} />
       </div>
     </div>
   );

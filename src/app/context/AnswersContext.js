@@ -314,7 +314,12 @@ export const AnswersProvider = ({ children }) => {
       const oneSqFtToSqm = 0.09290304;
       const areaFeatures = ["LotArea", "1stFlrSF", "2ndFlrSF"];
       if (areaFeatures.includes(featureInfo.name)) {
-        return formatCurrencyInput(Math.round(value * oneSqFtToSqm).toString());
+        if (preferredAreaMetric === "sqm") {
+          return formatCurrencyInput(
+            Math.round(value * oneSqFtToSqm).toString()
+          );
+        }
+        return formatCurrencyInput(Math.round(value).toString());
       }
       return value.toLocaleString();
     }
@@ -409,7 +414,7 @@ export const AnswersProvider = ({ children }) => {
     const correctPrice = getCurrentHousePrice();
     const error = (100 * Math.abs(correctPrice - userGuess)) / correctPrice;
     const clippedError = Math.min(error, 100);
-    const score = 100 - clippedError / questionsPerPhase[2];
+    const score = userScore - clippedError / questionsPerPhase[2];
     updateUserScore(score);
   }
 
