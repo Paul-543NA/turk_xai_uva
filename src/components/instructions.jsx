@@ -50,27 +50,21 @@ export const PhaseInstructions = () => {
                 receive feedback in the form of the true sales prices.
               </p>
                 {["point"].includes(userExplanationType) ? (
-                  // <li>
               <p>  
                 The explanation you will receive shows how each feature
                 would have to change such that the predicted house price
                 would be at least <strong>{formatPriceForUI(100000)} higher</strong> more than the currently predicted
                 price. 
-                {/* The grey dot shows the value of the property, and the <font color="#ec4899">pink</font> dot shows what it would have to change to. */}
               </p>
-                  // </li>
                 ) : null}
                 {["interval"].includes(userExplanationType) ? (
-                  // <li>
               <p>  
                 The explanation you will receive shows how each feature
                 would have to change such that the predicted house price
                 would be at least <strong>{formatPriceForUI(100000)} higher</strong> than the currently predicted
                 price. Specifically, for each feature you will see a possible range (minimum and maximum) 
                 of values that this feature could take on.
-                {/* The grey dot shows the value of the property, and the <font color="#ec4899">pink</font> dot shows what it would have to change to. */}
               </p>
-                  // </li>
                 ) : null}
                 {["featureImportance"].includes(userExplanationType) ? (
                   <p>
@@ -104,23 +98,29 @@ export const PhaseInstructions = () => {
                 will see the true sales prices, the AI’s prediction and an
                 explanation for this prediction.
               </p>
-
-              <ul>
-                {["point", "interval"].includes(userExplanationType) ? (
-                  <li>
-                    The explanation you will receive shows how each feature
-                    would have to change such that the predicted house price
-                    would be at least $100,000 more than the currently predicted
-                    price.
-                  </li>
+              {["point"].includes(userExplanationType) ? (
+              <p>  
+                The explanation you will receive shows how each feature
+                would have to change such that the predicted house price
+                would be at least <strong>{formatPriceForUI(100000)} higher</strong> more than the currently predicted
+                price. 
+              </p>
+                ) : null}
+                {["interval"].includes(userExplanationType) ? (
+              <p>  
+                The explanation you will receive shows how each feature
+                would have to change such that the predicted house price
+                would be at least <strong>{formatPriceForUI(100000)} higher</strong> than the currently predicted
+                price. Specifically, for each feature you will see a possible range (minimum and maximum) 
+                of values that this feature could take on.
+              </p>
                 ) : null}
                 {["featureImportance"].includes(userExplanationType) ? (
-                  <li>
+                  <p>
                     The explanation you will receive shows the impact of each
                     feature on the predicted price, ranging from 0 to 100.
-                  </li>
+                  </p>
                 ) : null}
-              </ul>
             </>
           )}
         </>
