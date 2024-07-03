@@ -1,0 +1,94 @@
+[
+  {
+    "name": "BldgType",
+    "min": null,
+    "max": null,
+    "label": "Building type",
+    "type": "categorical",
+    "valueLabels": {
+      "1Fam": "Single-family detached",
+      "2fmCon": "Two-family conversion",
+      "Duplex": "Duplex",
+      "Twnhs": "Townhouse inside unit",
+      "TwnhsE": "Townhouse end unit"
+    }
+  },
+  {
+    "name": "LotArea",
+    "min": null,
+    "max": null,
+    "label": "Lot size",
+    "type": "continuous"
+  },
+  {
+    "name": "Street",
+    "min": null,
+    "max": null,
+    "label": "Street type",
+    "type": "categorical",
+    "valueLabels": {
+      "Grvl": "Gravel",
+      "Pave": "Paved"
+    }
+  },
+  {
+    "name": "YearBuilt",
+    "min": 1850,
+    "max": 2024,
+    "label": "Construction date",
+    "type": "continuous"
+  },
+  {
+    "name": "1stFlrSF",
+    "min": null,
+    "max": null,
+    "label": "First floor area",
+    "type": "continuous"
+  },
+  {
+    "name": "2ndFlrSF",
+    "min": null,
+    "max": null,
+    "label": "Second floor area",
+    "type": "continuous"
+  },
+  {
+    "name": "FullBath",
+    "min": 0,
+    "max": 10,
+    "label": "Nr of bathrooms",
+    "type": "continuous"
+  },
+  {
+    "name": "BedroomAbvGr",
+    "min": 0,
+    "max": 10,
+    "label": "Nr of bedrooms",
+    "type": "continuous"
+  },
+  {
+    "name": "TotRmsAbvGrd",
+    "min": 0,
+    "max": 10,
+    "label": "Nr of rooms",
+    "type": "continuous"
+  },
+  {
+    "name": "Fireplaces",
+    "min": 0,
+    "max": 10,
+    "label": "Nr of fireplaces",
+    "type": "continuous"
+  },
+  {
+    "name": "CentralAir",
+    "min": null,
+    "max": null,
+    "label": "Central air conditioning",
+    "type": "categorical",
+    "valueLabels": {
+      "N": "No",
+      "Y": "Yes"
+    }
+  }
+]
