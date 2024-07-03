@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const IntervalBar = ({
+  featurename,
   lower,
   actual,
   upper,
@@ -73,38 +74,77 @@ const IntervalBar = ({
     </p>
   );
 
+  
   const scaledLower = ((lower - featureMin) / (featureMax - featureMin)) * 100;
   const scaledUpper = ((upper - featureMin) / (featureMax - featureMin)) * 100;
   const scaledActual =
     ((actual - featureMin) / (featureMax - featureMin)) * 100;
 
   // Case values to string and add the label suffix
-  const lowerLabel = lower.toString() + featureSuffix;
-  const actualLabel = actual.toString() + featureSuffix;
-  const upperLabel = upper.toString() + featureSuffix;
+  let lowerLabel, actualLabel, upperLabel;
+  const integerFeatures = ["buildyear", "bathrooms", "balcony"];
+  if (integerFeatures.includes(featurename)) {
+    lowerLabel = lower.toString() + featureSuffix;
+    actualLabel = actual.toString() + featureSuffix;
+    upperLabel = upper.toString() + featureSuffix;
+  } 
+  else {
+    lowerLabel = lower.toFixed(2).toString() + featureSuffix;
+    actualLabel = actual.toFixed(2).toString() + featureSuffix;
+    upperLabel = upper.toFixed(2).toString() + featureSuffix;
+  }
 
-  return (
-    <div className="w-full p-2">
-      {/* Progress labels */}
-      <div className="relative w-full bg-transparent rounded-full py-3">
-        <IntervalEndLabel
-          position={(scaledLower + scaledUpper) / 2}
-          label={`${lowerLabel} - ${upperLabel}`}
-        />
-      </div>
+  // const lowerLabel = lower.toString() + featureSuffix;
+  // const actualLabel = Math.round(actual).toString() + featureSuffix;
+  // const upperLabel = upper.toString() + featureSuffix;
 
-      {/* Progress bar itself */}
-      <div className="relative w-full bg-base-content bg-opacity-50 rounded-full h-4">
-        <IntervalHighlightBar start={scaledLower} end={scaledUpper} />
-        <ProgressCircle position={scaledActual} />
+  if (lower == upper) {
+    return (
+      <div className="w-full p-2">
+        {/* Progress labels */}
+        <div className="relative w-full bg-transparent rounded-full py-3">
+          <IntervalEndLabel
+            position={(scaledLower + scaledUpper) / 2}
+            label={`${lowerLabel}`}
+          />
+        </div>
+  
+        {/* Progress bar itself */}
+        <div className="relative w-full bg-base-content bg-opacity-50 rounded-full h-4">
+          <IntervalHighlightBar start={scaledLower} end={scaledUpper} />
+          <ProgressCircle position={scaledActual} />
+        </div>
+  
+        {/* Progress labels */}
+        <div className="relative w-full bg-transparent rounded-full py-3">
+          <ProgressLabel position={scaledActual} label={actualLabel} />
+        </div>
       </div>
+    )
+  }
+  else 
+    return (
+      <div className="w-full p-2">
+        {/* Progress labels */}
+        <div className="relative w-full bg-transparent rounded-full py-3">
+          <IntervalEndLabel
+            position={(scaledLower + scaledUpper) / 2}
+            label={`${lowerLabel} - ${upperLabel}`}
+          />
+        </div>
 
-      {/* Progress labels */}
-      <div className="relative w-full bg-transparent rounded-full py-3">
-        <ProgressLabel position={scaledActual} label={actualLabel} />
+        {/* Progress bar itself */}
+        <div className="relative w-full bg-base-content bg-opacity-50 rounded-full h-4">
+          <IntervalHighlightBar start={scaledLower} end={scaledUpper} />
+          <ProgressCircle position={scaledActual} />
+        </div>
+
+        {/* Progress labels */}
+        <div className="relative w-full bg-transparent rounded-full py-3">
+          <ProgressLabel position={scaledActual} label={actualLabel} />
+        </div>
       </div>
-    </div>
-  );
+    );
 };
 
 IntervalBar.propTypes = {
