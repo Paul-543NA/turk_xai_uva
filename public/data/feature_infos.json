@@ -1,94 +1,86 @@
 [
   {
-    "name": "BldgType",
+    "name": "zipcode",
     "min": null,
     "max": null,
-    "label": "Building type",
+    "label": "Zipcode",
     "type": "categorical",
     "valueLabels": {
-      "1Fam": "Single-family detached",
-      "2fmCon": "Two-family conversion",
-      "Duplex": "Duplex",
-      "Twnhs": "Townhouse inside unit",
-      "TwnhsE": "Townhouse end unit"
+      "3800": "3800",
+      "3525": "3525",
+      "3500": "3500",
+      "3528": "3528"
     }
   },
   {
-    "name": "LotArea",
+    "name": "energy-eff",
     "min": null,
     "max": null,
-    "label": "Lot size",
-    "type": "continuous"
-  },
-  {
-    "name": "Street",
-    "min": null,
-    "max": null,
-    "label": "Street type",
+    "label": "Energy efficiency",
     "type": "categorical",
     "valueLabels": {
-      "Grvl": "Gravel",
-      "Pave": "Paved"
+      "1": "Yes",
+      "0": "No"
     }
   },
   {
-    "name": "YearBuilt",
-    "min": 1850,
+    "name": "monument",
+    "min": null,
+    "max": null,
+    "label": "Monument status",
+    "type": "categorical",
+    "valueLabels": {
+      "1": "Yes",
+      "0": "No"
+    }
+  },
+  {
+    "name": "buildyear",
+    "min": 1900,
     "max": 2024,
     "label": "Construction date",
     "type": "continuous"
   },
   {
-    "name": "1stFlrSF",
+    "name": "lot-len",
     "min": null,
     "max": null,
-    "label": "First floor area",
+    "label": "Lot length",
     "type": "continuous"
   },
   {
-    "name": "2ndFlrSF",
+    "name": "lot-width",
     "min": null,
     "max": null,
-    "label": "Second floor area",
+    "label": "Lot width",
     "type": "continuous"
   },
   {
-    "name": "FullBath",
+    "name": "house-area",
+    "min": null,
+    "max": null,
+    "label": "Area of liveable space",
+    "type": "continuous"
+  },
+  {
+    "name": "garden-size",
+    "min": null,
+    "max": null,
+    "label": "Size of garden",
+    "type": "continuous"
+  },
+  {
+    "name": "bathrooms",
     "min": 0,
-    "max": 10,
+    "max": 5,
     "label": "Nr of bathrooms",
     "type": "continuous"
   },
   {
-    "name": "BedroomAbvGr",
+    "name": "balcony",
     "min": 0,
-    "max": 10,
-    "label": "Nr of bedrooms",
+    "max": 5,
+    "label": "Nr of balconies",
     "type": "continuous"
-  },
-  {
-    "name": "TotRmsAbvGrd",
-    "min": 0,
-    "max": 10,
-    "label": "Nr of rooms",
-    "type": "continuous"
-  },
-  {
-    "name": "Fireplaces",
-    "min": 0,
-    "max": 10,
-    "label": "Nr of fireplaces",
-    "type": "continuous"
-  },
-  {
-    "name": "CentralAir",
-    "min": null,
-    "max": null,
-    "label": "Central air conditioning",
-    "type": "categorical",
-    "valueLabels": {
-      "N": "No",
-      "Y": "Yes"
-    }
   }
 ]
