@@ -109,7 +109,7 @@ function UserInputCard() {
     <label className="form-control w-full max-w-xs">
       {/* Toggle to follow or not the AI */}
       <div className="label">
-        <span className="label-text">Follow AI:</span>
+        <span className="text-base">Follow AI:</span>
       </div>
       <input
         type="checkbox"
@@ -122,11 +122,13 @@ function UserInputCard() {
   );
 
   const TruthInput = (
-    <label className="form-control w-full max-w-xs">
+    <div>
+    <p><span className="text-base">What do you think is the true sales price of this property?</span></p>
+    <label className="form-control w-full max-w-xs mt-6">
       {/* Label and input field */}
-      <div className="label">
-        <span className="label-text">How much is this property worth?</span>
-      </div>
+      {/* <div className="label">
+        <span className="text-base">What do you think is the true sales price of this property?</span>
+      </div> */}
       <label className="input input-bordered flex items-center gap-2">
         {getCurrencySymbol()}
         <input
@@ -139,14 +141,17 @@ function UserInputCard() {
         />
       </label>
     </label>
+    </div>
   );
 
   const AIInput = (
-    <label className="form-control w-full max-w-xs">
+    <div>
+      <p><span className="text-base">What do you think is the sales price for this property according to the AI?</span></p>
+    <label className="form-control w-full max-w-xs mt-6">
       {/* Label and input field */}
-      <div className="label">
-        <span className="label-text">How much will the AI say?</span>
-      </div>
+      {/* <div className="label">
+        <span className="text-base">What do you think is the sales price for this property according to the AI?</span>
+      </div> */}
       <label className="input input-bordered flex items-center gap-2">
         {getCurrencySymbol()}
         <input
@@ -159,6 +164,7 @@ function UserInputCard() {
         />
       </label>
     </label>
+    </div>
   );
 
   const userPredictionError = () => {
@@ -185,8 +191,14 @@ function UserInputCard() {
         {currentPhase === "1" ? (
           <>
             {AIInput}
+            <span> </span>
+            <span> </span>
             {showingFeedback ? (
-              <p className="p-4 pl-4">
+              // <li className="p-4 pl-0">
+              //   The AI predicted the value of the property to be{" "}
+              //   <strong>{formatPriceForUI(getAIPrediction())}</strong>.
+              // </li>
+              <p className="p-4 pl-0">
                 The AI predicted the value of the property to be{" "}
                 <strong>{formatPriceForUI(getAIPrediction())}</strong>.
               </p>
@@ -202,7 +214,7 @@ function UserInputCard() {
         {/* In phase 1, it is disabled if any of the value/AI inputs are not valid */}
         {/* In phase 2, it is disabled if the value input is not valid or follow AI is on */}
         {showingFeedback && currentPhase !== "2" ? (
-          <p className="p-4 pl-4">
+          <p className="p-4 pl-0">
             The true value of the property is{" "}
             <strong>{formatPriceForUI(getCurrentHousePrice())}</strong>.
           </p>

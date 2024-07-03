@@ -1,11 +1,13 @@
 import React from "react";
 import featureInfos from "../../public/data/feature_infos.json";
 import { useAnswers } from "@/app/context/AnswersContext";
+import { formatFeatureLabelForUI } from "@/utils/featureProcessor";
+
 
 const PropertyCard = () => {
   const {
     getCurrentHouse,
-    formatFeatureLabelForUI,
+    // formatFeatureLabelForUI,
     formatFeatureForUI,
     currentPhase,
     formatPriceForUI,
@@ -27,7 +29,7 @@ const PropertyCard = () => {
         ))}
         {/* AI-predicted house price */}
         {currentPhase === "0" ? (
-          <p className="mt-4">
+          <p className="mt-6">
             The AI predicts the house to be:{" "}
             <strong>{formatPriceForUI(getAIPrediction())}</strong>
           </p>
