@@ -61,19 +61,29 @@ const FeatureImportanceSentencesCard = ({ featureImportances }) => {
     (feature) => feature.type === "continuous"
   );
 
-  const displayedText = continuousFeatures.map((feature, index) => {
-    const importance = featureImportances[feature.name];
-    if (index === continuousFeatures.length - 1) {
-      return `and ${feature.label} weighs ${importance}.`;
-    }
-    return `${feature.label} weighs ${importance}, `;
-  });
+  const sortedFeatures = continuousFeatures
+  .map(feature => ({
+    name: feature.name,
+    label: feature.label,
+    importance: featureImportances[feature.name]
+  }))
+  .sort((a, b) => b.importance - a.importance);
+
+  const paragraph = `According to the AI, on a scale from 0 to 100, ` +
+  `${sortedFeatures[0].label} weighs ${(sortedFeatures[0].importance)}, ` +
+  `${sortedFeatures[1].label} weighs ${(sortedFeatures[1].importance)}, and ` +
+  `${sortedFeatures[2].label} weighs ${(sortedFeatures[2].importance)}. ` +
+  `This is followed by ${sortedFeatures[3].label} with a weight of ${(sortedFeatures[3].importance)} ` +
+  `and ${sortedFeatures[4].label} with a weight of ${(sortedFeatures[4].importance)}. ` +
+  `${sortedFeatures[5].label} (weight ${(sortedFeatures[5].importance)}) ` +
+  `and ${sortedFeatures[6].label} (weight ${(sortedFeatures[6].importance)}) ` +
+  `had the least impact on the prediction.`;
 
   return (
     <div className="card bg-base-300 shadow-xl m-4">
       <div className="card-body">
         <h2 className="card-title">Feature importances</h2>
-        <p>According to the model, on a scale of 0 to 100, {displayedText}</p>
+        <p>{paragraph}</p>
       </div>
     </div>
   );
@@ -83,6 +93,7 @@ const FeatureImportanceTableCard = ({ featureImportances }) => {
   /*
         featureImportances: object with feature names as keys and feature importances as values
         */
+
   const continuousFeatures = featureInfos.filter(
     (feature) => feature.type === "continuous"
   );
@@ -91,11 +102,12 @@ const FeatureImportanceTableCard = ({ featureImportances }) => {
     <div className="card bg-base-300 shadow-xl m-4">
       <div className="card-body">
         <h2 className="card-title">Feature importances</h2>
-        <table className="table w-full">
+        <p>The explanation shows the importance of each feature towards the AI's prediction from 0 to 100.</p>
+        <table className="table w-full text-base">
           <thead>
             <tr>
-              <th>Feature</th>
-              <th>Importance</th>
+              <th className="text-base">Feature</th>
+              <th className="text-base">Importance</th>
             </tr>
           </thead>
           <tbody>
@@ -135,6 +147,7 @@ const FeatureImportanceGraphCard = ({ featureImportances }) => {
     <div className="card bg-base-300 shadow-xl m-4">
       <div className="card-body">
         <h2 className="card-title">Feature importances</h2>
+        <p>The explanation shows the importance of each feature towards the AI's prediction from 0 to 100.</p>
         {continuousFeatures.map((feature, index) => (
           <FeatureImportanceLine key={index} featureInfo={feature} />
         ))}
