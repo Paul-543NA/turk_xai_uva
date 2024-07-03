@@ -63,7 +63,7 @@ const PointBar = ({
 
   // Case values to string and add the label suffix
   const counterfactualLabel = counterfactual.toString() + featureSuffix;
-  const actualLabel = actual.toString() + featureSuffix;
+  const actualLabel = actual.toFixed(2).toString() + featureSuffix;
 
   return (
     <div className="w-full p-2">
@@ -73,7 +73,7 @@ const PointBar = ({
           position={scaledCounterfactual}
           label={counterfactualLabel}
         />
-        <ProgressLabel position={scaledActual} label={actualLabel} />
+        {/* <ProgressLabel position={scaledActual} label={actualLabel} /> */}
       </div>
 
       {/* Progress bar itself */}
@@ -81,6 +81,11 @@ const PointBar = ({
         <ProgressCircle position={scaledActual} />
         <CounterfactualCircle position={scaledCounterfactual} />
       </div>
+
+        {/* Progress labels */}
+          <div className="relative w-full bg-transparent rounded-full py-3">
+          <ProgressLabel position={scaledActual} label={actualLabel} />
+        </div>
     </div>
   );
 };

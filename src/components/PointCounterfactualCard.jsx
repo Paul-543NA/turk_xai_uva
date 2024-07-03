@@ -1,27 +1,48 @@
 import React from "react";
 import PointBar from "./PointBar";
 import featureInfos from "../../public/data/feature_infos.json";
-import { formatFeatureForUI, getFeatureBounds } from "@/utils/featureProcessor";
+import { formatFeatureForUI, getFeatureBounds, formatPriceForUI, formatFeatureLabelForUI } from "@/utils/featureProcessor";
 import { useAnswers } from "@/app/context/AnswersContext";
 
+
 const SentencesPointCounterfactualCard = ({ pointCounterfactual }) => {
+
+  let area = `m²`;
+  let distance = `m`;
+  if (localStorage.getItem("preferredAreaMetric") === 'sqft') {
+    area = `ft²`;
+    distance = `ft`;
+  }
+
+  let bathrooms = ``;
+  if (pointCounterfactual['bathrooms']===1) {
+    bathrooms = `bathroom`;
+  }
+  else bathrooms = `bathrooms`
+  ;
+
+  let balconies = ``;
+  if (pointCounterfactual['balcony']===1) {
+    balconies = `balcony`;
+  }
+  else balconies = `balconies`
+  ;
+
   return (
     <div className="card bg-base-300 shadow-xl md:m-4">
       <div className="card-body">
         <h2 className="card-title">Point counterfactual</h2>
         <p>
-          The property is a {pointCounterfactual["BldgType"]} on a{" "}
-          {pointCounterfactual["Street"]} street. It is{" "}
-          {pointCounterfactual["LotArea"]} sq ft big built in{" "}
-          {pointCounterfactual["YearBuilt"]} with{" "}
-          {pointCounterfactual["TotRmsAbvGrd"]} rooms in total including{" "}
-          {pointCounterfactual["BedroomAbvGr"]} bedrooms and{" "}
-          {pointCounterfactual["FullBath"]} bathrooms. The property has{" "}
-          {pointCounterfactual["Fireplaces"]} fireplaces and{" "}
-          {pointCounterfactual["CentralAir"] === "Y" ? "" : "no"} central air
-          conditioning. The floors are divided into{" "}
-          {pointCounterfactual["1stFlrSF"]} sq ft on the first floor and{" "}
-          {pointCounterfactual["2ndFlrSF"]} sq ft on the second floor.
+        The AI would have predicted a price of at least <strong>{formatPriceForUI(100000)} higher</strong> than the currently
+        predicted price if 
+        <ul className="list-disc list-inside leading-loose">
+        <li>the lot would be {formatFeatureForUI(4, pointCounterfactual['lot-len'])} {distance} long and {formatFeatureForUI(5, pointCounterfactual['lot-width'])} {distance} wide,</li>
+        <li>the living area would have {formatFeatureForUI(6, pointCounterfactual['house-area'])} {area}</li>
+        <li>and the garden would have a size of {formatFeatureForUI(7, pointCounterfactual['garden-size'])} {area}. </li>
+        </ul>
+        <span></span>
+
+        Besides, the house should have {pointCounterfactual['bathrooms']} {bathrooms} and {pointCounterfactual['balcony']} {balconies}.
         </p>
       </div>
     </div>
@@ -42,7 +63,7 @@ const GraphPointCounterfactualCard = ({ house, pointCounterfactual }) => {
 
     return (
       <div className="py-2">
-        <p>{feature.label}</p>
+        <p>{formatFeatureLabelForUI(feature)}</p>
         <PointBar
           counterfactual={pointCounterfactual[feature.name]}
           actual={house[feature.name]}
@@ -57,11 +78,14 @@ const GraphPointCounterfactualCard = ({ house, pointCounterfactual }) => {
     <div className="card bg-base-300 shadow-xl md:m-4">
       <div className="card-body">
         <h2 className="card-title">Point counterfactual</h2>
+        <p>The explanation shows what value each feature needs to take on such that the AI would predict the price to be at 
+          least <strong>{formatPriceForUI(100000)} higher</strong> than the currently predicted price.
+        </p>
         {continuousFeatures.map((feature, index) => (
           <FeatureBar key={index} feature={feature} />
         ))}
         {/* A div to explain the meaning of the colors */}
-        <div className="py-2">
+        <div className="py-6">
           <div className="flex flex-row gap-2 align-middle">
             <div className="bg-base-content w-6 h-6 rounded-full"></div>
             <p className="text-base-content">Actual value</p>
@@ -81,7 +105,7 @@ const TablePointCounterfactualCard = ({ pointCounterfactual }) => {
 
   const tableRows = continuousFeatures.map((feature, index) => (
     <tr key={index}>
-      <td>{feature.label}</td>
+      <td>{formatFeatureLabelForUI(feature)}</td>
       <td>{formatFeatureForUI(feature, pointCounterfactual[feature.name])}</td>
     </tr>
   ));
@@ -90,11 +114,14 @@ const TablePointCounterfactualCard = ({ pointCounterfactual }) => {
     <div className="card bg-base-300 shadow-xl md:m-4">
       <div className="card-body">
         <h2 className="card-title">Point counterfactual</h2>
-        <table className="table table-zebra pt-3">
+        <p>The explanation shows what value each feature needs to take on such that the AI would predict the price to be at 
+          least <strong>{formatPriceForUI(100000)} higher</strong> than the currently predicted price.
+        </p>
+        <table className="table table-compact pt-3 text-base">
           <thead>
             <tr>
-              <th>Feature</th>
-              <th>Value</th>
+              <th className="text-base">Feature</th>
+              <th className="text-base">Value</th>
             </tr>
           </thead>
           <tbody>{tableRows}</tbody>
