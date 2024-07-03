@@ -79,7 +79,8 @@ export const AnswersProvider = ({ children }) => {
   };
 
   // Tracks the preferred area metric, can be "sqm" or "sqft"
-  const [preferredAreaMetric, setPreferredAreaMetric] = useState("sqft");
+  // const [preferredAreaMetric, setPreferredAreaMetric] = useState("sqft");
+  const [preferredAreaMetric, setPreferredAreaMetric] = useState("sqm");
   const updatePreferredAreaMetric = (newMetric) => {
     setPreferredAreaMetric(newMetric);
     localStorage.setItem("preferredAreaMetric", newMetric);
@@ -159,7 +160,7 @@ export const AnswersProvider = ({ children }) => {
 
     // Initialize the preferred area metric
     let storedAreaMetric =
-      localStorage.getItem("preferredAreaMetric") ?? "sqft";
+      localStorage.getItem("preferredAreaMetric") ?? "sqm";
     updatePreferredAreaMetric(storedAreaMetric);
 
     // Initialize the preferred currency
@@ -220,7 +221,7 @@ export const AnswersProvider = ({ children }) => {
   }
 
   function getCurrentHousePrice() {
-    return getCurrentHouse().SalePrice;
+    return getCurrentHouse()["retailvalue"];
   }
 
   function getAIPrediction() {
@@ -285,15 +286,25 @@ export const AnswersProvider = ({ children }) => {
   function formatFeatureLabelForUI(featureInfo) {
     // Format the feature label for display in the UI
     // e.g. "1stFlrSF" -> "1st Floor Area (ft²)"
-    const areaFeatures = ["LotArea", "1stFlrSF", "2ndFlrSF"];
+    const preferredAreaMetric = localStorage.getItem("preferredAreaMetric");
+    const areaFeatures = ["house-area", "lot-len", "lot-width", "garden-size"];
     if (areaFeatures.includes(featureInfo.name)) {
       if (preferredAreaMetric === "sqm") {
         return `${featureInfo.label} (m²)`;
       }
       return `${featureInfo.label} (ft²)`;
     }
+
+    const distanceFeatures = ["lot-len", "lot-width"];
+    if (distanceFeatures.includes(featureInfo.name)) {
+      if (preferredAreaMetric == 'sqm') {
+        return `${featureInfo.label} (m)`;
+      }
+      else return `${featureInfo.label} (ft)`
+    }
     return featureInfo.label;
   }
+
 
   function formatFeatureForUI(featureInfo, value) {
     // If the feature should be hidden, return ???
@@ -306,21 +317,33 @@ export const AnswersProvider = ({ children }) => {
     }
     if (featureInfo.type === "continuous") {
       // For continuous features, return the value as a string
-      if (featureInfo.name === "YearBuilt") {
+      if (featureInfo.name === "buildyear") {
         // Except for dates that remain the same
         return Math.round(value).toString();
       }
       // Convert sqft to sqm
       const oneSqFtToSqm = 0.09290304;
-      const areaFeatures = ["LotArea", "1stFlrSF", "2ndFlrSF"];
+      const oneSqmToSqFt = 10.7639;
+      const areaFeatures = ["house-area", "garden-size"];
       if (areaFeatures.includes(featureInfo.name)) {
-        if (preferredAreaMetric === "sqm") {
-          return formatCurrencyInput(
-            Math.round(value * oneSqFtToSqm).toString()
-          );
+        if (preferredAreaMetric === "sqft") {
+          return (value * oneSqmToSqFt).toFixed(2).toString()
         }
-        return formatCurrencyInput(Math.round(value).toString());
+        else return `${value.toFixed(2)}`
+        // else return Math.round(value,2).toString();
       }
+      // Convert meters to feet
+      const one_ft_to_m = 0.3048
+      const one_m_to_ft = 3.281
+      const distanceFeatures = ["lot-len", "lot-width"];
+      if (distanceFeatures.includes(featureInfo.name)) {
+        if (preferredAreaMetric == 'sqft') {
+          return (value * one_m_to_ft).toFixed(2).toString()
+        }
+        else return `${value.toFixed(2)}`
+      }
+
+
       return value.toLocaleString();
     }
 
@@ -329,11 +352,11 @@ export const AnswersProvider = ({ children }) => {
   }
 
   function formatPriceForUI(price) {
-    // The original price is in GBP, turn it into the preferred currency
+    // The original price is in EUR, turn it into the preferred currency
     const conversionRates = {
-      GBP: 1,
-      EUR: 1.18,
-      USD: 1.27,
+      GBP: 0.85,
+      EUR: 1,
+      USD: 1.08,
     };
     const convertedPrice = Math.round(
       price / conversionRates[preferredCurrency]
@@ -353,9 +376,9 @@ export const AnswersProvider = ({ children }) => {
   const revertPriceToGBP = (price) => {
     // The price is in the preferred currency, turn it back into GBP
     const conversionRates = {
-      GBP: 1,
-      EUR: 1.18,
-      USD: 1.27,
+      GBP: 0.85,
+      EUR: 1,
+      USD: 1.08,
     };
     return Math.round(price * conversionRates[preferredCurrency]);
   };

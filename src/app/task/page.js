@@ -92,9 +92,9 @@ export default function Home() {
   );
 
   const titleForPhase = {
-    0: "Guess the price",
-    1: "Guess the AI prediction",
-    2: "Team up with the AI",
+    0: "What is the price of this property?",
+    1: "What is the price of this property, and what does the AI say?",
+    2: "Team up with the AI?",
   };
 
   const scoreText = () => {
@@ -115,11 +115,11 @@ export default function Home() {
         </h1>
         {/* Explanation view selection dropdown */}
         <div className="flex flex-row gap-4">
-          {/* {resetUserButton} */}
-          {/* {CurrentPhaseSelector}
+          {resetUserButton}
+          {CurrentPhaseSelector}
           {ExplanationTypeSelector}
-          {ExplanationSelector} */}
-          <p className="text-4xl font-bold text-right">{scoreText()} </p>
+          {/*{ExplanationSelector}*/ }
+          <p className="text-3xl font-bold text-right">{scoreText()} </p>
         </div>
 
         {/* <button className="btn btn-secondary px-2 py-1" onClick={resetUserID}>
@@ -127,8 +127,8 @@ export default function Home() {
         </button> */}
       </div>
       <p>
-        Phase {answersContext.currentPhase} - {answersContext.currentQuestion}{" "}
-        cases completed
+        {/* Phase {answersContext.currentPhase} - {answersContext.currentQuestion}{" "}
+        cases completed */}
         {/* HACK: Fix the above if need be */}
       </p>
       {/* <p> User id: {userId}</p> */}

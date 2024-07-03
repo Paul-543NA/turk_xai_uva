@@ -63,20 +63,21 @@ export default function Form() {
   };
 
   return (
-    <div className="container mx-auto text-xl p-4">
+    <div className="container mx-auto text-xl p-10 mt-10">
       <h1 className="text-4xl font-bold mb-4">Questionnaire</h1>
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-8">
         <div className="form-control">
           <label className="label">
-            <span className="label-text">Gender: How do you identify?</span>
+            <span className="text-base">Gender: How do you identify?</span>
           </label>
           <select
             name="gender"
             value={formData.gender}
             onChange={handleChange}
-            className={`select select-bordered w-full max-w-xs ${
+            className={`select select-bordered w-full max-w-xs text-base${
               errors.gender ? "select-error" : ""
             }`}
+          
           >
             <option value="">Select</option>
             <option value="female">Female</option>
@@ -91,14 +92,14 @@ export default function Form() {
 
         <div className="form-control">
           <label className="label">
-            <span className="label-text">How old are you?</span>
+            <span className="text-base">How old are you?</span>
           </label>
           <input
             type="number"
             name="age"
             value={formData.age}
             onChange={handleChange}
-            className={`input input-bordered w-full max-w-xs ${
+            className={`input input-bordered w-full max-w-xs text-base ${
               errors.age ? "input-error" : ""
             }`}
           />
@@ -109,7 +110,30 @@ export default function Form() {
 
         <div className="form-control">
           <label className="label">
-            <span className="label-text">
+            <span className="text-base">Which level of education have you completed?</span>
+          </label>
+          <select
+            name="education"
+            value={formData.education}
+            onChange={handleChange}
+            className={`select select-bordered w-full max-w-xs text-base ${
+              errors.education ? "select-error" : ""
+            }`}
+          >
+            <option value="">Select</option>
+            <option value="highschool">Highschool</option>
+            <option value="bachelors">Bachelors</option>
+            <option value="masters">Masters</option>
+            <option value="phd">PhD</option>
+          </select>
+          {errors.education && (
+            <span className="text-red-500 text-sm">{errors.education}</span>
+          )}
+        </div>
+
+        <div className="form-control">
+          <label className="label">
+            <span className="text-base">
               How would you rate your theoretical knowledge about AI?
             </span>
           </label>
@@ -130,7 +154,7 @@ export default function Form() {
 
         <div className="form-control">
           <label className="label">
-            <span className="label-text">
+            <span className="text-base">
               How would you rate your practical experience with AI?
             </span>
           </label>
@@ -151,7 +175,7 @@ export default function Form() {
 
         <div className="form-control">
           <label className="label">
-            <span className="label-text">
+            <span className="text-base">
               Do you work with or on AI on a daily basis?
             </span>
           </label>
@@ -159,7 +183,7 @@ export default function Form() {
             name="dailyAIWork"
             value={formData.dailyAIWork}
             onChange={handleChange}
-            className={`select select-bordered w-full max-w-xs ${
+            className={`select select-bordered w-full max-w-xs text-base ${
               errors.dailyAIWork ? "select-error" : ""
             }`}
           >
@@ -174,7 +198,7 @@ export default function Form() {
 
         <div className="form-control">
           <label className="label">
-            <span className="label-text">
+            <span className="text-base">
               Have you bought a house or actively considered buying a house in
               the past five years?
             </span>
@@ -183,7 +207,7 @@ export default function Form() {
             name="houseBuying"
             value={formData.houseBuying}
             onChange={handleChange}
-            className={`select select-bordered w-full max-w-xs ${
+            className={`select select-bordered w-full max-w-xs text-base ${
               errors.houseBuying ? "select-error" : ""
             }`}
           >
@@ -198,7 +222,7 @@ export default function Form() {
 
         <div className="form-control">
           <label className="label">
-            <span className="label-text">
+            <span className="text-base">
               This task is about estimating prices, which currency are you most
               familiar with?
             </span>
@@ -207,7 +231,7 @@ export default function Form() {
             name="preferredCurrency"
             value={formData.preferredCurrency}
             onChange={handleChange}
-            className={`select select-bordered w-full max-w-xs ${
+            className={`select select-bordered w-full max-w-xs text-base ${
               errors.preferredCurrency ? "select-error" : ""
             }`}
           >
@@ -225,7 +249,7 @@ export default function Form() {
 
         <div className="form-control">
           <label className="label">
-            <span className="label-text">
+            <span className="text-base">
               Which metric to you usually use to measure areas?
             </span>
           </label>
@@ -233,7 +257,7 @@ export default function Form() {
             name="preferredMetric"
             value={formData.preferredMetric}
             onChange={handleChange}
-            className={`select select-bordered w-full max-w-xs ${
+            className={`select select-bordered w-full max-w-xs text-base ${
               errors.preferredMetric ? "select-error" : ""
             }`}
           >
@@ -249,7 +273,7 @@ export default function Form() {
         </div>
 
         <div className="form-control">
-          <button type="submit" className="btn btn-primary my-8 mt-8">
+          <button type="submit" className="btn btn-primary my-8 mt-8 text-base">
             Submit
           </button>
         </div>
