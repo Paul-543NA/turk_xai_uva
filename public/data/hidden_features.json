@@ -1,4 +1,4 @@
 {
-  "2": ["LotArea", "YearBuilt"],
-  "4": ["LotArea", "YearBuilt", "FullBath", "BedroomAbvGr"]
+  "2": ["house-area", "lot-width"],
+  "4": ["house-area", "lot-width", "bathrooms", "lot-len"]
 }

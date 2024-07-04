@@ -1,32 +1,57 @@
 import React from "react";
 import IntervalBar from "./IntervalBar";
+import PointBar from "./PointBar";
 import NotImplementedCard from "./NotImplementedCard";
-import { formatFeatureForUI, getFeatureBounds } from "@/utils/featureProcessor";
+import { formatFeatureForUI, getFeatureBounds, formatPriceForUI, formatFeatureLabelForUI } from "@/utils/featureProcessor";
+// import { formatCurrencyInput } from "@/app/context/AnswersContext";
+// import { formatPriceForUI } from "@/app/context/AnswersContext";
 import featureInfos from "../../public/data/feature_infos.json";
+
 import { useAnswers } from "@/app/context/AnswersContext";
 
 const SentencesIntervalCard = ({ intervalExplanation }) => {
+  let area = `m²`;
+  let distance = `m`;
+  if (localStorage.getItem("preferredAreaMetric") === 'sqft') {
+    area = `ft²`;
+    distance = `ft`;
+  }
+  let bathrooms = ``;
+  if (intervalExplanation['bathrooms'].min != intervalExplanation['bathrooms'].max) {
+    bathrooms = `${intervalExplanation['bathrooms'].min} to ${intervalExplanation['bathrooms'].max} bathrooms`;
+  }
+  else if (intervalExplanation["bathrooms"].min === 1) {
+    bathrooms = `${intervalExplanation["bathrooms"].min} bathroom`;}
+  else {bathrooms = `${intervalExplanation["bathrooms"].min} bathrooms`}
+  ;
+  let balconies = ``;
+  if (intervalExplanation['balcony'].min != intervalExplanation['balcony'].max) {
+    balconies = `${intervalExplanation['balcony'].min} to ${intervalExplanation['balcony'].max} balconies`;
+  }
+  else if (intervalExplanation["balcony"].min === 1) {
+    balconies = `${intervalExplanation["balcony"].min} balcony`;}
+  else {balconies = `${intervalExplanation["balcony"].min} balconies`}
+  ; 
+
   return (
     <div className="card bg-base-300 shadow-xl md:m-4">
       <div className="card-body">
         <h2 className="card-title">Interval Explanation</h2>
+        {/* <p>The explanation shows in what range each feature needs to be so that the AI would predict the price to be ... higher than
+          the currently predicted price.
+        </p> */}
+        <span></span>
         <p>
-          The property should be {intervalExplanation["LotArea"].min} to{" "}
-          {intervalExplanation["LotArea"].max} sq ft (with{" "}
-          {intervalExplanation["1stFlrSF"].min} to{" "}
-          {intervalExplanation["1stFlrSF"].max} sq ft on the first floor, and{" "}
-          {intervalExplanation["1stFlrSF"].min} to{" "}
-          {intervalExplanation["1stFlrSF"].max} on the second). It should have{" "}
-          been build between {intervalExplanation["YearBuilt"].min} and{" "}
-          {intervalExplanation["YearBuilt"].max}, have{" "}
-          {intervalExplanation["TotRmsAbvGrd"].min} to{" "}
-          {intervalExplanation["TotRmsAbvGrd"].max} total rooms, of which{" "}
-          {intervalExplanation["BedroomAbvGr"].min} to{" "}
-          {intervalExplanation["BedroomAbvGr"].max} bedrooms and{" "}
-          {intervalExplanation["FullBath"].min} to{" "}
-          {intervalExplanation["FullBath"].max} bathrooms. It should also have{" "}
-          {intervalExplanation["Fireplaces"].min} to{" "}
-          {intervalExplanation["Fireplaces"].max} fireplaces.
+        The AI would have predicted a price of at least <strong>{formatPriceForUI(100000)} higher</strong> than the currently
+        predicted price, if
+        <ul className="list-disc list-inside leading-loose">
+        <li>the lot would be between {formatFeatureForUI(4, intervalExplanation['lot-len'].min)} {distance} and {intervalExplanation['lot-len'].max} {distance} long,</li>
+        <li>between {intervalExplanation['lot-width'].min} {distance} and {intervalExplanation['lot-width'].max} {distance} wide, </li>
+        <li>the living area would be between {intervalExplanation['house-area'].min} {area} and {intervalExplanation['house-area'].max} {area} big,</li>
+        <li>and the garden would have a size somewhere between {intervalExplanation['garden-size'].min} {area} and {intervalExplanation['garden-size'].max} {area}. </li>
+        </ul>
+        <span></span>
+        Besides, the house should have {bathrooms} and {balconies}.
         </p>
       </div>
     </div>
@@ -44,11 +69,12 @@ const GraphIntervalCard = ({ house, intervalExplanation }) => {
       house[featureInfo.name],
       undefined,
       intervalExplanation[featureInfo.name]
-    );
+    ); 
     return (
       <div className="py-2">
-        <p>{featureInfo.label}</p>
+        <p>{formatFeatureLabelForUI(featureInfo)}</p>
         <IntervalBar
+          featurename={featureInfo.name}
           lower={intervalExplanation[featureInfo.name].min}
           actual={house[featureInfo.name]}
           upper={intervalExplanation[featureInfo.name].max}
@@ -57,15 +83,28 @@ const GraphIntervalCard = ({ house, intervalExplanation }) => {
         />
       </div>
     );
+    
   };
 
   return (
     <div className="card bg-base-300 shadow-xl md:m-4">
       <div className="card-body">
         <h2 className="card-title">Interval counterfactual</h2>
+        <p>The explanation shows in what range each feature needs to be so that the AI would predict the price to be at 
+          least <strong>{formatPriceForUI(100000)} higher</strong> than the currently predicted price.
+        </p>
         {continuousFeatures.map((feature, index) => (
           <FeatureIntervalBar key={index} featureInfo={feature} />
         ))}
+        {/* A div to explain the meaning of the colors */}
+        <div className="py-6">
+          <div className="flex flex-row gap-2 align-middle">
+            <div className="bg-base-content w-6 h-6 rounded-full"></div>
+            <p className="text-base-content">Actual value</p>
+            <div className="bg-secondary w-12 h-6 rounded-full"></div>
+            <p className="text-secondary">Counterfactual range</p>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -80,18 +119,23 @@ const TableIntervalCard = ({ intervalExplanation }) => {
     <div className="card bg-base-300 shadow-xl md:m-4">
       <div className="card-body">
         <h2 className="card-title">Interval Explanation</h2>
-        <table className="table table-compact">
+        <p>The explanation shows in what range each feature needs to be so that the AI would predict the price to be at 
+          least <strong>{formatPriceForUI(100000)} higher</strong> than the currently predicted price.
+        </p>
+        <span></span>
+        <table className="table table-compact text-base">
           <thead>
             <tr>
-              <th>Feature</th>
-              <th>Min</th>
-              <th>Max</th>
+              <th className="text-base">Feature</th>
+              <th className="text-base">Min</th>
+              <th className="text-base">Max</th>
             </tr>
           </thead>
           <tbody>
             {continuousFeatures.map((feature) => (
               <tr key={feature}>
-                <td>{feature.label}</td>
+                {/* <td>{feature.label}</td> */}
+                <td>{formatFeatureLabelForUI(feature)}</td>
                 <td>
                   {formatFeatureForUI(
                     feature,

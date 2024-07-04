@@ -1,13 +1,11 @@
 import React from "react";
 import featureInfos from "../../public/data/feature_infos.json";
 import { useAnswers } from "@/app/context/AnswersContext";
-import { formatFeatureLabelForUI } from "@/utils/featureProcessor";
-
 
 const PropertyCard = () => {
   const {
     getCurrentHouse,
-    // formatFeatureLabelForUI,
+    formatFeatureLabelForUI,
     formatFeatureForUI,
     currentPhase,
     formatPriceForUI,
