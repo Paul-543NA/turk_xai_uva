@@ -7,6 +7,7 @@ export default function Form() {
   const [formData, setFormData] = useState({
     gender: "",
     age: "",
+    education: "",
     theoreticalKnowledge: 0,
     practicalExperience: 0,
     dailyAIWork: "",
