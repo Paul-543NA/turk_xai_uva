@@ -77,8 +77,8 @@ export default function Home() {
       className="modal modal-top p-10 bg-neutral bg-opacity-50 pb-20 md:pb-0"
       open={showPhaseInfoModal}
     >
-      <div className="modal-box bg-neutral text-neutral-content">
-        <h3 className="font-bold text-4xl">Welcome to phase {currentPhase}!</h3>
+      <div className="modal-box bg-base dark:bg-neutral text-neutral-content">
+        <h3 className="font-bold text-4xl text-neutral dark:text-gray-300">Welcome to phase {currentPhase}!</h3>
         <div className="py-4">
           <PhaseInstructions />
         </div>
@@ -110,7 +110,7 @@ export default function Home() {
 
       {/* Header */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-start md:justify-between mb-4">
-        <h1 className="text-4xl font-bold text-center mb-0">
+        <h1 className="text-4xl font-bold text-center mb-0 dark:text-gray-300">
           {titleForPhase[currentPhase]}
         </h1>
         {/* Explanation view selection dropdown */}

@@ -4,12 +4,13 @@ import { useAnswers } from "../context/AnswersContext";
 import { useRouter } from "next/navigation";
 
 const Page = () => {
-  const { saveScoreToLeaderBoard, resetUser } = useAnswers();
+  const { saveScoreToLeaderBoard, resetUser, didGiveConsent } = useAnswers();
   const [email, setEmail] = useState("");
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [feedbackType, setFeedbackType] = useState(""); // 'success' or 'error'
   const [isSubmitted, setIsSubmitted] = useState(false);
   const router = useRouter();
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,6 +32,24 @@ const Page = () => {
     router.push("/");
   };
 
+  if (!didGiveConsent) {
+    return (
+      <div className="hero bg-base-200 min-h-screen">
+        <div className="hero-content text-center">
+          <div className="max-w-md">
+            <h1 className="text-5xl font-bold">Oops!</h1>
+            <p className="py-6">
+              Unfortunately, you cannot participate in the study as you did not give consent.
+            </p>
+            <button onClick={handleReset} className="btn btn-primary mt-4 w-full">
+              Go back to Home
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="hero bg-base-200 min-h-screen">
       <div className="hero-content text-center">
@@ -47,14 +66,14 @@ const Page = () => {
                 <input
                   type="email"
                   placeholder="Enter your email"
-                  className="input input-bordered input-primary w-full max-w-xs"
+                  className="input input-bordered input-primary mt-4"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   disabled={isSubmitted}
                 />
                 {!isSubmitted && (
-                  <button type="submit" className="btn btn-primary mt-4">
+                  <button type="submit" className="btn btn-primary mt-4" disabled={!email}>
                     Submit
                   </button>
                 )}

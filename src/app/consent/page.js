@@ -7,7 +7,7 @@ export default function InformedConsent() {
   const [consent, setConsent] = useState("");
   const [errors, setErrors] = useState({});
   const router = useRouter();
-  const { submitFormResponse } = useAnswers();
+  const { submitFormResponse, updateDidGiveConsent } = useAnswers();
 
   const handleChange = (e) => {
     const { value } = e.target;
@@ -26,8 +26,9 @@ export default function InformedConsent() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
+      updateDidGiveConsent(consent === "agree");
       if (consent === "disagree") {
-        router.push("/finish"); // Redirect to the end page
+        router.push("/finish");
       } else {
         submitFormResponse({ consent })
           .then(() => {
@@ -64,8 +65,7 @@ export default function InformedConsent() {
                 onChange={handleChange}
                 className="radio radio-primary"
               />
-              <span className="ml-2 text-base">I acknowledge to have read and understood the information; I consent to participate in
-              the study.</span>
+              <span className="ml-2 text-base">I acknowledge to have read and understood the information; I consent to participate in the study.</span>
             </label>
             <label className="cursor-pointer">
               <input
@@ -85,7 +85,11 @@ export default function InformedConsent() {
         </div>
 
         <div className="form-control">
-          <button type="submit" className="btn btn-primary my-8 mt-8 text-base">
+          <button 
+            type="submit" 
+            className="btn btn-primary my-8 mt-8 text-base" 
+            disabled={!consent}
+          >
             Submit
           </button>
         </div>

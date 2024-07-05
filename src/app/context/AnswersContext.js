@@ -104,6 +104,10 @@ export const AnswersProvider = ({ children }) => {
     setDidGiveConsent(newDidGiveConsent);
     localStorage.setItem("didGiveConsent", newDidGiveConsent);
   };
+  const getConsentStatus = () => {
+    return localStorage.getItem("didGiveConsent") === "true";
+  };
+
 
   const [userScore, setUserScore] = useState(0);
   const updateUserScore = (newScore) => {
@@ -580,6 +584,8 @@ export const AnswersProvider = ({ children }) => {
         showingFeedback,
         didCompleteForm,
         didGiveConsent,
+        updateDidGiveConsent,
+        getConsentStatus,
         userScore,
         revertPriceToGBP,
         // Getters
