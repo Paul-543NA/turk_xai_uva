@@ -296,8 +296,8 @@ export const AnswersProvider = ({ children }) => {
   function formatFeatureLabelForUI(featureInfo) {
     // Format the feature label for display in the UI
     // e.g. "1stFlrSF" -> "1st Floor Area (ft²)"
-    const preferredAreaMetric = localStorage.getItem("preferredAreaMetric");
-    const areaFeatures = ["house-area", "lot-len", "lot-width", "garden-size"];
+    // const preferredAreaMetric = localStorage.getItem("preferredAreaMetric");
+    const areaFeatures = ["house-area", "garden-size"];
     if (areaFeatures.includes(featureInfo.name)) {
       if (preferredAreaMetric === "sqm") {
         return `${featureInfo.label} (m²)`;
@@ -585,10 +585,10 @@ export const AnswersProvider = ({ children }) => {
         didCompleteForm,
         didGiveConsent,
         updateDidGiveConsent,
-        getConsentStatus,
         userScore,
         revertPriceToGBP,
         // Getters
+        getConsentStatus,
         getCurrentHouse,
         getCurrentPointCounterfactual,
         getCurrentIntervalCounterfactual,

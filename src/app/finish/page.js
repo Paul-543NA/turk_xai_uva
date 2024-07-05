@@ -37,7 +37,7 @@ const Page = () => {
       <div className="hero bg-base-200 min-h-screen">
         <div className="hero-content text-center">
           <div className="max-w-md">
-            <h1 className="text-5xl font-bold">Oops!</h1>
+            <h1 className="text-5xl font-bold dark:text-gray-300">Oops!</h1>
             <p className="py-6">
               Unfortunately, you cannot participate in the study as you did not give consent.
             </p>
@@ -54,7 +54,7 @@ const Page = () => {
     <div className="hero bg-base-200 min-h-screen">
       <div className="hero-content text-center">
         <div className="max-w-md">
-          <h1 className="text-5xl font-bold">Well done!</h1>
+          <h1 className="text-5xl font-bold dark:text-gray-300">Well done!</h1>
           <p className="py-6">
             You have completed the task. Thank you for your participation! If
             you would like to enter the raffle to win a gift card, please enter

@@ -43,7 +43,7 @@ export default function InformedConsent() {
 
   return (
     <div className="container mx-auto text-xl p-10 mt-10">
-      <h1 className="text-4xl font-bold mb-4">Informed Consent</h1>
+      <h1 className="text-4xl font-bold mb-4 dark:text-gray-300">Informed Consent</h1>
       <form onSubmit={handleSubmit} className="space-y-8">
         <div className="form-control">
           <p className="text-base mb-4">
