@@ -108,7 +108,6 @@ export const AnswersProvider = ({ children }) => {
     return localStorage.getItem("didGiveConsent") === "true";
   };
 
-
   const [userScore, setUserScore] = useState(0);
   const updateUserScore = (newScore) => {
     setUserScore(newScore);
@@ -169,8 +168,7 @@ export const AnswersProvider = ({ children }) => {
     updateAnswers(storedAnswers);
 
     // Initialize the preferred area metric
-    let storedAreaMetric =
-      localStorage.getItem("preferredAreaMetric") ?? "sqm";
+    let storedAreaMetric = localStorage.getItem("preferredAreaMetric") ?? "sqm";
     updatePreferredAreaMetric(storedAreaMetric);
 
     // Initialize the preferred currency
@@ -293,34 +291,7 @@ export const AnswersProvider = ({ children }) => {
   // SECTION - UI FORMATTING
   // ===========================================================================
 
-  function formatFeatureLabelForUI(featureInfo) {
-    // Format the feature label for display in the UI
-    // e.g. "1stFlrSF" -> "1st Floor Area (ft²)"
-    // const preferredAreaMetric = localStorage.getItem("preferredAreaMetric");
-    const areaFeatures = ["house-area", "garden-size"];
-    if (areaFeatures.includes(featureInfo.name)) {
-      if (preferredAreaMetric === "sqm") {
-        return `${featureInfo.label} (m²)`;
-      }
-      return `${featureInfo.label} (ft²)`;
-    }
-
-    const distanceFeatures = ["lot-len", "lot-width"];
-    if (distanceFeatures.includes(featureInfo.name)) {
-      if (preferredAreaMetric == 'sqm') {
-        return `${featureInfo.label} (m)`;
-      }
-      else return `${featureInfo.label} (ft)`
-    }
-    return featureInfo.label;
-  }
-
-
   function formatFeatureForUI(featureInfo, value) {
-    // If the feature should be hidden, return ???
-    if (shouldFeatureBeHidden(featureInfo.name)) {
-      return "???";
-    }
     if (featureInfo.type === "categorical") {
       // For categorical features, return the category name
       return featureInfo.valueLabels[value];
@@ -337,28 +308,44 @@ export const AnswersProvider = ({ children }) => {
       const areaFeatures = ["house-area", "garden-size"];
       if (areaFeatures.includes(featureInfo.name)) {
         if (preferredAreaMetric === "sqft") {
-          return (value * oneSqmToSqFt).toFixed(2).toString()
-        }
-        else return `${value.toFixed(2)}`
+          return (value * oneSqmToSqFt).toFixed(2).toString();
+        } else return `${value.toFixed(2)}`;
         // else return Math.round(value,2).toString();
       }
       // Convert meters to feet
-      const one_ft_to_m = 0.3048
-      const one_m_to_ft = 3.281
+      const one_ft_to_m = 0.3048;
+      const one_m_to_ft = 3.281;
       const distanceFeatures = ["lot-len", "lot-width"];
       if (distanceFeatures.includes(featureInfo.name)) {
-        if (preferredAreaMetric == 'sqft') {
-          return (value * one_m_to_ft).toFixed(2).toString()
-        }
-        else return `${value.toFixed(2)}`
+        if (preferredAreaMetric == "sqft") {
+          return (value * one_m_to_ft).toFixed(2).toString();
+        } else return `${value.toFixed(2)}`;
       }
 
-
-      return value.toLocaleString();
+      return Math.round(value).toLocaleString();
     }
 
     // For other types of values (e.g., dates), return the original value
     return value;
+  }
+
+  function formatCurrencyInput(value) {
+    // Formats the number with thousands separators
+    // e.g. 1000000 -> 1,000,000 or 1 000 000
+    // Remove any non-digit characters except for the decimal point
+    const split = preferredCurrency === "EUR" ? " " : ",";
+    const cleanValue = value.replace(/[^\d.]/g, "");
+    // Split the integer and decimal parts
+    const [integerPart, decimalPart] = cleanValue.split(".");
+    // Format the integer part with thousands separators
+    const formattedInteger = integerPart.replace(
+      /\B(?=(\d{3})+(?!\d))/g,
+      split
+    );
+    // Reassemble the number
+    return decimalPart
+      ? `${formattedInteger}.${decimalPart}`
+      : formattedInteger;
   }
 
   function formatPriceForUI(price) {
@@ -393,23 +380,23 @@ export const AnswersProvider = ({ children }) => {
     return Math.round(price * conversionRates[preferredCurrency]);
   };
 
-  function formatCurrencyInput(value) {
-    // Formats the number with thousands separators
-    // e.g. 1000000 -> 1,000,000 or 1 000 000
-    // Remove any non-digit characters except for the decimal point
-    const split = preferredCurrency === "EUR" ? " " : ",";
-    const cleanValue = value.replace(/[^\d.]/g, "");
-    // Split the integer and decimal parts
-    const [integerPart, decimalPart] = cleanValue.split(".");
-    // Format the integer part with thousands separators
-    const formattedInteger = integerPart.replace(
-      /\B(?=(\d{3})+(?!\d))/g,
-      split
-    );
-    // Reassemble the number
-    return decimalPart
-      ? `${formattedInteger}.${decimalPart}`
-      : formattedInteger;
+  function formatFeatureLabelForUI(featureInfo) {
+    // Format the feature label for display in the UI
+    // e.g. "1stFlrSF" -> "1st Floor Area (ft²)"
+    const areaFeatures = ["house-area", "garden-size"];
+    if (areaFeatures.includes(featureInfo.name)) {
+      if (preferredAreaMetric === "sqm") {
+        return `${featureInfo.label} (m²)`;
+      } else return `${featureInfo.label} (ft²)`;
+    }
+
+    const distanceFeatures = ["lot-len", "lot-width"];
+    if (distanceFeatures.includes(featureInfo.name)) {
+      if (preferredAreaMetric == "sqm") {
+        return `${featureInfo.label} (m)`;
+      } else return `${featureInfo.label} (ft)`;
+    }
+    return featureInfo.label;
   }
 
   // =============================================================================

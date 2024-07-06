@@ -1,38 +1,41 @@
+"use client";
 import React from "react";
 import IntervalBar from "./IntervalBar";
-import PointBar from "./PointBar";
 import NotImplementedCard from "./NotImplementedCard";
-import { formatFeatureForUI, getFeatureBounds, formatPriceForUI, formatFeatureLabelForUI } from "@/utils/featureProcessor";
-// import { formatCurrencyInput } from "@/app/context/AnswersContext";
-// import { formatPriceForUI } from "@/app/context/AnswersContext";
+import { getFeatureBounds } from "@/utils/featureProcessor";
 import featureInfos from "../../public/data/feature_infos.json";
 
 import { useAnswers } from "@/app/context/AnswersContext";
 
 const SentencesIntervalCard = ({ intervalExplanation }) => {
+  const { preferredAreaMetric, formatFeatureForUI, formatPriceForUI } =
+    useAnswers();
   let area = `m²`;
   let distance = `m`;
-  if (localStorage.getItem("preferredAreaMetric") === 'sqft') {
+  if (preferredAreaMetric === "sqft") {
     area = `ft²`;
     distance = `ft`;
   }
   let bathrooms = ``;
-  if (intervalExplanation['bathrooms'].min != intervalExplanation['bathrooms'].max) {
-    bathrooms = `${intervalExplanation['bathrooms'].min} to ${intervalExplanation['bathrooms'].max} bathrooms`;
+  if (
+    intervalExplanation["bathrooms"].min != intervalExplanation["bathrooms"].max
+  ) {
+    bathrooms = `${intervalExplanation["bathrooms"].min} to ${intervalExplanation["bathrooms"].max} bathrooms`;
+  } else if (intervalExplanation["bathrooms"].min === 1) {
+    bathrooms = `${intervalExplanation["bathrooms"].min} bathroom`;
+  } else {
+    bathrooms = `${intervalExplanation["bathrooms"].min} bathrooms`;
   }
-  else if (intervalExplanation["bathrooms"].min === 1) {
-    bathrooms = `${intervalExplanation["bathrooms"].min} bathroom`;}
-  else {bathrooms = `${intervalExplanation["bathrooms"].min} bathrooms`}
-  ;
   let balconies = ``;
-  if (intervalExplanation['balcony'].min != intervalExplanation['balcony'].max) {
-    balconies = `${intervalExplanation['balcony'].min} to ${intervalExplanation['balcony'].max} balconies`;
+  if (
+    intervalExplanation["balcony"].min != intervalExplanation["balcony"].max
+  ) {
+    balconies = `${intervalExplanation["balcony"].min} to ${intervalExplanation["balcony"].max} balconies`;
+  } else if (intervalExplanation["balcony"].min === 1) {
+    balconies = `${intervalExplanation["balcony"].min} balcony`;
+  } else {
+    balconies = `${intervalExplanation["balcony"].min} balconies`;
   }
-  else if (intervalExplanation["balcony"].min === 1) {
-    balconies = `${intervalExplanation["balcony"].min} balcony`;}
-  else {balconies = `${intervalExplanation["balcony"].min} balconies`}
-  ; 
-
   return (
     <div className="card bg-base-300 shadow-xl md:m-4">
       <div className="card-body">
@@ -42,16 +45,33 @@ const SentencesIntervalCard = ({ intervalExplanation }) => {
         </p> */}
         <span></span>
         <p>
-        The AI would have predicted a price of at least <strong>{formatPriceForUI(100000)} higher</strong> than the currently
-        predicted price, if
-        <ul className="list-disc list-inside leading-loose">
-        <li>the lot would be between {formatFeatureForUI(4, intervalExplanation['lot-len'].min)} {distance} and {intervalExplanation['lot-len'].max} {distance} long,</li>
-        <li>between {intervalExplanation['lot-width'].min} {distance} and {intervalExplanation['lot-width'].max} {distance} wide, </li>
-        <li>the living area would be between {intervalExplanation['house-area'].min} {area} and {intervalExplanation['house-area'].max} {area} big,</li>
-        <li>and the garden would have a size somewhere between {intervalExplanation['garden-size'].min} {area} and {intervalExplanation['garden-size'].max} {area}. </li>
-        </ul>
-        <span></span>
-        Besides, the house should have {bathrooms} and {balconies}.
+          The AI would have predicted a price of at least{" "}
+          <strong>{formatPriceForUI(100000)} higher</strong> than the currently
+          predicted price, if
+          <ul className="list-disc list-inside leading-loose">
+            <li>
+              the lot would be between{" "}
+              {formatFeatureForUI(4, intervalExplanation["lot-len"].min)}{" "}
+              {distance} and {intervalExplanation["lot-len"].max} {distance}{" "}
+              long,
+            </li>
+            <li>
+              between {intervalExplanation["lot-width"].min} {distance} and{" "}
+              {intervalExplanation["lot-width"].max} {distance} wide,{" "}
+            </li>
+            <li>
+              the living area would be between{" "}
+              {intervalExplanation["house-area"].min} {area} and{" "}
+              {intervalExplanation["house-area"].max} {area} big,
+            </li>
+            <li>
+              and the garden would have a size somewhere between{" "}
+              {intervalExplanation["garden-size"].min} {area} and{" "}
+              {intervalExplanation["garden-size"].max} {area}.{" "}
+            </li>
+          </ul>
+          <span></span>
+          Besides, the house should have {bathrooms} and {balconies}.
         </p>
       </div>
     </div>
@@ -59,6 +79,7 @@ const SentencesIntervalCard = ({ intervalExplanation }) => {
 };
 
 const GraphIntervalCard = ({ house, intervalExplanation }) => {
+  const { formatPriceForUI, formatFeatureLabelForUI } = useAnswers();
   const continuousFeatures = featureInfos.filter(
     (feature) => feature.type === "continuous"
   );
@@ -69,7 +90,7 @@ const GraphIntervalCard = ({ house, intervalExplanation }) => {
       house[featureInfo.name],
       undefined,
       intervalExplanation[featureInfo.name]
-    ); 
+    );
     return (
       <div className="py-2">
         <p>{formatFeatureLabelForUI(featureInfo)}</p>
@@ -83,15 +104,17 @@ const GraphIntervalCard = ({ house, intervalExplanation }) => {
         />
       </div>
     );
-    
   };
 
   return (
     <div className="card bg-base-300 shadow-xl md:m-4">
       <div className="card-body">
         <h2 className="card-title">Interval counterfactual</h2>
-        <p>The explanation shows in what range each feature needs to be so that the AI would predict the price to be at 
-          least <strong>{formatPriceForUI(100000)} higher</strong> than the currently predicted price.
+        <p>
+          The explanation shows in what range each feature needs to be so that
+          the AI would predict the price to be at least{" "}
+          <strong>{formatPriceForUI(100000)} higher</strong> than the currently
+          predicted price.
         </p>
         {continuousFeatures.map((feature, index) => (
           <FeatureIntervalBar key={index} featureInfo={feature} />
@@ -111,6 +134,8 @@ const GraphIntervalCard = ({ house, intervalExplanation }) => {
 };
 
 const TableIntervalCard = ({ intervalExplanation }) => {
+  const { formatFeatureForUI, formatPriceForUI, formatFeatureLabelForUI } =
+    useAnswers();
   const continuousFeatures = featureInfos.filter(
     (feature) => feature.type === "continuous"
   );
@@ -119,8 +144,11 @@ const TableIntervalCard = ({ intervalExplanation }) => {
     <div className="card bg-base-300 shadow-xl md:m-4">
       <div className="card-body">
         <h2 className="card-title">Interval Explanation</h2>
-        <p>The explanation shows in what range each feature needs to be so that the AI would predict the price to be at 
-          least <strong>{formatPriceForUI(100000)} higher</strong> than the currently predicted price.
+        <p>
+          The explanation shows in what range each feature needs to be so that
+          the AI would predict the price to be at least{" "}
+          <strong>{formatPriceForUI(100000)} higher</strong> than the currently
+          predicted price.
         </p>
         <span></span>
         <table className="table table-compact text-base">

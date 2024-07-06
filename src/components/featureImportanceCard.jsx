@@ -1,8 +1,6 @@
 "use client";
 import React from "react";
-import IntervalBar from "./IntervalBar";
 import NotImplementedCard from "./NotImplementedCard";
-import { formatFeatureForUI, getFeatureBounds } from "@/utils/featureProcessor";
 import featureInfos from "../../public/data/feature_infos.json";
 import { useAnswers } from "@/app/context/AnswersContext";
 
@@ -62,22 +60,23 @@ const FeatureImportanceSentencesCard = ({ featureImportances }) => {
   );
 
   const sortedFeatures = continuousFeatures
-  .map(feature => ({
-    name: feature.name,
-    label: feature.label,
-    importance: featureImportances[feature.name]
-  }))
-  .sort((a, b) => b.importance - a.importance);
+    .map((feature) => ({
+      name: feature.name,
+      label: feature.label,
+      importance: featureImportances[feature.name],
+    }))
+    .sort((a, b) => b.importance - a.importance);
 
-  const paragraph = `According to the AI, on a scale from 0 to 100, ` +
-  `${sortedFeatures[0].label} weighs ${(sortedFeatures[0].importance)}, ` +
-  `${sortedFeatures[1].label} weighs ${(sortedFeatures[1].importance)}, and ` +
-  `${sortedFeatures[2].label} weighs ${(sortedFeatures[2].importance)}. ` +
-  `This is followed by ${sortedFeatures[3].label} with a weight of ${(sortedFeatures[3].importance)} ` +
-  `and ${sortedFeatures[4].label} with a weight of ${(sortedFeatures[4].importance)}. ` +
-  `${sortedFeatures[5].label} (weight ${(sortedFeatures[5].importance)}) ` +
-  `and ${sortedFeatures[6].label} (weight ${(sortedFeatures[6].importance)}) ` +
-  `had the least impact on the prediction.`;
+  const paragraph =
+    `According to the AI, on a scale from 0 to 100, ` +
+    `${sortedFeatures[0].label} weighs ${sortedFeatures[0].importance}, ` +
+    `${sortedFeatures[1].label} weighs ${sortedFeatures[1].importance}, and ` +
+    `${sortedFeatures[2].label} weighs ${sortedFeatures[2].importance}. ` +
+    `This is followed by ${sortedFeatures[3].label} with a weight of ${sortedFeatures[3].importance} ` +
+    `and ${sortedFeatures[4].label} with a weight of ${sortedFeatures[4].importance}. ` +
+    `${sortedFeatures[5].label} (weight ${sortedFeatures[5].importance}) ` +
+    `and ${sortedFeatures[6].label} (weight ${sortedFeatures[6].importance}) ` +
+    `had the least impact on the prediction.`;
 
   return (
     <div className="card bg-base-300 shadow-xl m-4">
@@ -98,11 +97,14 @@ const FeatureImportanceTableCard = ({ featureImportances }) => {
     (feature) => feature.type === "continuous"
   );
 
+  const aiDescText =
+    "The explanation shows the importance of each feature towards the AI's prediction from 0 to 100.";
+
   return (
     <div className="card bg-base-300 shadow-xl m-4">
       <div className="card-body">
         <h2 className="card-title">Feature importances</h2>
-        <p>The explanation shows the importance of each feature towards the AI's prediction from 0 to 100.</p>
+        <p>{aiDescText}</p>
         <table className="table w-full text-base">
           <thead>
             <tr>
@@ -143,11 +145,14 @@ const FeatureImportanceGraphCard = ({ featureImportances }) => {
     );
   };
 
+  const aiDescText =
+    "The explanation shows the importance of each feature towards the AIs prediction from 0 to 100.";
+
   return (
     <div className="card bg-base-300 shadow-xl m-4">
       <div className="card-body">
         <h2 className="card-title">Feature importances</h2>
-        <p>The explanation shows the importance of each feature towards the AI's prediction from 0 to 100.</p>
+        <p>{aiDescText}</p>
         {continuousFeatures.map((feature, index) => (
           <FeatureImportanceLine key={index} featureInfo={feature} />
         ))}

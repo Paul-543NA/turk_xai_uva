@@ -106,7 +106,7 @@ function UserInputCard() {
   };
 
   const TrustAIToggle = (
-    <label className="form-control w-full max-w-xs">
+    <label className="form-control w-full max-w-xs mb-4">
       {/* Toggle to follow or not the AI */}
       <div className="label">
         <span className="text-base">Follow AI:</span>
@@ -123,47 +123,56 @@ function UserInputCard() {
 
   const TruthInput = (
     <div>
-    <p><span className="text-base">What do you think is the true sales price of this property?</span></p>
-    <label className="form-control w-full max-w-xs mt-6">
-      {/* Label and input field */}
-      {/* <div className="label">
+      <p>
+        <span className="text-base">
+          What do you think is the true sales price of this property?
+        </span>
+      </p>
+      <label className="form-control w-full max-w-xs mt-6">
+        {/* Label and input field */}
+        {/* <div className="label">
         <span className="text-base">What do you think is the true sales price of this property?</span>
       </div> */}
-      <label className="input input-bordered flex items-center gap-2">
-        {getCurrencySymbol()}
-        <input
-          type="text"
-          className="grow"
-          placeholder=""
-          value={inputValue}
-          onChange={handleInputChange}
-          disabled={showingFeedback || (currentPhase === "2" && followAI)}
-        />
+        <label className="input input-bordered flex items-center gap-2">
+          {getCurrencySymbol()}
+          <input
+            type="text"
+            className="grow"
+            placeholder=""
+            value={inputValue}
+            onChange={handleInputChange}
+            disabled={showingFeedback || (currentPhase === "2" && followAI)}
+          />
+        </label>
       </label>
-    </label>
     </div>
   );
 
   const AIInput = (
     <div>
-      <p><span className="text-base">What do you think is the sales price for this property according to the AI?</span></p>
-    <label className="form-control w-full max-w-xs mt-6">
-      {/* Label and input field */}
-      {/* <div className="label">
+      <p>
+        <span className="text-base">
+          What do you think is the sales price for this property according to
+          the AI?
+        </span>
+      </p>
+      <label className="form-control w-full max-w-xs mt-6">
+        {/* Label and input field */}
+        {/* <div className="label">
         <span className="text-base">What do you think is the sales price for this property according to the AI?</span>
       </div> */}
-      <label className="input input-bordered flex items-center gap-2">
-        {getCurrencySymbol()}
-        <input
-          type="text"
-          className="grow"
-          placeholder=""
-          value={inputAIValue}
-          onChange={handleAIInputChange}
-          disabled={showingFeedback}
-        />
+        <label className="input input-bordered flex items-center gap-2">
+          {getCurrencySymbol()}
+          <input
+            type="text"
+            className="grow"
+            placeholder=""
+            value={inputAIValue}
+            onChange={handleAIInputChange}
+            disabled={showingFeedback}
+          />
+        </label>
       </label>
-    </label>
     </div>
   );
 
@@ -194,11 +203,7 @@ function UserInputCard() {
             <span> </span>
             <span> </span>
             {showingFeedback ? (
-              // <li className="p-4 pl-0">
-              //   The AI predicted the value of the property to be{" "}
-              //   <strong>{formatPriceForUI(getAIPrediction())}</strong>.
-              // </li>
-              <p className="p-4 pl-0">
+              <p className="mb-8 pl-4">
                 The AI predicted the value of the property to be{" "}
                 <strong>{formatPriceForUI(getAIPrediction())}</strong>.
               </p>
@@ -214,7 +219,7 @@ function UserInputCard() {
         {/* In phase 1, it is disabled if any of the value/AI inputs are not valid */}
         {/* In phase 2, it is disabled if the value input is not valid or follow AI is on */}
         {showingFeedback && currentPhase !== "2" ? (
-          <p className="p-4 pl-0">
+          <p className="p-4 pl-4">
             The true value of the property is{" "}
             <strong>{formatPriceForUI(getCurrentHousePrice())}</strong>.
           </p>
@@ -242,7 +247,7 @@ function UserInputCard() {
         ) : (
           <button
             onClick={handleClickNext}
-            className="btn btn-primary mt-4"
+            className="btn btn-primary mt-8"
             disabled={
               submitting ||
               (currentPhase === "0" && !isValid) ||
