@@ -177,7 +177,7 @@ export default function Form() {
         <div className="form-control">
           <label className="label">
             <span className="text-base">
-              Do you work with or on AI on a daily basis?
+              How often do you work with AI on average?
             </span>
           </label>
           <select
@@ -189,8 +189,10 @@ export default function Form() {
             }`}
           >
             <option value="">Select</option>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
+            <option value="yes">Daily</option>
+            <option value="no">Weekly</option>
+            <option value="no">Monthly</option>
+            <option value="no">Less than monthly</option>
           </select>
           {errors.dailyAIWork && (
             <span className="text-red-500 text-sm">{errors.dailyAIWork}</span>
