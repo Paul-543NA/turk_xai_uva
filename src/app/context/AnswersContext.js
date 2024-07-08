@@ -359,6 +359,7 @@ export const AnswersProvider = ({ children }) => {
       price / conversionRates[preferredCurrency]
     );
     const localeString = formatCurrencyInput(convertedPrice.toString());
+    console.log("formatPriceForUI", preferredCurrency, localeString);
     if (preferredCurrency === "GBP") {
       return `£${localeString}`;
     }
@@ -481,6 +482,19 @@ export const AnswersProvider = ({ children }) => {
   async function submitFormResponse(formResponse) {
     // Send the form response to firebase
     // The document ID is the user ID
+
+    console.log("submitFormResponse", formResponse);
+
+    // Update state
+    console.log(
+      "submitFormResponse",
+      formResponse.preferredCurrency,
+      formResponse.preferredMetric
+    );
+    updatePreferredCurrency(formResponse.preferredCurrency);
+    updatePreferredAreaMetric(formResponse.preferredMetric);
+
+    // Update the database
     try {
       if (runtimeParams.useFirestore) {
         await setDoc(doc(db, "formResponses", userId), formResponse);

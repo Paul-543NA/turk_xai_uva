@@ -7,7 +7,7 @@ export default function InformedConsent() {
   const [consent, setConsent] = useState("");
   const [errors, setErrors] = useState({});
   const router = useRouter();
-  const { submitFormResponse, updateDidGiveConsent } = useAnswers();
+  const { updateDidGiveConsent } = useAnswers();
 
   const handleChange = (e) => {
     const { value } = e.target;
@@ -30,13 +30,7 @@ export default function InformedConsent() {
       if (consent === "disagree") {
         router.push("/finish");
       } else {
-        submitFormResponse({ consent })
-          .then(() => {
-            router.push("/form");
-          })
-          .catch((error) => {
-            console.error("Error submitting form:", error);
-          });
+        router.push("/form");
       }
     }
   };
