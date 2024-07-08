@@ -310,7 +310,6 @@ export const AnswersProvider = ({ children }) => {
         if (preferredAreaMetric === "sqft") {
           return (value * oneSqmToSqFt).toFixed(2).toString();
         } else return `${value.toFixed(2)}`;
-        // else return Math.round(value,2).toString();
       }
       // Convert meters to feet
       const one_ft_to_m = 0.3048;

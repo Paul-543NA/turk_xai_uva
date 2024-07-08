@@ -72,12 +72,23 @@ const GraphPointCounterfactualCard = ({ house, pointCounterfactual }) => {
       pointCounterfactual[feature.name]
     );
 
+    const { formatFeatureForUI } = useAnswers();
+
+    const actualLabel = formatFeatureForUI(feature, house[feature.name]);
+    console.log("actualLabel", actualLabel);
+    const counterfactualLabel = formatFeatureForUI(
+      feature,
+      pointCounterfactual[feature.name]
+    );
+
     return (
       <div className="py-2">
         <p>{formatFeatureLabelForUI(feature)}</p>
         <PointBar
           counterfactual={pointCounterfactual[feature.name]}
           actual={house[feature.name]}
+          counterfactualLabel={counterfactualLabel}
+          actualLabel={actualLabel}
           featureMin={min}
           featureMax={max}
         />

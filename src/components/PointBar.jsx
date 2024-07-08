@@ -4,9 +4,10 @@ import PropTypes from "prop-types";
 const PointBar = ({
   actual,
   counterfactual,
+  counterfactualLabel,
+  actualLabel,
   featureMin = 9,
   featureMax = 100,
-  featureSuffix = "",
 }) => {
   const ProgressCircle = ({ position }) => (
     <div
@@ -60,10 +61,6 @@ const PointBar = ({
     ((counterfactual - featureMin) / (featureMax - featureMin)) * 100;
   const scaledActual =
     ((actual - featureMin) / (featureMax - featureMin)) * 100;
-
-  // Case values to string and add the label suffix
-  const counterfactualLabel = counterfactual.toString() + featureSuffix;
-  const actualLabel = actual.toString() + featureSuffix;
 
   return (
     <div className="w-full p-2">
