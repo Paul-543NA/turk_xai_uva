@@ -11,7 +11,7 @@ const PointBar = ({
 }) => {
   const ProgressCircle = ({ position }) => (
     <div
-      className="absolute bg-neutral-content bg-opacity-100 h-4 w-4 z-10 rounded-full"
+      className="absolute bg-base-content bg-opacity-100 h-4 w-4 z-10 rounded-full"
       style={{
         left: `${position}%`,
         top: "0",
@@ -74,7 +74,7 @@ const PointBar = ({
       </div>
 
       {/* Progress bar itself */}
-      <div className="relative w-full bg-base-content bg-opacity-50 rounded-full h-4">
+      <div className="relative w-full bg-base-content bg-opacity-20 dark:bg-opacity-50 rounded-full h-4">
         <ProgressCircle position={scaledActual} />
         <CounterfactualCircle position={scaledCounterfactual} />
       </div>

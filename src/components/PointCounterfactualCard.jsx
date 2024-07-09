@@ -112,7 +112,7 @@ const GraphPointCounterfactualCard = ({ house, pointCounterfactual }) => {
         {/* A div to explain the meaning of the colors */}
         <div className="py-6">
           <div className="flex flex-row gap-2 align-middle">
-            <div className="bg-neutral-content w-6 h-6 rounded-full"></div>
+            <div className="bg-base-content w-6 h-6 rounded-full"></div>
             <p className="text-base-content">Actual value</p>
             <div className="bg-secondary w-6 h-6 rounded-full"></div>
             <p className="text-secondary">Counterfactual</p>
