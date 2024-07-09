@@ -25,50 +25,65 @@ export const PhaseInstructions = () => {
   const { currentPhase, userExplanationType, formatPriceForUI } = useAnswers();
 
   return (
-    <div className="prose !max-w-none prose-lg xl:prose-xl">
+    // <div className="prose !max-w-none prose-lg xl:prose-xl">
+    <div className="prose !max-w-none prose-lg">
       {currentPhase === "0" && (
         <>
           {userExplanationType === "none" ? (
+            <>
             <p>
-              In this phase of the experiment you will be presented with
-              information about a house and the AI’s prediction of the sales
-              price for this particular property. Then, your task is to make a
-              judgement of the true sales price yourself. This may or may not be
-              the same as the prediction of the AI. After submitting your
-              response, you will receive feedback in the form of the true sales
-              prices.
+              In this phase of the experiment you will be presented with:
             </p>
+            <ul class="ps-10 mt-2 list-disc list-inside space-y-2">
+                <li>information about a house</li>
+                <li>the AI's prediction of the sales price for this particular property</li>
+                <li>an explanation for this prediction.</li>
+            </ul>
+            <p>
+                Then, your task is to make a judgement of the true
+                sales price yourself. This may or may not be the same as the
+                prediction of the AI. After submitting your response, you will
+                receive feedback in the form of the true sales prices.
+              </p>
+            </>
           ) : (
             <>
               <p>
-                In this phase of the experiment you will be presented with
-                information about a house, the AI’s prediction of the sales
-                price for this particular property, and an explanation for this
-                prediction. Then, your task is to make a judgement of the true
+                In this phase of the experiment you will be presented with:
+              </p>
+                <ul class="ps-10 mt-2 list-disc list-inside space-y-2">
+                <li>information about a house</li>
+                <li>the AI's prediction of the sales price for this particular property</li>
+                <li>an explanation for this prediction.</li>
+              </ul>
+              <p>
+                Then, your task is to make a judgement of the true
                 sales price yourself. This may or may not be the same as the
                 prediction of the AI. After submitting your response, you will
                 receive feedback in the form of the true sales prices.
               </p>
               {["point"].includes(userExplanationType) ? (
                 <p>
+                  <strong>Why does the model predict this price for this property?</strong> We want to understand under which circumstances <strong>a house of the same type</strong>, 
+                  that is same zipcode, monument status and energy efficiency class, would cost <strong>{formatPriceForUI(100000)} more</strong>. 
                   The explanation you will receive shows how each feature would
                   have to change such that the predicted house price would be at
-                  least <strong>{formatPriceForUI(100000)} higher</strong> more
-                  than the currently predicted price.
+                  least {formatPriceForUI(100000)} higher than the currently predicted price.
                 </p>
               ) : null}
               {["interval"].includes(userExplanationType) ? (
                 <p>
+                  <strong>Why does the model predict this price for this property?</strong> We want to understand under which circumstances <strong>a house of the same type</strong>, 
+                  that is same zipcode, monument status and energy efficiency class, would cost <strong>{formatPriceForUI(100000)} more</strong>. 
                   The explanation you will receive shows how each feature would
-                  have to change such that the predicted house price would be at
-                  least <strong>{formatPriceForUI(100000)} higher</strong> than
-                  the currently predicted price. Specifically, for each feature
+                  have to change such that the predicted price is {formatPriceForUI(100000)} higher. Specifically, for each feature
                   you will see a possible range (minimum and maximum) of values
                   that this feature could take on.
                 </p>
               ) : null}
               {["featureImportance"].includes(userExplanationType) ? (
                 <p>
+                  <strong>Why does the model predict this price for this property?</strong>
                   The explanation you will receive shows the impact of each
                   feature on the predicted price, ranging from 0 to 100.
                 </p>
@@ -80,45 +95,62 @@ export const PhaseInstructions = () => {
       {currentPhase === "1" && (
         <>
           {userExplanationType === "none" ? (
+            <>
             <p>
-              In this phase of the experiment you will be presented with
-              information about a house. The amount of information shown to you
+              In this phase of the experiment you will be presented with:
+            </p>
+              <ul class="ps-10 mt-2 list-disc list-inside space-y-2">
+              <li>information about a house</li>
+              {/* <li>the AI's prediction of the sales price for this particular property</li>
+              <li>an explanation for this prediction.</li> */}
+            </ul>
+            <p>
+              The amount of information shown to you
               may differ between trials. Your task is to make a judgement about
               the house true sales price and the sales price that the AI
               predicts. After submitting your response, you will see the true
               sales prices and the AI’s prediction.
             </p>
+            </>
           ) : (
             <>
               <p>
-                In this phase of the experiment you will be presented with
-                information about a house. The amount of information shown to
-                you differs in between trials. For each house, your task is to
-                make a judgement about the house true sales price and the sales
-                price that the AI predicts. After submitting your response, you
-                will see the true sales prices, the AI’s prediction and an
-                explanation for this prediction.
+                In this phase of the experiment you will be presented with:
+              </p>
+                <ul class="ps-10 mt-2 list-disc list-inside space-y-2">
+                <li>information about a house</li>
+                {/* <li>the AI's prediction of the sales price for this particular property</li>
+                <li>an explanation for this prediction.</li> */}
+              </ul>
+              <p>
+                The amount of information shown to you
+                may differ between trials. Your task is to make a judgement about
+                the house true sales price and the sales price that the AI
+                predicts. After submitting your response, you will see the true
+                sales prices and the AI’s prediction.
               </p>
               {["point"].includes(userExplanationType) ? (
                 <p>
+                  <strong>Why does the model predict this price for this property?</strong> We want to understand under which circumstances <strong>a house of the same type</strong>, 
+                  that is same zipcode, monument status and energy efficiency class, would cost <strong>{formatPriceForUI(100000)} more</strong>. 
                   The explanation you will receive shows how each feature would
                   have to change such that the predicted house price would be at
-                  least <strong>{formatPriceForUI(100000)} higher</strong> more
-                  than the currently predicted price.
+                  least {formatPriceForUI(100000)} higher than the currently predicted price.
                 </p>
               ) : null}
               {["interval"].includes(userExplanationType) ? (
                 <p>
+                  <strong>Why does the model predict this price for this property?</strong> We want to understand under which circumstances <strong>a house of the same type</strong>, 
+                  that is same zipcode, monument status and energy efficiency class, would cost <strong>{formatPriceForUI(100000)} more</strong>. 
                   The explanation you will receive shows how each feature would
-                  have to change such that the predicted house price would be at
-                  least <strong>{formatPriceForUI(100000)} higher</strong> than
-                  the currently predicted price. Specifically, for each feature
+                  have to change such that the predicted price is {formatPriceForUI(100000)} higher. Specifically, for each feature
                   you will see a possible range (minimum and maximum) of values
                   that this feature could take on.
                 </p>
               ) : null}
               {["featureImportance"].includes(userExplanationType) ? (
                 <p>
+                   <strong>Why does the model predict this price for this property?</strong>
                   The explanation you will receive shows the impact of each
                   feature on the predicted price, ranging from 0 to 100.
                 </p>
@@ -131,9 +163,16 @@ export const PhaseInstructions = () => {
       {currentPhase === "2" && (
         <>
           <p>
-            In this phase of the experiment you will be presented with
-            information about a house. For some properties not all information
-            will be available. For each house, your task is to choose an agent,
+            In this phase of the experiment you will be presented with:
+          </p>
+            <ul class="ps-10 mt-2 list-disc list-inside space-y-2">
+            <li>information about a house</li>
+            {/* <li>the AI's prediction of the sales price for this particular property</li> */}
+            {/* <li>an explanation for this prediction.</li> */}
+          </ul>
+          <p>
+            For some properties not all information
+            will be available, shown as "???". For each house, your task is to choose an agent,
             either the AI or yourself, to predict the house’s true sales price.
             If you choose not to follow the AI, you will be asked to enter your
             prediction of the house price. You will not receive any information
