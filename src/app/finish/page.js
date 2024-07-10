@@ -32,23 +32,23 @@ const Page = () => {
     router.push("/");
   };
 
-  if (!didGiveConsent) {
-    return (
-      <div className="hero bg-base-200 min-h-screen">
-        <div className="hero-content text-center">
-          <div className="max-w-md">
-            <h1 className="text-5xl font-bold dark:text-gray-300">Oops!</h1>
-            <p className="py-6">
-              Unfortunately, you cannot participate in the study as you did not give consent.
-            </p>
-            <button onClick={handleReset} className="btn btn-primary mt-4 w-full">
-              Go back to Home
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // if (!didGiveConsent) {
+  //   return (
+  //     <div className="hero bg-base-200 min-h-screen">
+  //       <div className="hero-content text-center">
+  //         <div className="max-w-md">
+  //           <h1 className="text-5xl font-bold dark:text-gray-300">Oops!</h1>
+  //           <p className="py-6">
+  //             Unfortunately, you cannot participate in the study as you did not give consent.
+  //           </p>
+  //           <button onClick={handleReset} className="btn btn-primary mt-4 w-full">
+  //             Go back to Home
+  //           </button>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="hero bg-base-200 min-h-screen">

@@ -28,8 +28,8 @@ export default function Form() {
 
   const validate = () => {
     let tempErrors = {};
-    if (!formData.age || formData.age < 10 || formData.age > 100) {
-      tempErrors.age = "Please enter a valid age between 10 and 100.";
+    if (!formData.age || formData.age < 18 || formData.age > 100) {
+      tempErrors.age = "Please enter a valid age between 18 and 100.";
     }
     if (!formData.gender) {
       tempErrors.gender = "Please select an option.";
