@@ -60,12 +60,13 @@ export const PhaseInstructions = () => {
                 Then, your task is to make a judgement of the true
                 sales price yourself. This may or may not be the same as the
                 prediction of the AI. After submitting your response, you will
-                receive feedback in the form of the true sales prices.
+                receive feedback in the form of the <strong>true sales price</strong>.
               </p>
               {["point"].includes(userExplanationType) ? (
                 <p>
-                  <strong>Why does the model predict this price for this property?</strong> We want to understand under which circumstances <strong>a house of the same type</strong>, 
-                  that is same zipcode, monument status and energy efficiency class, would cost <strong>{formatPriceForUI(100000)} more</strong>. 
+                  {/* <strong>Why does the model predict this price for this property?</strong>  */}
+                  <strong>Why is this property so expensive?</strong> We want to understand under which circumstances <strong>a house of the same type</strong>, 
+                  that is same zipcode, monument status and energy efficiency class, would cost <strong>{formatPriceForUI(100000)} less</strong>. 
                   The explanation you will receive shows how each feature would
                   have to change such that the predicted house price would be at
                   least {formatPriceForUI(100000)} higher than the currently predicted price.
@@ -73,8 +74,9 @@ export const PhaseInstructions = () => {
               ) : null}
               {["interval"].includes(userExplanationType) ? (
                 <p>
-                  <strong>Why does the model predict this price for this property?</strong> We want to understand under which circumstances <strong>a house of the same type</strong>, 
-                  that is same zipcode, monument status and energy efficiency class, would cost <strong>{formatPriceForUI(100000)} more</strong>. 
+                  {/* <strong>Why does the model predict this price for this property?</strong>  */}
+                  <strong>Why is this property so expensive?</strong> We want to understand under which circumstances <strong>a house of the same type</strong>, 
+                  that is same zipcode, monument status and energy efficiency class, would cost <strong>{formatPriceForUI(100000)} less</strong>. 
                   The explanation you will receive shows how each feature would
                   have to change such that the predicted price is {formatPriceForUI(100000)} higher. Specifically, for each feature
                   you will see a possible range (minimum and maximum) of values
@@ -106,11 +108,15 @@ export const PhaseInstructions = () => {
             </ul>
             <p>
               The amount of information shown to you
-              may differ between trials. Your task is to make a judgement about
-              the house true sales price and the sales price that the AI
-              predicts. After submitting your response, you will see the true
-              sales prices and the AI’s prediction.
+              may differ between trials. Your task is to <strong>estimate the the house's 
+              the house's true sales price and the sales price that the AI
+              predicts</strong>. After submitting your response, you will see:
             </p>
+            <ul class="ps-10 mt-2 list-disc list-inside space-y-2">
+                <li>the AI's prediction of the sales price</li>
+                {/* <li>an explanation for this prediction</li> */}
+                <li>the true sales price</li>
+              </ul>
             </>
           ) : (
             <>
@@ -123,27 +129,34 @@ export const PhaseInstructions = () => {
                 <li>an explanation for this prediction.</li> */}
               </ul>
               <p>
-                The amount of information shown to you
-                may differ between trials. Your task is to make a judgement about
-                the house true sales price and the sales price that the AI
-                predicts. After submitting your response, you will see the true
-                sales prices and the AI’s prediction.
+              The amount of information shown to you
+              may differ between trials. Your task is to <strong>estimate the the house's 
+              the house's true sales price and the sales price that the AI
+              predicts</strong>. After submitting your response, you will see:
               </p>
+              <ul class="ps-10 mt-2 list-disc list-inside space-y-2">
+                <li>the AI's prediction of the sales price</li>
+                <li>an explanation for this prediction</li>
+                <li>the true sales price</li>
+              </ul>
               {["point"].includes(userExplanationType) ? (
                 <p>
-                  <strong>Why does the model predict this price for this property?</strong> We want to understand under which circumstances <strong>a house of the same type</strong>, 
-                  that is same zipcode, monument status and energy efficiency class, would cost <strong>{formatPriceForUI(100000)} more</strong>. 
+                  {/* <strong>Why does the model predict this price for this property?</strong>  */}
+                  <strong>Why is this property so expensive?</strong> We want to understand under which circumstances <strong>a house of the same type</strong>, 
+                  that is same zipcode, monument status and energy efficiency class, would cost <strong>{formatPriceForUI(100000)} less</strong>. 
                   The explanation you will receive shows how each feature would
                   have to change such that the predicted house price would be at
-                  least {formatPriceForUI(100000)} higher than the currently predicted price.
+                  least {formatPriceForUI(100000)} lower than the currently predicted price.
                 </p>
               ) : null}
               {["interval"].includes(userExplanationType) ? (
                 <p>
-                  <strong>Why does the model predict this price for this property?</strong> We want to understand under which circumstances <strong>a house of the same type</strong>, 
-                  that is same zipcode, monument status and energy efficiency class, would cost <strong>{formatPriceForUI(100000)} more</strong>. 
+                  {/* <strong>Why does the model predict this price for this property?</strong>  */}
+                  <strong>Why is this property so expensive?</strong> We want to understand under which circumstances <strong>a house of the same type</strong>, 
+                  that is same zipcode, monument status and energy efficiency class, would cost <strong>{formatPriceForUI(100000)} less</strong>. 
                   The explanation you will receive shows how each feature would
-                  have to change such that the predicted price is {formatPriceForUI(100000)} higher. Specifically, for each feature
+                  have to change such that the predicted price is {formatPriceForUI(100000)} lower than the currently predicted price. 
+                  Specifically, for each feature
                   you will see a possible range (minimum and maximum) of values
                   that this feature could take on.
                 </p>
