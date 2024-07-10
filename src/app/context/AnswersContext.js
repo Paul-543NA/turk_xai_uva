@@ -108,7 +108,7 @@ export const AnswersProvider = ({ children }) => {
     return localStorage.getItem("didGiveConsent") === "true";
   };
 
-  const [userScore, setUserScore] = useState(0);
+  const [userScore, setUserScore] = useState(100);
   const updateUserScore = (newScore) => {
     setUserScore(newScore);
     localStorage.setItem("userScore", newScore);
@@ -181,7 +181,7 @@ export const AnswersProvider = ({ children }) => {
     updateDidCompleteForm(storedDidCompleteForm);
 
     // Initialize the user score
-    let storedUserScore = parseFloat(localStorage.getItem("userScore") ?? "0");
+    let storedUserScore = parseFloat(localStorage.getItem("userScore") ?? "100");
     updateUserScore(storedUserScore);
 
     // Initialize the house indices
