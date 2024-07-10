@@ -30,6 +30,16 @@ const IntervalBar = ({
       }}
     />
   );
+  const IntervalHighlightCircle = ({ position }) => (
+    <div
+      className="absolute bg-secondary bg-opacity-100 h-4 w-4 z-10 rounded-full"
+      style={{
+        left: `${position}%`,
+        top: "0",
+        transform: "translateX(-75%)",
+      }}
+    />
+  );
 
   const IntervalEndLabel = ({ position, label }) => {
     let adjustedPosition = position;
@@ -111,8 +121,9 @@ const IntervalBar = ({
   
         {/* Progress bar itself */}
         <div className="relative w-full bg-base-content bg-opacity-20 dark:bg-opacity-50 rounded-full h-4">
-          <IntervalHighlightBar start={scaledLower} end={scaledUpper} />
           <ProgressCircle position={scaledActual} />
+          {/* <IntervalHighlightBar start={scaledLower} end={scaledUpper} /> */}
+          <IntervalHighlightCircle position={scaledLower}  />
         </div>
   
         {/* Progress labels */}
