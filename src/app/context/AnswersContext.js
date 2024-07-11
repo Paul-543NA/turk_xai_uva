@@ -24,7 +24,7 @@ export const AnswersProvider = ({ children }) => {
   const explanationTypes = ["none", "point", "interval", "featureImportance"];
   const explanationViewModes = ["sentences", "graph", "table"];
   const phases = ["0", "1", "2"];
-  const questionsPerPhase = [5, 5, 5];
+  const questionsPerPhase = [30, 30, 30];
 
   function getRandom(list) {
     return list[Math.floor(Math.random() * list.length)];

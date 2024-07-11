@@ -1,4 +1,3 @@
 {
-  "2": ["house-area", "lot-width"],
-  "4": ["house-area", "lot-width", "bathrooms", "buildyear"]
+  "15": ["house-area", "lot-width", "bathrooms", "buildyear"]
 }
