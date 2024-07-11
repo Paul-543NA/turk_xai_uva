@@ -43,13 +43,18 @@ export default function InformedConsent() {
       <form onSubmit={handleSubmit} className="space-y-8">
         <div className="form-control">
           <p className="text-base mb-4">[Informed consent text goes here...]</p>
+          <ol class="mt-6 text-base space-y-4 list-decimal list-inside">
+            <li>I confirm that I have read and understand the participant information sheet dated 11/07/24 version 1.0 for this study.</li>
+            <li>I understand that my participation is voluntary, and I am free to withdraw at any time, without giving any reason and without my legal rights being affected.</li>
+            <li>I give permission for Imperial College London to access my records that are relevant to this research.</li>
+            <li>I consent to take part in this study.</li>
+          </ol>
         </div>
-
         <div className="form-control">
           <label className="label">
-            {/* <span className="text-base">Do you agree to participate in this study?</span> */}
+            <span className="text-base mb-6"><strong>Do you agree with the above clauses and consent to take part in this study?</strong></span>
           </label>
-          <div className="flex flex-col space-y-4">
+          <div className="flex flex-row space-x-10">
             <label className="cursor-pointer">
               <input
                 type="radio"
@@ -60,8 +65,7 @@ export default function InformedConsent() {
                 className="radio radio-primary"
               />
               <span className="ml-2 text-base">
-                I acknowledge to have read and understood the information; I
-                consent to participate in the study.
+                Yes
               </span>
             </label>
             <label className="cursor-pointer">
@@ -74,7 +78,7 @@ export default function InformedConsent() {
                 className="radio radio-primary"
               />
               <span className="ml-2 text-base">
-                I do not consent to participate in the study.
+                No
               </span>
             </label>
           </div>
