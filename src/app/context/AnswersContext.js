@@ -181,7 +181,9 @@ export const AnswersProvider = ({ children }) => {
     updateDidCompleteForm(storedDidCompleteForm);
 
     // Initialize the user score
-    let storedUserScore = parseFloat(localStorage.getItem("userScore") ?? "100");
+    let storedUserScore = parseFloat(
+      localStorage.getItem("userScore") ?? "100"
+    );
     updateUserScore(storedUserScore);
 
     // Initialize the house indices
@@ -292,6 +294,10 @@ export const AnswersProvider = ({ children }) => {
   // ===========================================================================
 
   function formatFeatureForUI(featureInfo, value) {
+    // If the feature should be hidden, return ???
+    if (shouldFeatureBeHidden(featureInfo.name)) {
+      return "???";
+    }
     if (featureInfo.type === "categorical") {
       // For categorical features, return the category name
       return featureInfo.valueLabels[value];
