@@ -42,7 +42,7 @@ export default function InformedConsent() {
       </h1>
       <form onSubmit={handleSubmit} className="space-y-8">
         <div className="form-control">
-          <p className="text-base mb-4">[Informed consent text goes here...]</p>
+          {/* <p className="text-base mb-4">[Informed consent text goes here...]</p> */}
           <ol class="mt-6 text-base space-y-4 list-decimal list-inside">
             <li>I confirm that I have read and understand the participant information sheet dated 11/07/24 version 1.0 for this study.</li>
             <li>I understand that my participation is voluntary, and I am free to withdraw at any time, without giving any reason and without my legal rights being affected.</li>
@@ -73,6 +73,42 @@ export default function InformedConsent() {
                 type="radio"
                 name="consent"
                 value="disagree"
+                checked={consent === "disagree"}
+                onChange={handleChange}
+                className="radio radio-primary"
+              />
+              <span className="ml-2 text-base">
+                No
+              </span>
+            </label>
+          </div>
+          {errors.consent && (
+            <span className="text-red-500 text-sm">{errors.consent}</span>
+          )}
+        </div>
+        <div className="form-control">
+          <label className="label">
+            <span className="text-base mb-6"><strong>I give consent for information collected about me to be used to support other research in the future, including those outside of the EEA (optional).</strong></span>
+          </label>
+          <div className="flex flex-row space-x-10">
+            <label className="cursor-pointer">
+              <input
+                type="radio"
+                name="consent-optional"
+                value="yes"
+                checked={consent === "agree"}
+                onChange={handleChange}
+                className="radio radio-primary"
+              />
+              <span className="ml-2 text-base">
+                Yes
+              </span>
+            </label>
+            <label className="cursor-pointer">
+              <input
+                type="radio"
+                name="consent-optional"
+                value="no"
                 checked={consent === "disagree"}
                 onChange={handleChange}
                 className="radio radio-primary"
