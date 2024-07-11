@@ -96,8 +96,8 @@ export default function InformedConsent() {
                 type="radio"
                 name="consent-optional"
                 value="yes"
-                checked={consent === "agree"}
-                onChange={handleChange}
+                // checked={consent === "agree"}
+                // onChange={handleChange}
                 className="radio radio-primary"
               />
               <span className="ml-2 text-base">
@@ -109,8 +109,8 @@ export default function InformedConsent() {
                 type="radio"
                 name="consent-optional"
                 value="no"
-                checked={consent === "disagree"}
-                onChange={handleChange}
+                // checked={consent === "disagree"}
+                // onChange={handleChange}
                 className="radio radio-primary"
               />
               <span className="ml-2 text-base">
