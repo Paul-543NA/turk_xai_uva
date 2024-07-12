@@ -5,105 +5,26 @@ import { useAnswers } from "@/app/context/AnswersContext";
 function UserInputCard() {
   const {
     currentPhase,
-    goToNextQuestion,
     showingFeedback,
     getCurrentHousePrice,
     getAIPrediction,
     getCurrencySymbol,
     formatPriceForUI,
-    formatCurrencyInput,
-    userScore,
-    saveAnswer,
-    updateScore,
-    revertPriceToGBP,
   } = useAnswers();
 
-  const [inputValue, setInputValue] = useState("");
-  const [inputAIValue, setAIInputValue] = useState("");
-  const [isValid, setIsValid] = useState(false);
-  const [isAIValid, setAIIsValid] = useState(false);
-  const [followAI, setFollowAI] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState(null);
-
-  const createUserAnswer = () => {
-    let userAnswer = {
-      propertyValue: getValueGBP(inputValue),
-    };
-    if (currentPhase === "1") {
-      userAnswer = {
-        ...userAnswer,
-        aiPrediction: getValueGBP(inputAIValue),
-      };
-    }
-    if (currentPhase === "2") {
-      userAnswer = {
-        ...userAnswer,
-        aiPrediction: getValueGBP(inputAIValue),
-        followAI: followAI,
-        score: userScore,
-      };
-    }
-    return userAnswer;
-  };
-
-  const handleInputChange = (e) => {
-    const value = e.target.value;
-    const formattedValue = formatCurrencyInput(value);
-    setInputValue(formattedValue);
-
-    // Validate the input value (must be a positive number)
-    const number = parseFloat(value);
-    setIsValid(!isNaN(number) && number > 0);
-  };
-
-  const handleAIInputChange = (e) => {
-    const value = e.target.value;
-    const formattedValue = formatCurrencyInput(value);
-    setAIInputValue(formattedValue);
-
-    // Validate the input value (must be a positive number)
-    const number = parseFloat(value);
-    setAIIsValid(!isNaN(number) && number > 0);
-  };
-
-  const emptyInputs = () => {
-    setInputValue("");
-    setFollowAI(false);
-    setAIInputValue("");
-    setAIIsValid(false);
-    setIsValid(false);
-  };
-
-  const handleClickNext = async () => {
-    let submitErr = null;
-
-    if (!showingFeedback) {
-      const userAnswer = createUserAnswer();
-      try {
-        setSubmitting(true);
-        if (currentPhase === "2") {
-          const userGuess = followAI
-            ? getAIPrediction()
-            : getValueGBP(inputValue);
-          updateScore(userGuess);
-        }
-        await saveAnswer(userAnswer);
-      } catch (error) {
-        submitErr = error.message;
-      } finally {
-        setSubmitting(false);
-        setSubmitError(submitErr);
-      }
-    }
-    // Only execute if no error occurred
-    if (submitErr === null) {
-      const doReset = goToNextQuestion();
-      if (doReset) {
-        emptyInputs();
-      }
-    }
-  };
+  const {
+    inputValue,
+    inputAIValue,
+    isValid,
+    isAIValid,
+    followAI,
+    submitting,
+    submitError,
+    handleInputChange,
+    handleAIInputChange,
+    handleClickNext,
+    userPredictionError,
+  } = useUserInputCard();
 
   const TrustAIToggle = (
     <label className="form-control w-full max-w-xs mb-4">
@@ -175,20 +96,6 @@ function UserInputCard() {
       </label>
     </div>
   );
-
-  const userPredictionError = () => {
-    // If the user follows the AI, use the AI output
-    if (followAI) {
-      return Math.round(Math.abs(getCurrentHousePrice() - getAIPrediction()));
-    }
-    return Math.abs(getCurrentHousePrice() - getValueGBP(inputValue));
-  };
-
-  const getValueGBP = () => {
-    // Remove " " and , from the input value
-    const inputCleaned = inputValue.replace(/ /g, "").replace(/,/g, "");
-    return revertPriceToGBP(parseFloat(inputCleaned));
-  };
 
   return (
     <div className="card bg-base-300 shadow-xl md:m-4">
@@ -267,6 +174,135 @@ function UserInputCard() {
       </div>
     </div>
   );
+}
+
+function useUserInputCard() {
+  const {
+    currentPhase,
+    goToNextQuestion,
+    showingFeedback,
+    getCurrentHousePrice,
+    getAIPrediction,
+    formatCurrencyInput,
+    userScore,
+    saveAnswer,
+    updateScore,
+    revertPriceToGBP,
+  } = useAnswers();
+
+  const [inputValue, setInputValue] = useState("");
+  const [inputAIValue, setAIInputValue] = useState("");
+  const [isValid, setIsValid] = useState(false);
+  const [isAIValid, setAIIsValid] = useState(false);
+  const [followAI, setFollowAI] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
+
+  const createUserAnswer = () => {
+    let userAnswer = {
+      propertyValue: getValueGBP(inputValue),
+    };
+    if (currentPhase === "1") {
+      userAnswer = {
+        ...userAnswer,
+        aiPrediction: getValueGBP(inputAIValue),
+      };
+    }
+    if (currentPhase === "2") {
+      userAnswer = {
+        ...userAnswer,
+        followAI: followAI,
+        score: userScore,
+      };
+    }
+    return userAnswer;
+  };
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    const formattedValue = formatCurrencyInput(value);
+    setInputValue(formattedValue);
+
+    // Validate the input value (must be a positive number)
+    const number = parseFloat(value);
+    setIsValid(!isNaN(number) && number > 0);
+  };
+
+  const handleAIInputChange = (e) => {
+    const value = e.target.value;
+    const formattedValue = formatCurrencyInput(value);
+    setAIInputValue(formattedValue);
+
+    // Validate the input value (must be a positive number)
+    const number = parseFloat(value);
+    setAIIsValid(!isNaN(number) && number > 0);
+  };
+
+  const emptyInputs = () => {
+    setInputValue("");
+    setFollowAI(false);
+    setAIInputValue("");
+    setAIIsValid(false);
+    setIsValid(false);
+  };
+
+  const handleClickNext = async () => {
+    let submitErr = null;
+
+    if (!showingFeedback) {
+      const userAnswer = createUserAnswer();
+      try {
+        setSubmitting(true);
+        if (currentPhase === "2") {
+          const userGuess = followAI
+            ? getAIPrediction()
+            : getValueGBP(inputValue);
+          updateScore(userGuess);
+        }
+        await saveAnswer(userAnswer);
+      } catch (error) {
+        submitErr = error.message;
+      } finally {
+        setSubmitting(false);
+        setSubmitError(submitErr);
+      }
+    }
+    // Only execute if no error occurred
+    if (submitErr === null) {
+      const doReset = goToNextQuestion();
+      if (doReset) {
+        emptyInputs();
+      }
+    }
+  };
+
+  const userPredictionError = () => {
+    // If the user follows the AI, use the AI output
+    if (followAI) {
+      return Math.round(Math.abs(getCurrentHousePrice() - getAIPrediction()));
+    }
+    return Math.abs(getCurrentHousePrice() - getValueGBP(inputValue));
+  };
+
+  const getValueGBP = () => {
+    // Remove " " and , from the input value
+    const inputCleaned = inputValue.replace(/ /g, "").replace(/,/g, "");
+    return revertPriceToGBP(parseFloat(inputCleaned));
+  };
+
+  return {
+    inputValue,
+    inputAIValue,
+    isValid,
+    isAIValid,
+    followAI,
+    submitting,
+    submitError,
+    handleInputChange,
+    handleAIInputChange,
+    handleClickNext,
+    userPredictionError,
+  };
 }
 
 export default UserInputCard;
