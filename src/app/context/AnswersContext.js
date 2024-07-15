@@ -104,9 +104,6 @@ export const AnswersProvider = ({ children }) => {
     setDidGiveConsent(newDidGiveConsent);
     localStorage.setItem("didGiveConsent", newDidGiveConsent);
   };
-  const getConsentStatus = () => {
-    return localStorage.getItem("didGiveConsent") === "true";
-  };
 
   const [userScore, setUserScore] = useState(100);
   const updateUserScore = (newScore) => {
@@ -179,6 +176,10 @@ export const AnswersProvider = ({ children }) => {
     let storedDidCompleteForm =
       localStorage.getItem("didCompleteForm") === "true";
     updateDidCompleteForm(storedDidCompleteForm);
+
+    let storedDidGiveConsent =
+      localStorage.getItem("didGiveConsent") === "true";
+    updateDidGiveConsent(storedDidGiveConsent);
 
     // Initialize the user score
     let storedUserScore = parseFloat(
@@ -625,7 +626,6 @@ export const AnswersProvider = ({ children }) => {
         userScore,
         revertPriceToGBP,
         // Getters
-        getConsentStatus,
         getCurrentHouse,
         getCurrentPointCounterfactual,
         getCurrentIntervalCounterfactual,
