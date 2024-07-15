@@ -188,12 +188,43 @@ export const AnswersProvider = ({ children }) => {
 
     // Initialize the house indices
     // If there is no value in the local storage, these indices are a shuffled version of the range of available houses
-    const housesRange = Array.from({ length: houses.length }, (_, i) => i);
-    let storedHouseIndices = JSON.parse(localStorage.getItem("houseIndices"));
-    if (!storedHouseIndices && runtimeParams.shuffleHouses) {
-      storedHouseIndices = housesRange.sort(() => Math.random() - 0.5);
+    // const housesRange = Array.from({ length: houses.length }, (_, i) => i);
+    // let storedHouseIndices = JSON.parse(localStorage.getItem("houseIndices"));
+    // if (!storedHouseIndices && runtimeParams.shuffleHouses) {
+    //   storedHouseIndices = housesRange.sort(() => Math.random() - 0.5);
+    // }
+    // updateHouseIndices(storedHouseIndices);
+
+    
+    const totalQuestions = questionsPerPhase.reduce((sum, value) => sum + value, 0);
+
+    if (totalQuestions <= houses.length) {
+      const housesRange = Array.from({ length: houses.length }, (_, i) => i);
+      let storedHouseIndices = JSON.parse(localStorage.getItem("houseIndices"));
+      if (!storedHouseIndices && runtimeParams.shuffleHouses) {
+        storedHouseIndices = housesRange.sort(() => Math.random() - 0.5);
+      }
+      updateHouseIndices(storedHouseIndices);
     }
-    updateHouseIndices(storedHouseIndices);
+    else {
+      // Function to sample indices with replacement
+      function sampleIndicesWithReplacement(arrayLength, numSamples) {
+        const indices = [];
+        for (let i = 0; i < numSamples; i++) {
+            const randomIndex = Math.floor(Math.random() * arrayLength);
+            indices.push(randomIndex);
+        }
+        return indices;
+      }
+
+      const sampledIndices = sampleIndicesWithReplacement(houses.length, totalQuestions);
+      updateHouseIndices(sampledIndices);
+    }
+
+
+
+
+  
 
     setIsLoading(false);
   }
