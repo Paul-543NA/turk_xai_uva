@@ -196,8 +196,10 @@ export const AnswersProvider = ({ children }) => {
     // }
     // updateHouseIndices(storedHouseIndices);
 
-    
-    const totalQuestions = questionsPerPhase.reduce((sum, value) => sum + value, 0);
+    const totalQuestions = questionsPerPhase.reduce(
+      (sum, value) => sum + value,
+      0
+    );
 
     if (totalQuestions <= houses.length) {
       const housesRange = Array.from({ length: houses.length }, (_, i) => i);
@@ -206,26 +208,23 @@ export const AnswersProvider = ({ children }) => {
         storedHouseIndices = housesRange.sort(() => Math.random() - 0.5);
       }
       updateHouseIndices(storedHouseIndices);
-    }
-    else {
+    } else {
       // Function to sample indices with replacement
       function sampleIndicesWithReplacement(arrayLength, numSamples) {
         const indices = [];
         for (let i = 0; i < numSamples; i++) {
-            const randomIndex = Math.floor(Math.random() * arrayLength);
-            indices.push(randomIndex);
+          const randomIndex = Math.floor(Math.random() * arrayLength);
+          indices.push(randomIndex);
         }
         return indices;
       }
 
-      const sampledIndices = sampleIndicesWithReplacement(houses.length, totalQuestions);
+      const sampledIndices = sampleIndicesWithReplacement(
+        houses.length,
+        totalQuestions
+      );
       updateHouseIndices(sampledIndices);
     }
-
-
-
-
-  
 
     setIsLoading(false);
   }
@@ -505,8 +504,19 @@ export const AnswersProvider = ({ children }) => {
     // questionAnswers: { userID: { questionId: answer } }
     try {
       if (runtimeParams.useFirestore) {
+        // Add the current house Id and a timestamp to the answer
+        answer["houseId"] = getCurrentHouse()["id"];
+        answer["timestamp"] = new Date().toISOString();
+
+        const collectionName = runtimeParams.firestoreTestMode
+          ? "test-questionAnswers"
+          : "questionAnswers";
         await setDoc(
-          doc(db, `questionAnswers/${userId}/answers`, getCurrentQuestionID()),
+          doc(
+            db,
+            `${collectionName}/${userId}/answers`,
+            getCurrentQuestionID()
+          ),
           answer
         );
       }
@@ -523,20 +533,46 @@ export const AnswersProvider = ({ children }) => {
     console.log("submitFormResponse", formResponse);
 
     // Update state
-    console.log(
-      "submitFormResponse",
-      formResponse.preferredCurrency,
-      formResponse.preferredMetric
-    );
     updatePreferredCurrency(formResponse.preferredCurrency);
     updatePreferredAreaMetric(formResponse.preferredMetric);
+
+    // Add the attributed experiment conditions to the form response
+    formResponse["attributedUserExplanationType"] = userExplanationType;
+    formResponse["attributedUserExplanationViewMode"] = userExplanationViewMode;
+    formResponse["timestamp"] = new Date().toISOString();
+
+    // Get the id of each house in the use attributed order
+    const houseIds = houseIndices.map((index) => houses[index].id);
+    formResponse["houseIds"] = houseIds;
 
     // Update the database
     try {
       if (runtimeParams.useFirestore) {
-        await setDoc(doc(db, "formResponses", userId), formResponse);
+        const collectionName = runtimeParams.firestoreTestMode
+          ? "test-formResponses"
+          : "formResponses";
+        await setDoc(doc(db, collectionName, userId), formResponse);
       }
       updateDidCompleteForm(true);
+    } catch (error) {
+      console.error("Error writing document: ", error);
+      throw error;
+    }
+  }
+
+  async function saveConsent(consent, reuseConsent) {
+    updateDidGiveConsent(consent);
+    try {
+      if (runtimeParams.useFirestore) {
+        const collectionName = runtimeParams.firestoreTestMode
+          ? "test-consents"
+          : "consents";
+        await setDoc(doc(db, collectionName, userId), {
+          consent: consent,
+          reuseConsent: reuseConsent,
+          timeStep: new Date().toISOString(),
+        });
+      }
     } catch (error) {
       console.error("Error writing document: ", error);
       throw error;
@@ -546,7 +582,10 @@ export const AnswersProvider = ({ children }) => {
   async function saveScoreToLeaderBoard(email) {
     try {
       if (runtimeParams.useFirestore) {
-        await setDoc(doc(db, "leaderBoard", userId), {
+        const collectionName = runtimeParams.firestoreTestMode
+          ? "test-leaderBoard"
+          : "leaderBoard";
+        await setDoc(doc(db, collectionName, userId), {
           email: email,
           score: userScore,
         });
@@ -622,7 +661,7 @@ export const AnswersProvider = ({ children }) => {
         showingFeedback,
         didCompleteForm,
         didGiveConsent,
-        updateDidGiveConsent,
+        saveConsent,
         userScore,
         revertPriceToGBP,
         // Getters

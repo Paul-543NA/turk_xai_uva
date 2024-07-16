@@ -5,13 +5,21 @@ import { useAnswers } from "../context/AnswersContext";
 
 export default function InformedConsent() {
   const [consent, setConsent] = useState("");
+  const [reuseConsent, setReuseConsent] = useState("agree");
   const [errors, setErrors] = useState({});
+  const [uploadError, setUploadError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { updateDidGiveConsent } = useAnswers();
+  const { saveConsent } = useAnswers();
 
   const handleChange = (e) => {
     const { value } = e.target;
     setConsent(value);
+  };
+
+  const handleReuseConsentChange = (e) => {
+    const { value } = e.target;
+    setReuseConsent(value);
   };
 
   const validate = () => {
@@ -23,14 +31,21 @@ export default function InformedConsent() {
     return Object.keys(tempErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     if (validate()) {
-      updateDidGiveConsent(consent === "agree");
-      if (consent === "disagree") {
-        router.push("/finish");
-      } else {
+      try {
+        await saveConsent(consent, reuseConsent);
+        setUploadError(null);
+        setLoading(false);
         router.push("/form");
+      } catch (error) {
+        // Handle the error, e.g., display an error message
+        setUploadError(
+          "An error occurred. Please check your internet connection or try again later."
+        );
+        setLoading(false);
       }
     }
   };
@@ -121,8 +136,8 @@ export default function InformedConsent() {
                 type="radio"
                 name="consent-optional"
                 value="yes"
-                // checked={consent === "agree"}
-                // onChange={handleChange}
+                checked={reuseConsent === "agree"}
+                onChange={handleReuseConsentChange}
                 className="radio radio-primary"
               />
               <span className="ml-2 text-base">Yes</span>
@@ -132,8 +147,8 @@ export default function InformedConsent() {
                 type="radio"
                 name="consent-optional"
                 value="no"
-                // checked={consent === "disagree"}
-                // onChange={handleChange}
+                checked={reuseConsent === "disagree"}
+                onChange={handleReuseConsentChange}
                 className="radio radio-primary"
               />
               <span className="ml-2 text-base">No</span>
@@ -148,11 +163,19 @@ export default function InformedConsent() {
           <button
             type="submit"
             className="btn btn-primary my-8 mt-8 text-base"
-            disabled={!(consent === "agree")}
+            disabled={!(consent === "agree") || loading}
           >
-            Submit
+            {loading ? "Loading..." : "Submit"}
           </button>
         </div>
+
+        {/* Error div that shows when there is an upload error */}
+        {uploadError && (
+          <div role="alert" className="text-red-500">
+            {uploadError}
+          </div>
+        )}
+
         {/* Warning div that you should give consent */}
         {consent === "disagree" && (
           <div role="alert" className="alert alert-warning">
