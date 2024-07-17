@@ -561,7 +561,7 @@ export const AnswersProvider = ({ children }) => {
   }
 
   async function saveConsent(consent, reuseConsent) {
-    updateDidGiveConsent(consent);
+    updateDidGiveConsent(consent === "agree");
     try {
       if (runtimeParams.useFirestore) {
         const collectionName = runtimeParams.firestoreTestMode
