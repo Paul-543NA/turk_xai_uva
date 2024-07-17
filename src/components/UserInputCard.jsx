@@ -20,6 +20,7 @@ function UserInputCard() {
     followAI,
     submitting,
     submitError,
+    setFollowAI,
     handleInputChange,
     handleAIInputChange,
     handleClickNext,
@@ -134,6 +135,9 @@ function UserInputCard() {
 
         {showingFeedback && currentPhase === "2" ? (
           <p className="p-4 pl-4">
+            {followAI
+              ? `THe AI predicted ${formatPriceForUI(getAIPrediction())}.`
+              : null}
             The true value of the property is{" "}
             <strong>{formatPriceForUI(getCurrentHousePrice())}</strong> (you
             were <strong>{formatPriceForUI(userPredictionError())}</strong>{" "}
@@ -298,6 +302,7 @@ function useUserInputCard() {
     followAI,
     submitting,
     submitError,
+    setFollowAI,
     handleInputChange,
     handleAIInputChange,
     handleClickNext,

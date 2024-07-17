@@ -588,6 +588,7 @@ export const AnswersProvider = ({ children }) => {
         await setDoc(doc(db, collectionName, userId), {
           email: email,
           score: userScore,
+          timeStep: new Date().toISOString(),
         });
       }
     } catch (error) {

@@ -4,13 +4,12 @@ import { useAnswers } from "../context/AnswersContext";
 import { useRouter } from "next/navigation";
 
 const Page = () => {
-  const { saveScoreToLeaderBoard, resetUser, didGiveConsent } = useAnswers();
+  const { saveScoreToLeaderBoard, resetUser, userScore } = useAnswers();
   const [email, setEmail] = useState("");
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [feedbackType, setFeedbackType] = useState(""); // 'success' or 'error'
   const [isSubmitted, setIsSubmitted] = useState(false);
   const router = useRouter();
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,29 +31,14 @@ const Page = () => {
     router.push("/");
   };
 
-  // if (!didGiveConsent) {
-  //   return (
-  //     <div className="hero bg-base-200 min-h-screen">
-  //       <div className="hero-content text-center">
-  //         <div className="max-w-md">
-  //           <h1 className="text-5xl font-bold dark:text-gray-300">Oops!</h1>
-  //           <p className="py-6">
-  //             Unfortunately, you cannot participate in the study as you did not give consent.
-  //           </p>
-  //           <button onClick={handleReset} className="btn btn-primary mt-4 w-full">
-  //             Go back to Home
-  //           </button>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   );
-  // }
-
   return (
     <div className="hero bg-base-200 min-h-screen">
       <div className="hero-content text-center">
         <div className="max-w-md">
           <h1 className="text-5xl font-bold dark:text-gray-300">Well done!</h1>
+          <h3 className="text-3xl font-bold dark:text-gray-300 mt-6">
+            Your score: {userScore.toFixed(2)}
+          </h3>
           <p className="py-6">
             You have completed the task. Thank you for your participation! If
             you would like to enter the raffle to win a gift card, please enter
@@ -73,7 +57,11 @@ const Page = () => {
                   disabled={isSubmitted}
                 />
                 {!isSubmitted && (
-                  <button type="submit" className="btn btn-primary mt-4" disabled={!email}>
+                  <button
+                    type="submit"
+                    className="btn btn-primary mt-4"
+                    disabled={!email}
+                  >
                     Submit
                   </button>
                 )}
