@@ -120,6 +120,8 @@ export default function InformedConsent() {
             <span className="text-red-500 text-sm">{errors.consent}</span>
           )}
         </div>
+
+        {/* OPTIONAL DATA REUSE CONSENT */}
         <div className="form-control">
           <label className="label">
             <span className="text-base mb-6">
@@ -135,7 +137,7 @@ export default function InformedConsent() {
               <input
                 type="radio"
                 name="consent-optional"
-                value="yes"
+                value="agree"
                 checked={reuseConsent === "agree"}
                 onChange={handleReuseConsentChange}
                 className="radio radio-primary"
@@ -146,7 +148,7 @@ export default function InformedConsent() {
               <input
                 type="radio"
                 name="consent-optional"
-                value="no"
+                value="disagree"
                 checked={reuseConsent === "disagree"}
                 onChange={handleReuseConsentChange}
                 className="radio radio-primary"
