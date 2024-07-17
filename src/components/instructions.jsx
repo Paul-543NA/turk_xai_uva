@@ -107,9 +107,9 @@ export const PhaseInstructions = () => {
               <li>an explanation for this prediction.</li> */}
             </ul>
             <p>
-            For some properties not all information
-            will be available, shown as "???". Your task is to <strong>estimate the the house's 
-              the house's true sales price and the sales price that the AI
+            {/* For some properties not all information will be available, shown as "???".  */}
+            Your task is to <strong>estimate the house's 
+              true sales price</strong> and <strong>the sales price that the AI
               predicts</strong>. After submitting your response, you will see:
             </p>
             <ul class="ps-10 mt-2 list-disc list-inside space-y-2">
@@ -129,8 +129,9 @@ export const PhaseInstructions = () => {
                 <li>an explanation for this prediction.</li> */}
               </ul>
               <p>
-              For some properties not all information will be available, shown as "???". Your task is to <strong>estimate the the house's 
-              the house's true sales price and the sales price that the AI
+              {/* For some properties not all information will be available, shown as "???".  */}
+              Your task is to <strong>estimate
+              the house's true sales price</strong> and <strong>the sales price that the AI
               predicts</strong>. After submitting your response, you will see:
               </p>
               <ul class="ps-10 mt-2 list-disc list-inside space-y-2">
