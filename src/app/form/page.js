@@ -68,7 +68,9 @@ export default function Form() {
 
   return (
     <div className="container mx-auto text-xl p-10 mt-10">
-      <h1 className="text-4xl font-bold mb-4 dark:text-gray-300">Questionnaire</h1>
+      <h1 className="text-4xl font-bold mb-4 dark:text-gray-300">
+        Questionnaire
+      </h1>
       <form onSubmit={handleSubmit} className="space-y-8">
         <div className="form-control">
           <label className="label">
@@ -81,7 +83,6 @@ export default function Form() {
             className={`select select-bordered w-full max-w-xs text-base${
               errors.gender ? "select-error" : ""
             }`}
-          
           >
             <option value="">Select</option>
             <option value="female">Female</option>
@@ -114,7 +115,9 @@ export default function Form() {
 
         <div className="form-control">
           <label className="label">
-            <span className="text-base">Which level of education have you completed?</span>
+            <span className="text-base">
+              Which level of education have you completed?
+            </span>
           </label>
           <select
             name="education"
@@ -192,10 +195,10 @@ export default function Form() {
             }`}
           >
             <option value="">Select</option>
-            <option value="yes">Daily</option>
-            <option value="no">Weekly</option>
-            <option value="no">Monthly</option>
-            <option value="no">Less than monthly</option>
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+            <option value="less_than_monthly">Less than monthly</option>
           </select>
           {errors.dailyAIWork && (
             <span className="text-red-500 text-sm">{errors.dailyAIWork}</span>
