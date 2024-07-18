@@ -45,7 +45,7 @@ export default function ExperimentIntroduction() {
               <li>
                 whether or not the house is classified as energy efficient
               </li>
-              <li>whether or not the house is a registered as a monument</li>
+              <li>whether or not the house is registered as a monument</li>
             </ul>
           </p>
           <p className="text-base mb-4">
