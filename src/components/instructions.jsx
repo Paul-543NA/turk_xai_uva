@@ -71,10 +71,10 @@ export const PhaseInstructions = () => {
                   understand under which circumstances{" "}
                   <strong>a house of the same type</strong>, that is same
                   zipcode, monument status and energy efficiency class, would
-                  cost <strong>{formatPriceForUI(100000)} less</strong>. The
+                  cost <strong>{formatPriceForUI(50000)} less</strong>. The
                   explanation you will receive shows how each feature would have
                   to change such that the predicted house price would be at
-                  least {formatPriceForUI(100000)} lower than the currently
+                  least {formatPriceForUI(50000)} lower than the currently
                   predicted price.
                 </p>
               ) : null}
@@ -85,10 +85,10 @@ export const PhaseInstructions = () => {
                   understand under which circumstances{" "}
                   <strong>a house of the same type</strong>, that is same
                   zipcode, monument status and energy efficiency class, would
-                  cost <strong>{formatPriceForUI(100000)} less</strong>. The
+                  cost <strong>{formatPriceForUI(50000)} less</strong>. The
                   explanation you will receive shows how each feature would have
                   to change such that the predicted price is{" "}
-                  {formatPriceForUI(100000)} lower. Specifically, for each
+                  {formatPriceForUI(50000)} lower. Specifically, for each
                   feature you will see a possible range (minimum and maximum) of
                   values that this feature could take on.
                 </p>
@@ -156,10 +156,10 @@ export const PhaseInstructions = () => {
                   understand under which circumstances{" "}
                   <strong>a house of the same type</strong>, that is same
                   zipcode, monument status and energy efficiency class, would
-                  cost <strong>{formatPriceForUI(100000)} less</strong>. The
+                  cost <strong>{formatPriceForUI(50000)} less</strong>. The
                   explanation you will receive shows how each feature would have
                   to change such that the predicted house price would be at
-                  least {formatPriceForUI(100000)} lower than the currently
+                  least {formatPriceForUI(50000)} lower than the currently
                   predicted price.
                 </p>
               ) : null}
@@ -170,10 +170,10 @@ export const PhaseInstructions = () => {
                   understand under which circumstances{" "}
                   <strong>a house of the same type</strong>, that is same
                   zipcode, monument status and energy efficiency class, would
-                  cost <strong>{formatPriceForUI(100000)} less</strong>. The
+                  cost <strong>{formatPriceForUI(50000)} less</strong>. The
                   explanation you will receive shows how each feature would have
                   to change such that the predicted price is{" "}
-                  {formatPriceForUI(100000)} lower than the currently predicted
+                  {formatPriceForUI(50000)} lower than the currently predicted
                   price. Specifically, for each feature you will see a possible
                   range (minimum and maximum) of values that this feature could
                   take on.
