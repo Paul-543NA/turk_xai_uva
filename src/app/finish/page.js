@@ -4,7 +4,7 @@ import { useAnswers } from "../context/AnswersContext";
 import { useRouter } from "next/navigation";
 
 const Page = () => {
-  const { saveScoreToLeaderBoard, resetUser, userScore } = useAnswers();
+  const { userId, saveScoreToLeaderBoard, resetUser, userScore } = useAnswers();
   const [email, setEmail] = useState("");
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [feedbackType, setFeedbackType] = useState(""); // 'success' or 'error'
@@ -74,10 +74,17 @@ const Page = () => {
               </div>
             </form>
           </div>
-          {/* Bytton to take the experu */}
+          {/* Button to take the experu */}
           <button onClick={handleReset} className="btn btn-warning mt-4 w-full">
             Reset
           </button>
+
+          <p className="py-6">
+            If you completed the experiment from Amazon Mechanical Turk, please
+            return to the HIT and submit the following unique completion code:
+            <br />
+            <strong>{userId}</strong>
+          </p>
         </div>
       </div>
     </div>

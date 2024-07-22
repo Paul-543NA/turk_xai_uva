@@ -10,7 +10,7 @@ export default function InformedConsent() {
   const [uploadError, setUploadError] = useState(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { saveConsent } = useAnswers();
+  const { userId, saveConsent } = useAnswers();
 
   const handleChange = (e) => {
     const { value } = e.target;
@@ -162,6 +162,30 @@ export default function InformedConsent() {
         </div>
 
         <div className="form-control">
+          {/* user Id alert */}
+          <div role="alert" className="alert">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              className="stroke-info h-6 w-6 shrink-0"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+            <p className="text-base">
+              If you ever want to withdraw from the study, please contact the
+              study team with your user ID. Your user ID is:
+              <br />
+              <strong>{userId}</strong>
+            </p>
+          </div>
+
+          {/* Submit button */}
           <button
             type="submit"
             className="btn btn-primary my-8 mt-8 text-base"
