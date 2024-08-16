@@ -31,7 +31,7 @@ const SentencesPointCounterfactualCard = ({ pointCounterfactual }) => {
         <h2 className="card-title">Point counterfactual</h2>
         <p>
           The AI would have predicted a price of at least{" "}
-          <strong>{formatPriceForUI(100000)} lower</strong> than the currently
+          <strong>{formatPriceForUI(50000)} lower</strong> than the currently
           predicted price if
           <ul className="list-disc list-inside leading-loose">
             <li>
@@ -103,7 +103,7 @@ const GraphPointCounterfactualCard = ({ house, pointCounterfactual }) => {
         <p>
           The explanation shows what value each feature needs to take on such
           that the AI would predict the price to be at least{" "}
-          <strong>{formatPriceForUI(100000)} lower</strong> than the currently
+          <strong>{formatPriceForUI(50000)} lower</strong> than the currently
           predicted price.
         </p>
         {continuousFeatures.map((feature, index) => (
@@ -144,7 +144,7 @@ const TablePointCounterfactualCard = ({ pointCounterfactual }) => {
         <p>
           The explanation shows what value each feature needs to take on such
           that the AI would predict the price to be at least{" "}
-          <strong>{formatPriceForUI(100000)} lower</strong> than the currently
+          <strong>{formatPriceForUI(50000)} lower</strong> than the currently
           predicted price.
         </p>
         <table className="table table-compact pt-3 text-base">

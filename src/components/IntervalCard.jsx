@@ -46,7 +46,7 @@ const SentencesIntervalCard = ({ intervalExplanation }) => {
         <span></span>
         <p>
           The AI would have predicted a price of at least{" "}
-          <strong>{formatPriceForUI(100000)} lower</strong> than the currently
+          <strong>{formatPriceForUI(5000)} lower</strong> than the currently
           predicted price, if
           <ul className="list-disc list-inside leading-loose">
             <li>
@@ -113,7 +113,7 @@ const GraphIntervalCard = ({ house, intervalExplanation }) => {
         <p>
           The explanation shows in what range each feature needs to be so that
           the AI would predict the price to be at least{" "}
-          <strong>{formatPriceForUI(100000)} lower</strong> than the currently
+          <strong>{formatPriceForUI(50000)} lower</strong> than the currently
           predicted price.
         </p>
         {continuousFeatures.map((feature, index) => (
@@ -147,7 +147,7 @@ const TableIntervalCard = ({ intervalExplanation }) => {
         <p>
           The explanation shows in what range each feature needs to be so that
           the AI would predict the price to be at least{" "}
-          <strong>{formatPriceForUI(100000)} lower</strong> than the currently
+          <strong>{formatPriceForUI(50000)} lower</strong> than the currently
           predicted price.
         </p>
         <span></span>
