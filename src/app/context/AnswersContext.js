@@ -392,7 +392,7 @@ export const AnswersProvider = ({ children }) => {
       USD: 1.08,
     };
     const convertedPrice = Math.round(
-      price / conversionRates[preferredCurrency]
+      price * conversionRates[preferredCurrency]
     );
     const localeString = formatCurrencyInput(convertedPrice.toString());
     console.log("formatPriceForUI", preferredCurrency, localeString);

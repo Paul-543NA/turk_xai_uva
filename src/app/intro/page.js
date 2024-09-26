@@ -30,10 +30,10 @@ export default function ExperimentIntroduction() {
             country. It is located approximately 30 min travel time to the
             Netherland{"'"}s capital city.{" "}
             <strong>
-              An AI was trained to predict a house{"'"}s sales price based on
-              eleven characteristics of the property:
+              An AI model was trained to predict a house{"'"}s sales price based on
+              ten characteristics of the property:
             </strong>
-            <ul class="ps-10 mt-2 list-disc list-inside space-y-2">
+            <ul class="ps-10 mt-2 list-disc list-inside space-y-1.5">
               <li>length of the lot</li>
               <li>width of the lot</li>
               <li>living area of the house</li>

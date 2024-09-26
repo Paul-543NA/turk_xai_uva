@@ -35,14 +35,18 @@ const SentencesPointCounterfactualCard = ({ pointCounterfactual }) => {
           predicted price if
           <ul className="list-disc list-inside leading-loose">
             <li>
+              the living area would have{" "}
+              {formatFeatureForUI(6, pointCounterfactual["house-area"])} {area},
+            </li>
+            <li>
               the lot would be{" "}
               {formatFeatureForUI(4, pointCounterfactual["lot-len"])} {distance}{" "}
               long and {formatFeatureForUI(5, pointCounterfactual["lot-width"])}{" "}
               {distance} wide,
             </li>
             <li>
-              the living area would have{" "}
-              {formatFeatureForUI(6, pointCounterfactual["house-area"])} {area}
+            the construction date would have been in{" "}
+            {pointCounterfactual["buildyear"]},
             </li>
             <li>
               and the garden would have a size of{" "}
@@ -61,9 +65,16 @@ const SentencesPointCounterfactualCard = ({ pointCounterfactual }) => {
 
 const GraphPointCounterfactualCard = ({ house, pointCounterfactual }) => {
   const { formatFeatureLabelForUI, formatPriceForUI } = useAnswers();
-  const continuousFeatures = featureInfos.filter(
-    (feature) => feature.type === "continuous"
-  );
+  // const continuousFeatures = featureInfos.filter(
+  //   (feature) => feature.type === "continuous"
+  // );
+  const featuresContinuous = ['house-area', 'lot-width', 'bathrooms', 'buildyear', 'lot-len', 'balcony', 'garden-size'];
+
+  const findFeatureByName = (name) => {
+    return featureInfos.find((feature) => feature.name === name);};
+    
+// Ensure the order of continousFeatures matches the one above
+  const continuousFeatures = featuresContinuous.map((name) => findFeatureByName(name)).filter(Boolean);
 
   const FeatureBar = ({ feature }) => {
     const [min, max] = getFeatureBounds(
@@ -126,9 +137,16 @@ const GraphPointCounterfactualCard = ({ house, pointCounterfactual }) => {
 const TablePointCounterfactualCard = ({ pointCounterfactual }) => {
   const { formatFeatureForUI, formatFeatureLabelForUI, formatPriceForUI } =
     useAnswers();
-  const continuousFeatures = featureInfos.filter(
-    (feature) => feature.type === "continuous"
-  );
+  // const continuousFeatures = featureInfos.filter(
+  //   (feature) => feature.type === "continuous"
+  // );
+  const featuresContinuous = ['house-area', 'lot-width', 'bathrooms', 'buildyear', 'lot-len', 'balcony', 'garden-size'];
+
+  const findFeatureByName = (name) => {
+    return featureInfos.find((feature) => feature.name === name);};
+    
+// Ensure the order of continousFeatures matches the one above
+  const continuousFeatures = featuresContinuous.map((name) => findFeatureByName(name)).filter(Boolean);
 
   const tableRows = continuousFeatures.map((feature, index) => (
     <tr key={index}>

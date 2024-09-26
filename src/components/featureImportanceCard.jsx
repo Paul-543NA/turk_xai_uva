@@ -69,13 +69,13 @@ const FeatureImportanceSentencesCard = ({ featureImportances }) => {
 
   const paragraph =
     `According to the AI, on a scale from 0 to 100, ` +
-    `${sortedFeatures[0].label} weighs ${sortedFeatures[0].importance}, ` +
-    `${sortedFeatures[1].label} weighs ${sortedFeatures[1].importance}, and ` +
-    `${sortedFeatures[2].label} weighs ${sortedFeatures[2].importance}. ` +
-    `This is followed by ${sortedFeatures[3].label} with a weight of ${sortedFeatures[3].importance} ` +
-    `and ${sortedFeatures[4].label} with a weight of ${sortedFeatures[4].importance}. ` +
-    `${sortedFeatures[5].label} (weight ${sortedFeatures[5].importance}) ` +
-    `and ${sortedFeatures[6].label} (weight ${sortedFeatures[6].importance}) ` +
+    `"${sortedFeatures[0].label}" weighs ${sortedFeatures[0].importance}, ` +
+    `"${sortedFeatures[1].label}" weighs ${sortedFeatures[1].importance}, and ` +
+    `"${sortedFeatures[2].label}" weighs ${sortedFeatures[2].importance}. ` +
+    `This is followed by "${sortedFeatures[3].label}" with a weight of ${sortedFeatures[3].importance} ` +
+    `and "${sortedFeatures[4].label}" with a weight of ${sortedFeatures[4].importance}. ` +
+    `"${sortedFeatures[5].label}" (weight ${sortedFeatures[5].importance}) ` +
+    `and "${sortedFeatures[6].label}" (weight ${sortedFeatures[6].importance}) ` +
     `had the least impact on the prediction.`;
 
   return (
@@ -93,9 +93,16 @@ const FeatureImportanceTableCard = ({ featureImportances }) => {
         featureImportances: object with feature names as keys and feature importances as values
         */
 
-  const continuousFeatures = featureInfos.filter(
-    (feature) => feature.type === "continuous"
-  );
+  // const continuousFeatures = featureInfos.filter(
+  //   (feature) => feature.type === "continuous"
+  // );
+  const featuresContinuous = ['house-area', 'lot-width', 'bathrooms', 'buildyear', 'lot-len', 'balcony', 'garden-size'];
+
+  const findFeatureByName = (name) => {
+    return featureInfos.find((feature) => feature.name === name);};
+    
+// Ensure the order of continousFeatures matches the one above
+  const continuousFeatures = featuresContinuous.map((name) => findFeatureByName(name)).filter(Boolean);
 
   const aiDescText =
     "The explanation shows the importance of each feature towards the AI's prediction from 0 to 100.";
@@ -130,9 +137,17 @@ const FeatureImportanceGraphCard = ({ featureImportances }) => {
   /*
     featureImportances: object with feature names as keys and feature importances as values
     */
-  const continuousFeatures = featureInfos.filter(
-    (feature) => feature.type === "continuous"
-  );
+  const featuresContinuous = ['house-area', 'lot-width', 'bathrooms', 'buildyear', 'lot-len', 'balcony', 'garden-size'];
+
+  const findFeatureByName = (name) => {
+    return featureInfos.find((feature) => feature.name === name);};
+    
+// Ensure the order of continousFeatures matches the one above
+  const continuousFeatures = featuresContinuous.map((name) => findFeatureByName(name)).filter(Boolean);
+
+  // const continuousFeatures = featureInfos.filter(
+  //   (feature) => feature.type === "continuous"
+  // );
 
   const FeatureImportanceLine = ({ featureInfo }) => {
     const importance = featureImportances[featureInfo.name];

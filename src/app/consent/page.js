@@ -6,6 +6,7 @@ import { useAnswers } from "../context/AnswersContext";
 export default function InformedConsent() {
   const [consent, setConsent] = useState("");
   const [reuseConsent, setReuseConsent] = useState("agree");
+  const [futureContact, setFutureContact] = useState("agree");
   const [errors, setErrors] = useState({});
   const [uploadError, setUploadError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -22,6 +23,11 @@ export default function InformedConsent() {
     setReuseConsent(value);
   };
 
+  const handleFutureContactChange = (e) => {
+    const { value } = e.target;
+    setFutureContact(value);
+  };
+
   const validate = () => {
     let tempErrors = {};
     if (!consent) {
@@ -36,7 +42,7 @@ export default function InformedConsent() {
     setLoading(true);
     if (validate()) {
       try {
-        await saveConsent(consent, reuseConsent);
+        await saveConsent(consent, reuseConsent, futureContact);
         setUploadError(null);
         setLoading(false);
         router.push("/form");
@@ -67,19 +73,28 @@ export default function InformedConsent() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                participant information sheet dated 11/07/24 version 1.0
+                participant information sheet dated 23/09/24 version 1.0
               </a>{" "}
-              for this study.
+              for this study and have had the opportunity to ask questions which have been answered fully.
             </li>
             <li>
               I understand that my participation is voluntary, and I am free to
               withdraw at any time, without giving any reason and without my
               legal rights being affected.
             </li>
+            {/* <li>
+            I give consent for information collected about me to be used to support other research 
+            or in the development of a new product or service by an academic institution or commercial company 
+            in the future, including those outside of the United Kingdom (which Imperial College London has ensured will keep this information secure). 
+            </li> */}
             <li>
+            I understand that data collected from me are a gift donated to Imperial College and that I will not 
+            personally benefit financially if this research leads to an invention and/or the successful development of a new product or service.
+            </li>
+            {/* <li>
               I give permission for Imperial College London to access my records
               that are relevant to this research.
-            </li>
+            </li> */}
             <li>I consent to take part in this study.</li>
           </ol>
         </div>
@@ -125,11 +140,12 @@ export default function InformedConsent() {
         <div className="form-control">
           <label className="label">
             <span className="text-base mb-6">
-              <strong>
+              {/* <strong> */}
                 I give consent for information collected about me to be used to
-                support other research in the future, including those outside of
-                the EEA (optional).
-              </strong>
+                support other research or in the development of a new product or service 
+                by an academic institution or commercial company in the future, including those outside 
+                of the United Kingdom (which Imperial College London has ensured will keep this information secure) <strong>(optional)</strong>.
+              {/* </strong> */}
             </span>
           </label>
           <div className="flex flex-row space-x-10">
@@ -151,6 +167,44 @@ export default function InformedConsent() {
                 value="disagree"
                 checked={reuseConsent === "disagree"}
                 onChange={handleReuseConsentChange}
+                className="radio radio-primary"
+              />
+              <span className="ml-2 text-base">No</span>
+            </label>
+          </div>
+          {errors.consent && (
+            <span className="text-red-500 text-sm">{errors.consent}</span>
+          )}
+        </div>
+
+        {/* OPTIONAL DATA REUSE CONSENT */}
+        <div className="form-control">
+          <label className="label">
+            <span className="text-base mb-6">
+              {/* <strong> */}
+              I give consent to being contacted about the possibility to take part in other research studies <strong>(optional)</strong>. 
+              {/* </strong> */}
+            </span>
+          </label>
+          <div className="flex flex-row space-x-10">
+            <label className="cursor-pointer">
+              <input
+                type="radio"
+                name="consent-optional-2"
+                value="agree"
+                checked={futureContact === "agree"}
+                onChange={handleFutureContactChange}
+                className="radio radio-primary"
+              />
+              <span className="ml-2 text-base">Yes</span>
+            </label>
+            <label className="cursor-pointer">
+              <input
+                type="radio"
+                name="consent-optional-2"
+                value="disagree"
+                checked={futureContact === "disagree"}
+                onChange={handleFutureContactChange}
                 className="radio radio-primary"
               />
               <span className="ml-2 text-base">No</span>

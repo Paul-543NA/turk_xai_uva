@@ -221,8 +221,8 @@ export const PhaseInstructions = () => {
             . The goal is to predict the house price as accurately as possible,
             regardless of whether relying on the AI or on yourself. Hence, you
             will be penalised for poorly predicted sales prices regardless the
-            source of the prediction (yourself or AI). The best 10% participants
-            will receive a gift card after completion of the study.
+            source of the prediction (yourself or AI). Your change to win a gift 
+            card after completion of the study is proportional to your score.
           </p>
         </>
       )}
