@@ -27,7 +27,7 @@ const Page = () => {
           <p className="py-8 text-xl">
             You are about to take part in a study of human AI collaboration. We
             are very excited to count you as one of our participants! It will
-            only take a few minutes and if you do well you might even win a gift
+            take about 30 minutes and if you do well you might even win a gift
             card!
           </p>
           <button className="btn btn-primary text-lg" onClick={handleClick}>
