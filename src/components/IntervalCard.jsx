@@ -46,9 +46,18 @@ const SentencesIntervalCard = ({ intervalExplanation }) => {
         <span></span>
         <p>
           The AI would have predicted a price of at least{" "}
-          <strong>{formatPriceForUI(5000)} lower</strong> than the currently
+          <strong>{formatPriceForUI(50000)} lower</strong> than the currently
           predicted price, if
           <ul className="list-disc list-inside leading-loose">
+          <li>
+              the living area would be between{" "}
+              {intervalExplanation["house-area"].min} {area} and{" "}
+              {intervalExplanation["house-area"].max} {area} big,
+            </li>
+            <li>
+              the lot would be between {intervalExplanation["lot-width"].min} {distance} and{" "}
+              {intervalExplanation["lot-width"].max} {distance} wide,{" "}
+            </li>
             <li>
               the lot would be between{" "}
               {formatFeatureForUI(4, intervalExplanation["lot-len"].min)}{" "}
@@ -56,13 +65,7 @@ const SentencesIntervalCard = ({ intervalExplanation }) => {
               long,
             </li>
             <li>
-              between {intervalExplanation["lot-width"].min} {distance} and{" "}
-              {intervalExplanation["lot-width"].max} {distance} wide,{" "}
-            </li>
-            <li>
-              the living area would be between{" "}
-              {intervalExplanation["house-area"].min} {area} and{" "}
-              {intervalExplanation["house-area"].max} {area} big,
+              the construction date would be between {intervalExplanation["buildyear"].min}{" "} and {intervalExplanation["buildyear"].max},
             </li>
             <li>
               and the garden would have a size somewhere between{" "}
@@ -80,9 +83,16 @@ const SentencesIntervalCard = ({ intervalExplanation }) => {
 
 const GraphIntervalCard = ({ house, intervalExplanation }) => {
   const { formatPriceForUI, formatFeatureLabelForUI } = useAnswers();
-  const continuousFeatures = featureInfos.filter(
-    (feature) => feature.type === "continuous"
-  );
+  // const continuousFeatures = featureInfos.filter(
+  //   (feature) => feature.type === "continuous"
+  // );
+  const featuresContinuous = ['house-area', 'lot-width', 'bathrooms', 'buildyear', 'lot-len', 'balcony', 'garden-size'];
+
+  const findFeatureByName = (name) => {
+    return featureInfos.find((feature) => feature.name === name);};
+    
+// Ensure the order of continousFeatures matches the one above
+  const continuousFeatures = featuresContinuous.map((name) => findFeatureByName(name)).filter(Boolean);
 
   const FeatureIntervalBar = ({ featureInfo }) => {
     const [min, max] = getFeatureBounds(
@@ -136,9 +146,16 @@ const GraphIntervalCard = ({ house, intervalExplanation }) => {
 const TableIntervalCard = ({ intervalExplanation }) => {
   const { formatFeatureForUI, formatPriceForUI, formatFeatureLabelForUI } =
     useAnswers();
-  const continuousFeatures = featureInfos.filter(
-    (feature) => feature.type === "continuous"
-  );
+  // const continuousFeatures = featureInfos.filter(
+  //   (feature) => feature.type === "continuous"
+  // );
+  const featuresContinuous = ['house-area', 'lot-width', 'bathrooms', 'buildyear', 'lot-len', 'balcony', 'garden-size'];
+
+  const findFeatureByName = (name) => {
+    return featureInfos.find((feature) => feature.name === name);};
+    
+// Ensure the order of continousFeatures matches the one above
+  const continuousFeatures = featuresContinuous.map((name) => findFeatureByName(name)).filter(Boolean);
 
   return (
     <div className="card bg-base-300 shadow-xl md:m-4">
