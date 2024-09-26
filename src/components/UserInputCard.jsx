@@ -1,8 +1,9 @@
 "use client";
 import React, { useState } from "react";
+import featureInfos from "../../public/data/feature_infos.json";
 import { useAnswers } from "@/app/context/AnswersContext";
 
-function UserInputCard() {
+function UserInputCard({ isExpanded, setIsExpanded }) {
   const {
     currentPhase,
     showingFeedback,
@@ -10,6 +11,9 @@ function UserInputCard() {
     getAIPrediction,
     getCurrencySymbol,
     formatPriceForUI,
+    preferredAreaMetric,
+    getCurrentHouse,
+    formatFeatureForUI,
   } = useAnswers();
 
   const {
@@ -25,7 +29,7 @@ function UserInputCard() {
     handleAIInputChange,
     handleClickNext,
     userPredictionError,
-  } = useUserInputCard();
+  } = useUserInputCard({ isExpanded, setIsExpanded });
 
   const TrustAIToggle = (
     <label className="form-control w-full max-w-xs mb-4">
@@ -98,9 +102,36 @@ function UserInputCard() {
     </div>
   );
 
+  
+
+
+  const house = getCurrentHouse();
+  const featureInfo = featureInfos[0]
+
+  function areaLabel(preferredAreaMetric) {
+    if (preferredAreaMetric === "sqm") {
+        return `m²`;
+    } else {
+        return `ft²`;
+    }
+  }
+
+  function average_price(featureInfo, house) {
+    return featureInfo.average_m2_price[house["zipcode"]]
+  }
+
   return (
     <div className="card bg-base-300 shadow-xl md:m-4">
       <div className="card-body">
+        <p>
+        <span className="text-base">
+            The average {areaLabel(preferredAreaMetric)}-price in this area ({featureInfo.valueLabels[house['zipcode']]}) 
+            is {formatPriceForUI(average_price(featureInfo, house))}.
+            Based on this, this house would cost {formatPriceForUI(house['house-area']*featureInfo.average_m2_price[house['zipcode']])}
+            {/* {featureInfos['zipcode']['valueLabels'][house['zipcode']]} */}
+        </span>
+        </p>
+
         {/* Show the toggle only in phase 2 */}
         {currentPhase === "2" ? TrustAIToggle : null}
 
@@ -136,7 +167,7 @@ function UserInputCard() {
         {showingFeedback && currentPhase === "2" ? (
           <p className="p-4 pl-4">
             {followAI
-              ? `THe AI predicted ${formatPriceForUI(getAIPrediction())}.`
+              ? `The AI predicted ${formatPriceForUI(getAIPrediction())}.`
               : null}
             The true value of the property is{" "}
             <strong>{formatPriceForUI(getCurrentHousePrice())}</strong> (you
@@ -180,7 +211,7 @@ function UserInputCard() {
   );
 }
 
-function useUserInputCard() {
+function useUserInputCard({ isExpanded, setIsExpanded }) {
   const {
     currentPhase,
     goToNextQuestion,
@@ -201,6 +232,7 @@ function useUserInputCard() {
   const [followAI, setFollowAI] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
+  // const [isExpanded, setIsExpanded] = useState(null);
 
   const createUserAnswer = () => {
     let userAnswer = {
@@ -248,6 +280,7 @@ function useUserInputCard() {
     setAIInputValue("");
     setAIIsValid(false);
     setIsValid(false);
+    setIsExpanded(false);
   };
 
   const handleClickNext = async () => {
@@ -307,6 +340,7 @@ function useUserInputCard() {
     handleAIInputChange,
     handleClickNext,
     userPredictionError,
+    // isExpanded,
   };
 }
 

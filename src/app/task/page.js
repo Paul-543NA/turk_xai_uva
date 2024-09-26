@@ -106,6 +106,14 @@ export default function Home() {
     return "";
   };
 
+  // Step 1: Add the `isExpanded` state and `setIsExpanded` function
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  // Step 2: Create the function to reset expanded state
+  const resetExpanded = () => {
+    setIsExpanded(false);
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-leading justify-start p-4 md:p-8 lg:p-24">
       {phaseInformationModal}
@@ -154,7 +162,7 @@ export default function Home() {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {/* Property features card */}
         <div className="flex-grow space-y-2">
-          <PropertyCard className="flex md:mx-4" />
+          <PropertyCard isExpanded={isExpanded} setIsExpanded={setIsExpanded} className="flex md:mx-4" />
         </div>
 
         {/* Counterfactual explanation card */}
@@ -183,11 +191,11 @@ export default function Home() {
         {/* Inputs for user answers */}
         {!showAI ? (
           <div className="col-span-1">
-            <UserInputCard />
+            <UserInputCard isExpanded={isExpanded} setIsExpanded={setIsExpanded} />
           </div>
         ) : (
           <div className="col-span-1 md:col-span-2 xl:col-span-1">
-            <UserInputCard />
+            <UserInputCard isExpanded={isExpanded} setIsExpanded={setIsExpanded}/>
           </div>
         )}
       </div>
