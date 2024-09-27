@@ -1,19 +1,17 @@
 "use client";
 import React from "react";
 import PointBar from "./PointBar";
+import PointBarIntegers from "./PointBarIntegers";
 import featureInfos from "../../public/data/feature_infos.json";
 import { getFeatureBounds } from "@/utils/featureProcessor";
 import { useAnswers } from "@/app/context/AnswersContext";
 
 const SentencesPointCounterfactualCard = ({ pointCounterfactual }) => {
-  const { preferredAreaMetric, formatFeatureForUI, formatPriceForUI } =
+  const { formatFeatureForUI, formatPriceForUI, formatAreaLabel, formatDistanceLabel } =
     useAnswers();
-  let area = `m²`;
-  let distance = `m`;
-  if (preferredAreaMetric === "sqft") {
-    area = `ft²`;
-    distance = `ft`;
-  }
+    
+  const findFeatureByName = (name) => {
+    return featureInfos.find((feature) => feature.name === name);};
 
   let bathrooms = ``;
   if (pointCounterfactual["bathrooms"] === 1) {
@@ -36,13 +34,14 @@ const SentencesPointCounterfactualCard = ({ pointCounterfactual }) => {
           <ul className="list-disc list-inside leading-loose">
             <li>
               the living area would have{" "}
-              {formatFeatureForUI(6, pointCounterfactual["house-area"])} {area},
+              {formatFeatureForUI(findFeatureByName('house-area'), pointCounterfactual["house-area"])} {formatAreaLabel()},
+              {/* {formatFeatureForUI(feature, pointCounterfactual[feature.name])} */}
             </li>
             <li>
               the lot would be{" "}
-              {formatFeatureForUI(4, pointCounterfactual["lot-len"])} {distance}{" "}
-              long and {formatFeatureForUI(5, pointCounterfactual["lot-width"])}{" "}
-              {distance} wide,
+              {formatFeatureForUI(findFeatureByName('lot-len'), pointCounterfactual["lot-len"])} {formatDistanceLabel()}{" "}
+              long and {formatFeatureForUI(findFeatureByName('lot-width'), pointCounterfactual["lot-width"])}{" "}
+              {formatDistanceLabel()} wide,
             </li>
             <li>
             the construction date would have been in{" "}
@@ -50,7 +49,7 @@ const SentencesPointCounterfactualCard = ({ pointCounterfactual }) => {
             </li>
             <li>
               and the garden would have a size of{" "}
-              {formatFeatureForUI(7, pointCounterfactual["garden-size"])} {area}
+              {formatFeatureForUI(findFeatureByName('garden-size'), pointCounterfactual["garden-size"])} {formatAreaLabel()}
               .{" "}
             </li>
           </ul>
@@ -68,13 +67,15 @@ const GraphPointCounterfactualCard = ({ house, pointCounterfactual }) => {
   // const continuousFeatures = featureInfos.filter(
   //   (feature) => feature.type === "continuous"
   // );
-  const featuresContinuous = ['house-area', 'lot-width', 'bathrooms', 'buildyear', 'lot-len', 'balcony', 'garden-size'];
+  const featuresNumerical = ['house-area', 'lot-width', 'bathrooms', 'buildyear', 'lot-len', 'balcony', 'garden-size'];
+  const continuousFeatures = ['house-area', 'lot-width', 'buildyear', 'lot-len', 'garden-size']
+  const integerFeatures = ['bathrooms', 'balcony'];
 
   const findFeatureByName = (name) => {
     return featureInfos.find((feature) => feature.name === name);};
     
 // Ensure the order of continousFeatures matches the one above
-  const continuousFeatures = featuresContinuous.map((name) => findFeatureByName(name)).filter(Boolean);
+  const numericalFeatures = featuresNumerical.map((name) => findFeatureByName(name)).filter(Boolean);
 
   const FeatureBar = ({ feature }) => {
     const [min, max] = getFeatureBounds(
@@ -92,19 +93,41 @@ const GraphPointCounterfactualCard = ({ house, pointCounterfactual }) => {
       pointCounterfactual[feature.name]
     );
 
-    return (
-      <div className="py-2">
-        <p>{formatFeatureLabelForUI(feature)}</p>
-        <PointBar
-          counterfactual={pointCounterfactual[feature.name]}
-          actual={house[feature.name]}
-          counterfactualLabel={counterfactualLabel}
-          actualLabel={actualLabel}
-          featureMin={min}
-          featureMax={max}
-        />
-      </div>
-    );
+    // if its a continuous feature we show the bar, if it's integer we show individual circles
+    if (continuousFeatures.includes(feature.name)){
+      return (
+        <div className="py-2">
+          <p>{formatFeatureLabelForUI(feature)}</p>
+          <PointBar
+            counterfactual={pointCounterfactual[feature.name]}
+            actual={house[feature.name]}
+            counterfactualLabel={counterfactualLabel}
+            actualLabel={actualLabel}
+            featureMin={min}
+            featureMax={max}
+          />
+        </div>
+      );
+    }
+    else if (integerFeatures.includes(feature.name))
+    {
+      return (
+        <div className="py-2">
+          <p>{formatFeatureLabelForUI(feature)}</p>
+          <div className="mt-5">
+          <PointBarIntegers
+            counterfactual={pointCounterfactual[feature.name]}
+            actual={house[feature.name]}
+            counterfactualLabel={counterfactualLabel}
+            actualLabel={actualLabel}
+            featureMin={min}
+            featureMax={max}
+          />
+          </div>
+        </div>
+      );
+    }
+    
   };
 
   return (
@@ -117,7 +140,7 @@ const GraphPointCounterfactualCard = ({ house, pointCounterfactual }) => {
           <strong>{formatPriceForUI(50000)} lower</strong> than the currently
           predicted price.
         </p>
-        {continuousFeatures.map((feature, index) => (
+        {numericalFeatures.map((feature, index) => (
           <FeatureBar key={index} feature={feature} />
         ))}
         {/* A div to explain the meaning of the colors */}
