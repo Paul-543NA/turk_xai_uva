@@ -436,6 +436,18 @@ export const AnswersProvider = ({ children }) => {
     return featureInfo.label;
   }
 
+  function formatAreaLabel(){
+    if (preferredAreaMetric == 'sqm') {
+      return `m²`;
+    } else return `ft²`;
+  }
+
+  function formatDistanceLabel(){
+    if (preferredAreaMetric == 'sqm') {
+      return `m`;
+    } else return `ft`;
+  }
+
   // =============================================================================
   // SECTION - LOGGERS
   // =============================================================================
@@ -679,6 +691,8 @@ export const AnswersProvider = ({ children }) => {
         formatFeatureForUI,
         formatPriceForUI,
         formatCurrencyInput,
+        formatAreaLabel,
+        formatDistanceLabel,
         showPhaseInfoModal,
         closeModal,
         // Database interactions
