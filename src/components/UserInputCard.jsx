@@ -14,6 +14,8 @@ function UserInputCard({ isExpanded, setIsExpanded }) {
     preferredAreaMetric,
     getCurrentHouse,
     formatFeatureForUI,
+    formatAreaLabel,
+    formatDistancelabel,
   } = useAnswers();
 
   const {
@@ -108,13 +110,13 @@ function UserInputCard({ isExpanded, setIsExpanded }) {
   const house = getCurrentHouse();
   const featureInfo = featureInfos[0]
 
-  function areaLabel(preferredAreaMetric) {
-    if (preferredAreaMetric === "sqm") {
-        return `m²`;
-    } else {
-        return `ft²`;
-    }
-  }
+  // function areaLabel(preferredAreaMetric) {
+  //   if (preferredAreaMetric === "sqm") {
+  //       return `m²`;
+  //   } else {
+  //       return `ft²`;
+  //   }
+  // }
 
   function average_price(featureInfo, house) {
     return featureInfo.average_m2_price[house["zipcode"]]
@@ -125,7 +127,7 @@ function UserInputCard({ isExpanded, setIsExpanded }) {
       <div className="card-body">
         <p>
         <span className="text-base">
-            The average {areaLabel(preferredAreaMetric)}-price in this area ({featureInfo.valueLabels[house['zipcode']]}) 
+            The average {formatAreaLabel()}-price in this area ({featureInfo.valueLabels[house['zipcode']]}) 
             is {formatPriceForUI(average_price(featureInfo, house))}.
             Based on this, this house would cost {formatPriceForUI(house['house-area']*featureInfo.average_m2_price[house['zipcode']])}
             {/* {featureInfos['zipcode']['valueLabels'][house['zipcode']]} */}
