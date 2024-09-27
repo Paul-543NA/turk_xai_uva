@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import IntervalBar from "./IntervalBar";
+import IntervalBarIntegers from "./IntervalBarIntegers";
 import NotImplementedCard from "./NotImplementedCard";
 import { getFeatureBounds } from "@/utils/featureProcessor";
 import featureInfos from "../../public/data/feature_infos.json";
@@ -8,13 +9,16 @@ import featureInfos from "../../public/data/feature_infos.json";
 import { useAnswers } from "@/app/context/AnswersContext";
 
 const SentencesIntervalCard = ({ intervalExplanation }) => {
-  const { preferredAreaMetric, formatFeatureForUI, formatPriceForUI } =
+  const { preferredAreaMetric, formatFeatureForUI, formatPriceForUI, formatAreaLabel, formatDistanceLabel } =
     useAnswers();
-  let area = `m²`;
-  let distance = `m`;
-  if (preferredAreaMetric === "sqft") {
-    area = `ft²`;
-    distance = `ft`;
+
+  const findFeatureByName = (name) => {
+    return featureInfos.find((feature) => feature.name === name);
+  // let area = `m²`;
+  // let distance = `m`;
+  // if (preferredAreaMetric === "sqft") {
+  //   area = `ft²`;
+  //   distance = `ft`;
   }
   let bathrooms = ``;
   if (
@@ -51,17 +55,17 @@ const SentencesIntervalCard = ({ intervalExplanation }) => {
           <ul className="list-disc list-inside leading-loose">
           <li>
               the living area would be between{" "}
-              {intervalExplanation["house-area"].min} {area} and{" "}
-              {intervalExplanation["house-area"].max} {area} big,
+              {formatFeatureForUI(findFeatureByName("house-area"),intervalExplanation["house-area"].min)} {formatAreaLabel()} and{" "}
+              {formatFeatureForUI(findFeatureByName("house-area"),intervalExplanation["house-area"].max)} {formatAreaLabel()} big,
             </li>
             <li>
-              the lot would be between {intervalExplanation["lot-width"].min} {distance} and{" "}
-              {intervalExplanation["lot-width"].max} {distance} wide,{" "}
+              the lot would be between {formatFeatureForUI(findFeatureByName("lot-width"),intervalExplanation["lot-width"].min)} {formatDistanceLabel()} and{" "}
+              {formatFeatureForUI(findFeatureByName("lot-width"),intervalExplanation["lot-width"].max)} {formatDistanceLabel()} wide,{" "}
             </li>
             <li>
               the lot would be between{" "}
-              {formatFeatureForUI(4, intervalExplanation["lot-len"].min)}{" "}
-              {distance} and {intervalExplanation["lot-len"].max} {distance}{" "}
+              {formatFeatureForUI(findFeatureByName("lot-len"),intervalExplanation["lot-len"].min)} {formatDistanceLabel()}{" and "}
+              {formatFeatureForUI(findFeatureByName("lot-len"),intervalExplanation["lot-len"].max)} {formatDistanceLabel()}{" "}
               long,
             </li>
             <li>
@@ -69,8 +73,8 @@ const SentencesIntervalCard = ({ intervalExplanation }) => {
             </li>
             <li>
               and the garden would have a size somewhere between{" "}
-              {intervalExplanation["garden-size"].min} {area} and{" "}
-              {intervalExplanation["garden-size"].max} {area}.{" "}
+              {formatFeatureForUI(findFeatureByName("garden-size"),intervalExplanation["garden-size"].min)} {formatAreaLabel()} and{" "}
+              {formatFeatureForUI(findFeatureByName("garden-size"),intervalExplanation["garden-size"].max)} {formatAreaLabel()}.{" "}
             </li>
           </ul>
           <span></span>
@@ -86,13 +90,15 @@ const GraphIntervalCard = ({ house, intervalExplanation }) => {
   // const continuousFeatures = featureInfos.filter(
   //   (feature) => feature.type === "continuous"
   // );
-  const featuresContinuous = ['house-area', 'lot-width', 'bathrooms', 'buildyear', 'lot-len', 'balcony', 'garden-size'];
+  const featuresNumerical = ['house-area', 'lot-width', 'bathrooms', 'buildyear', 'lot-len', 'balcony', 'garden-size'];
+  const continuousFeatures = ['house-area', 'lot-width', 'buildyear', 'lot-len', 'garden-size']
+  const integerFeatures = ['bathrooms', 'balcony'];
 
   const findFeatureByName = (name) => {
     return featureInfos.find((feature) => feature.name === name);};
     
 // Ensure the order of continousFeatures matches the one above
-  const continuousFeatures = featuresContinuous.map((name) => findFeatureByName(name)).filter(Boolean);
+  const numericalFeatures = featuresNumerical.map((name) => findFeatureByName(name)).filter(Boolean);
 
   const FeatureIntervalBar = ({ featureInfo }) => {
     const [min, max] = getFeatureBounds(
@@ -101,7 +107,9 @@ const GraphIntervalCard = ({ house, intervalExplanation }) => {
       undefined,
       intervalExplanation[featureInfo.name]
     );
-    return (
+    // if its a continuous feature we show the bar, if it's integer we show individual circles
+    if (continuousFeatures.includes(featureInfo.name)){
+      return (
       <div className="py-2">
         <p>{formatFeatureLabelForUI(featureInfo)}</p>
         <IntervalBar
@@ -113,7 +121,39 @@ const GraphIntervalCard = ({ house, intervalExplanation }) => {
           featureMax={max}
         />
       </div>
-    );
+      );
+    }
+    else if (integerFeatures.includes(featureInfo.name))
+    {
+      return (
+        <div className="py-2">
+          <p>{formatFeatureLabelForUI(featureInfo)}</p>
+          <div className="mt-5">
+          <IntervalBarIntegers
+            featurename={featureInfo.name}
+            lower={intervalExplanation[featureInfo.name].min}
+            actual={house[featureInfo.name]}
+            upper={intervalExplanation[featureInfo.name].max}
+            featureMin={min}
+            featureMax={max}
+          />
+          </div>
+        </div>
+      );
+    }
+    // return (
+    //   <div className="py-2">
+    //     <p>{formatFeatureLabelForUI(featureInfo)}</p>
+    //     <IntervalBar
+    //       featurename={featureInfo.name}
+    //       lower={intervalExplanation[featureInfo.name].min}
+    //       actual={house[featureInfo.name]}
+    //       upper={intervalExplanation[featureInfo.name].max}
+    //       featureMin={min}
+    //       featureMax={max}
+    //     />
+    //   </div>
+    // );
   };
 
   return (
@@ -126,7 +166,7 @@ const GraphIntervalCard = ({ house, intervalExplanation }) => {
           <strong>{formatPriceForUI(50000)} lower</strong> than the currently
           predicted price.
         </p>
-        {continuousFeatures.map((feature, index) => (
+        {numericalFeatures.map((feature, index) => (
           <FeatureIntervalBar key={index} featureInfo={feature} />
         ))}
         {/* A div to explain the meaning of the colors */}
