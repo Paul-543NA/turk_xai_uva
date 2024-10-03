@@ -14,6 +14,8 @@ function UserInputCard({ isExpanded, setIsExpanded }) {
     preferredAreaMetric,
     getCurrentHouse,
     formatFeatureForUI,
+    formatAreaLabel,
+    formatDistancelabel,
   } = useAnswers();
 
   const {
@@ -54,7 +56,7 @@ function UserInputCard({ isExpanded, setIsExpanded }) {
           What do you think is the true sales price of this property?
         </span>
       </p>
-      <label className="form-control w-full max-w-xs mt-6">
+      <label className="form-control w-full mt-6">
         {/* Label and input field */}
         {/* <div className="label">
         <span className="text-base">What do you think is the true sales price of this property?</span>
@@ -108,13 +110,13 @@ function UserInputCard({ isExpanded, setIsExpanded }) {
   const house = getCurrentHouse();
   const featureInfo = featureInfos[0]
 
-  function areaLabel(preferredAreaMetric) {
-    if (preferredAreaMetric === "sqm") {
-        return `m²`;
-    } else {
-        return `ft²`;
-    }
-  }
+  // function areaLabel(preferredAreaMetric) {
+  //   if (preferredAreaMetric === "sqm") {
+  //       return `m²`;
+  //   } else {
+  //       return `ft²`;
+  //   }
+  // }
 
   function average_price(featureInfo, house) {
     return featureInfo.average_m2_price[house["zipcode"]]
@@ -125,9 +127,9 @@ function UserInputCard({ isExpanded, setIsExpanded }) {
       <div className="card-body">
         <p>
         <span className="text-base">
-            The average {areaLabel(preferredAreaMetric)}-price in this area ({featureInfo.valueLabels[house['zipcode']]}) 
+            The average {formatAreaLabel()}-price in this area ({featureInfo.valueLabels[house['zipcode']]}) 
             is {formatPriceForUI(average_price(featureInfo, house))}.
-            Based on this, this house would cost {formatPriceForUI(house['house-area']*featureInfo.average_m2_price[house['zipcode']])}
+            Based on this, this house would cost {formatPriceForUI(house['house-area']*featureInfo.average_m2_price[house['zipcode']])}.
             {/* {featureInfos['zipcode']['valueLabels'][house['zipcode']]} */}
         </span>
         </p>
