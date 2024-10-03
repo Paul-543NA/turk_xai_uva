@@ -369,7 +369,8 @@ export const AnswersProvider = ({ children }) => {
     // Formats the number with thousands separators
     // e.g. 1000000 -> 1,000,000 or 1 000 000
     // Remove any non-digit characters except for the decimal point
-    const split = preferredCurrency === "EUR" ? " " : ",";
+    // const split = preferredCurrency === "EUR" ? " " : ",";
+    const split = ",";
     const cleanValue = value.replace(/[^\d.]/g, "");
     // Split the integer and decimal parts
     const [integerPart, decimalPart] = cleanValue.split(".");
@@ -400,7 +401,7 @@ export const AnswersProvider = ({ children }) => {
       return `£${localeString}`;
     }
     if (preferredCurrency === "EUR") {
-      return `${localeString} €`;
+      return `€${localeString}`;
     }
     if (preferredCurrency === "USD") {
       return `$${localeString}`;
@@ -572,7 +573,7 @@ export const AnswersProvider = ({ children }) => {
     }
   }
 
-  async function saveConsent(consent, reuseConsent) {
+  async function saveConsent(consent, reuseConsent, futureContact) {
     updateDidGiveConsent(consent === "agree");
     try {
       if (runtimeParams.useFirestore) {
@@ -582,6 +583,7 @@ export const AnswersProvider = ({ children }) => {
         await setDoc(doc(db, collectionName, userId), {
           consent: consent,
           reuseConsent: reuseConsent,
+          futureContact: futureContact,
           timeStep: new Date().toISOString(),
         });
       }
