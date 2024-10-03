@@ -56,7 +56,7 @@ function UserInputCard({ isExpanded, setIsExpanded }) {
           What do you think is the true sales price of this property?
         </span>
       </p>
-      <label className="form-control w-full max-w-xs mt-6">
+      <label className="form-control w-full mt-6">
         {/* Label and input field */}
         {/* <div className="label">
         <span className="text-base">What do you think is the true sales price of this property?</span>
@@ -129,7 +129,7 @@ function UserInputCard({ isExpanded, setIsExpanded }) {
         <span className="text-base">
             The average {formatAreaLabel()}-price in this area ({featureInfo.valueLabels[house['zipcode']]}) 
             is {formatPriceForUI(average_price(featureInfo, house))}.
-            Based on this, this house would cost {formatPriceForUI(house['house-area']*featureInfo.average_m2_price[house['zipcode']])}
+            Based on this, this house would cost {formatPriceForUI(house['house-area']*featureInfo.average_m2_price[house['zipcode']])}.
             {/* {featureInfos['zipcode']['valueLabels'][house['zipcode']]} */}
         </span>
         </p>
