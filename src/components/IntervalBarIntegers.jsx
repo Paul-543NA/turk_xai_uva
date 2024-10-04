@@ -82,6 +82,7 @@ const PointBarForIntegers = ({
       <div className="relative w-full flex justify-between">
         {integerValues.map((value) => (
           <NormalCircle
+            key = {value}
             value={value}
             position={getPosition(value)}
             isActual={value === actual}
