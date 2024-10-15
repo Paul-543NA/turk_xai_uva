@@ -308,12 +308,22 @@ export const AnswersProvider = ({ children }) => {
     if (currentPhase !== "2") {
       return false;
     }
+
+    // Calculate the total number of questions in phase 2
+    const totalQuestionsInP2 = questionsPerPhase[2];
+     // Calculate the number of questions after which features should be hidden (50% of phase 2)
+    const halfwayPoint = Math.floor(totalQuestionsInP2 / 2);
+
     const questionsInP2SoFar =
       currentQuestion - questionsPerPhase[0] - questionsPerPhase[1];
     let featuresToHide = [];
     // Iterate overt the keys of the hiddenFeatures object
+    // for (const nbQuestions in hiddenFeatures) {
+    //   if (questionsInP2SoFar >= parseInt(nbQuestions) - 1) {
+    //     featuresToHide = featuresToHide.concat(hiddenFeatures[nbQuestions]);
+    //   }
     for (const nbQuestions in hiddenFeatures) {
-      if (questionsInP2SoFar >= parseInt(nbQuestions) - 1) {
+      if (questionsInP2SoFar > halfwayPoint) {
         featuresToHide = featuresToHide.concat(hiddenFeatures[nbQuestions]);
       }
     }
@@ -408,14 +418,14 @@ export const AnswersProvider = ({ children }) => {
     }
   }
 
-  const revertPriceToGBP = (price) => {
-    // The price is in the preferred currency, turn it back into GBP
+  const revertPriceToEUR = (price) => {
+    // The price is in the preferred currency, turn it back into EUR
     const conversionRates = {
       GBP: 0.85,
       EUR: 1,
       USD: 1.08,
     };
-    return Math.round(price * conversionRates[preferredCurrency]);
+    return Math.round(price / conversionRates[preferredCurrency]);
   };
 
   function formatFeatureLabelForUI(featureInfo) {
@@ -672,13 +682,14 @@ export const AnswersProvider = ({ children }) => {
         resetUser,
         currentQuestion,
         currentPhase,
+        questionsPerPhase,
         updatePhase,
         showingFeedback,
         didCompleteForm,
         didGiveConsent,
         saveConsent,
         userScore,
-        revertPriceToGBP,
+        revertPriceToEUR,
         // Getters
         getCurrentHouse,
         getCurrentPointCounterfactual,
