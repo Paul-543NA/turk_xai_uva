@@ -6,6 +6,8 @@ import { useAnswers } from "@/app/context/AnswersContext";
 function UserInputCard({ isExpanded, setIsExpanded }) {
   const {
     currentPhase,
+    currentQuestion,
+    questionsPerPhase,
     showingFeedback,
     getCurrentHousePrice,
     getAIPrediction,
@@ -109,6 +111,12 @@ function UserInputCard({ isExpanded, setIsExpanded }) {
 
   const house = getCurrentHouse();
   const featureInfo = featureInfos[0]
+  // Calculate the total number of questions in phase 2
+  const totalQuestionsInP2 = questionsPerPhase[2];
+  // Calculate the number of questions after which features should be hidden (50% of phase 2)
+  const halfwayPoint = Math.floor(totalQuestionsInP2 / 2);
+  // Calculate current question in P2
+  const questionsInP2SoFar = currentQuestion - questionsPerPhase[0] - questionsPerPhase[1];
 
   // function areaLabel(preferredAreaMetric) {
   //   if (preferredAreaMetric === "sqm") {
@@ -125,6 +133,7 @@ function UserInputCard({ isExpanded, setIsExpanded }) {
   return (
     <div className="card bg-base-300 shadow-xl md:m-4">
       <div className="card-body">
+      {currentPhase === "0" || currentPhase === "1" || (currentPhase === "2" && questionsInP2SoFar < halfwayPoint) ? (
         <p>
         <span className="text-base">
             The average {formatAreaLabel()}-price in this area ({featureInfo.valueLabels[house['zipcode']]}) 
@@ -133,6 +142,7 @@ function UserInputCard({ isExpanded, setIsExpanded }) {
             {/* {featureInfos['zipcode']['valueLabels'][house['zipcode']]} */}
         </span>
         </p>
+      ) : null }
 
         {/* Show the toggle only in phase 2 */}
         {currentPhase === "2" ? TrustAIToggle : null}
@@ -216,6 +226,8 @@ function UserInputCard({ isExpanded, setIsExpanded }) {
 function useUserInputCard({ isExpanded, setIsExpanded }) {
   const {
     currentPhase,
+    currentQuestion,
+    questionsPerPhase,
     goToNextQuestion,
     showingFeedback,
     getCurrentHousePrice,
@@ -224,7 +236,7 @@ function useUserInputCard({ isExpanded, setIsExpanded }) {
     userScore,
     saveAnswer,
     updateScore,
-    revertPriceToGBP,
+    revertPriceToEUR,
   } = useAnswers();
 
   const [inputValue, setInputValue] = useState("");
@@ -238,19 +250,31 @@ function useUserInputCard({ isExpanded, setIsExpanded }) {
 
   const createUserAnswer = () => {
     let userAnswer = {
-      propertyValue: getValueGBP(inputValue),
+      propertyValue: getValueEUR(inputValue),
     };
     if (currentPhase === "1") {
       userAnswer = {
         ...userAnswer,
-        aiPrediction: getValueGBP(inputAIValue),
+        aiPrediction: getValueEUR(inputAIValue),
       };
     }
     if (currentPhase === "2") {
+      // Calculate the total number of questions in phase 2
+      const totalQuestionsInP2 = questionsPerPhase[2];
+      // Calculate the number of questions after which features should be hidden (50% of phase 2)
+      const halfwayPoint = Math.floor(totalQuestionsInP2 / 2);
+      // Calculate current question in P2
+      const questionsInP2SoFar = currentQuestion - questionsPerPhase[0] - questionsPerPhase[1];
+      let features_hidden = false;
+      if (questionsInP2SoFar >= halfwayPoint) {
+        features_hidden = true;
+      }
+
       userAnswer = {
         ...userAnswer,
         followAI: followAI,
         score: userScore,
+        featuresHidden: features_hidden,
       };
     }
     return userAnswer;
@@ -295,7 +319,7 @@ function useUserInputCard({ isExpanded, setIsExpanded }) {
         if (currentPhase === "2") {
           const userGuess = followAI
             ? getAIPrediction()
-            : getValueGBP(inputValue);
+            : getValueEUR(inputValue);
           updateScore(userGuess);
         }
         await saveAnswer(userAnswer);
@@ -320,13 +344,13 @@ function useUserInputCard({ isExpanded, setIsExpanded }) {
     if (followAI) {
       return Math.round(Math.abs(getCurrentHousePrice() - getAIPrediction()));
     }
-    return Math.abs(getCurrentHousePrice() - getValueGBP(inputValue));
+    return Math.abs(getCurrentHousePrice() - getValueEUR(inputValue));
   };
 
-  const getValueGBP = () => {
+  const getValueEUR = () => {
     // Remove " " and , from the input value
     const inputCleaned = inputValue.replace(/ /g, "").replace(/,/g, "");
-    return revertPriceToGBP(parseFloat(inputCleaned));
+    return revertPriceToEUR(parseFloat(inputCleaned));
   };
 
   return {
