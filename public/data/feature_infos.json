@@ -79,14 +79,14 @@
     "name": "bathrooms",
     "min": 0,
     "max": 5,
-    "label": "Nr of bathrooms",
+    "label": "Number of bathrooms",
     "type": "continuous"
   },
   {
     "name": "balcony",
     "min": 0,
     "max": 5,
-    "label": "Nr of balconies",
+    "label": "Number of balconies",
     "type": "continuous"
   }
 ]
