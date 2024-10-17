@@ -6,8 +6,8 @@ import { useAnswers } from "@/app/context/AnswersContext";
 function UserInputCard({ isExpanded, setIsExpanded }) {
   const {
     currentPhase,
-    // currentQuestion,
-    // questionsPerPhase,
+    currentQuestion,
+    questionsPerPhase,
     showingFeedback,
     getCurrentHousePrice,
     getAIPrediction,
@@ -111,6 +111,12 @@ function UserInputCard({ isExpanded, setIsExpanded }) {
 
   const house = getCurrentHouse();
   const featureInfo = featureInfos[0]
+  // Calculate the total number of questions in phase 2
+  const totalQuestionsInP2 = questionsPerPhase[2];
+  // Calculate the number of questions after which features should be hidden (50% of phase 2)
+  const halfwayPoint = Math.floor(totalQuestionsInP2 / 2);
+  // Calculate current question in P2
+  const questionsInP2SoFar = currentQuestion - questionsPerPhase[0] - questionsPerPhase[1];
 
   // function areaLabel(preferredAreaMetric) {
   //   if (preferredAreaMetric === "sqm") {
@@ -127,6 +133,7 @@ function UserInputCard({ isExpanded, setIsExpanded }) {
   return (
     <div className="card bg-base-300 shadow-xl md:m-4">
       <div className="card-body">
+      {currentPhase === "0" || currentPhase === "1" || (currentPhase === "2" && questionsInP2SoFar < halfwayPoint) ? (
         <p>
         <span className="text-base">
             The average {formatAreaLabel()}-price in this area ({featureInfo.valueLabels[house['zipcode']]}) 
@@ -135,6 +142,7 @@ function UserInputCard({ isExpanded, setIsExpanded }) {
             {/* {featureInfos['zipcode']['valueLabels'][house['zipcode']]} */}
         </span>
         </p>
+      ) : null }
 
         {/* Show the toggle only in phase 2 */}
         {currentPhase === "2" ? TrustAIToggle : null}
@@ -258,7 +266,7 @@ function useUserInputCard({ isExpanded, setIsExpanded }) {
       // Calculate current question in P2
       const questionsInP2SoFar = currentQuestion - questionsPerPhase[0] - questionsPerPhase[1];
       let features_hidden = false;
-      if (questionsInP2SoFar > halfwayPoint) {
+      if (questionsInP2SoFar >= halfwayPoint) {
         features_hidden = true;
       }
 

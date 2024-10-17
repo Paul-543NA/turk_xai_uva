@@ -323,7 +323,7 @@ export const AnswersProvider = ({ children }) => {
     //     featuresToHide = featuresToHide.concat(hiddenFeatures[nbQuestions]);
     //   }
     for (const nbQuestions in hiddenFeatures) {
-      if (questionsInP2SoFar > halfwayPoint) {
+      if (questionsInP2SoFar >= halfwayPoint) {
         featuresToHide = featuresToHide.concat(hiddenFeatures[nbQuestions]);
       }
     }
