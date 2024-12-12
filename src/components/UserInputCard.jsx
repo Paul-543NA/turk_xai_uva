@@ -142,7 +142,15 @@ function UserInputCard({ isExpanded, setIsExpanded }) {
             {/* {featureInfos['zipcode']['valueLabels'][house['zipcode']]} */}
         </span>
         </p>
-      ) : null }
+      ) : <p>
+      <span className="text-base">
+          The average {formatAreaLabel()}-price in this area ({featureInfo.valueLabels[house['zipcode']]}) 
+          is {formatPriceForUI(average_price(featureInfo, house))}.
+          As the area of the house is unknown, we cannot derive a house price based on average {formatAreaLabel()}-price.
+          {/* Based on this, this house would cost {formatPriceForUI(house['house-area']*featureInfo.average_m2_price[house['zipcode']])}. */}
+          {/* {featureInfos['zipcode']['valueLabels'][house['zipcode']]} */}
+      </span>
+      </p> }
 
         {/* Show the toggle only in phase 2 */}
         {currentPhase === "2" ? TrustAIToggle : null}
