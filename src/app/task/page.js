@@ -151,7 +151,7 @@ export default function Home() {
         <div className="collapse-title text-xl font-medium bg-base-content bg-opacity-15 text-base-content">
           Show instructions
         </div>
-        <div className="collapse-content flex justify-center">
+        <div className="collapse-content flex text-left ml-4">
           <div className="py-4 pt-4">
             <PhaseInstructions />
           </div>
