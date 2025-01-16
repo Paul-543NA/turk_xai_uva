@@ -38,7 +38,7 @@ export const PhaseInstructions = () => {
                   the AI{"'"}s prediction of the sales price for this particular
                   property
                 </li>
-                <li>an explanation for this prediction.</li>
+                {/* <li>an explanation for this prediction.</li> */}
               </ul>
               <p>
                 Then, your task is to make a judgement of the true sales price
@@ -221,7 +221,7 @@ export const PhaseInstructions = () => {
             . The goal is to predict the house price as accurately as possible,
             regardless of whether relying on the AI or on yourself. Hence, you
             will be penalised for poorly predicted sales prices regardless the
-            source of the prediction (yourself or AI). Your change to win a gift 
+            source of the prediction (yourself or AI). Your chance to win a gift 
             card after completion of the study is proportional to your score.
           </p>
         </>
