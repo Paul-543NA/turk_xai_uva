@@ -87,6 +87,15 @@ const Page = () => {
           </p>
         </div>
       </div>
+      <div className="fixed bottom-4 w-full flex justify-center">
+        <p className="text-center text-sm text-gray-500 max-w-5xl px-4">
+          To receive financial compensation for participating in this study, you
+          must complete the survey fully, sensibly, and truthfully. We have
+          quality criteria in place to assess this. If these criteria are not met,
+          you will not receive credit for participation (via Amazon Mechanical Turk) and will not be eligible
+          to win a gift card.
+        </p>
+      </div>
     </div>
   );
 };
